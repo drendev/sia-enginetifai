@@ -12,7 +12,7 @@ export default function Home() {
         </p>
       </header>
       <footer className="absolute bottom-0 mt-8">
-        <Image src={"/wave.svg"} width={10000} height={1000} alt="Waves" />
+        <Image src={"/wave.svg"} width={2990} height={1068} alt="Waves" />
       </footer>
     </main>  
   );
