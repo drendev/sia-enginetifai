@@ -27,9 +27,8 @@ export default function Home() {
         <h1 className="text-4xl font-bold mt-8 text-red-primary">EnginetifAI</h1>
         <p className="text-lg mt-4 text-gray-500 px-6 text-justify">
         AI-Powered solution for Inventory Management System. 
-        </p>
-        <p className="text-lg font-bold text-gray-500">
-        Coming Soon.
+        <span className="text-lg font-bold text-gray-500">
+        Coming Soon.</span>
         </p>
       </header>
       <footer className="absolute bottom-0 mt-8">
