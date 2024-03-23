@@ -1,9 +1,11 @@
 import Image from "next/image";
 
 
-export default function Home() {
+export default async function Home() {
+  await new Promise((resolve) => setTimeout(resolve, 4000));
+
   return (
-    <main className="flex min-h-full flex-col items-center justify-between pt-24">
+    <main className="flex min-h-full flex-col items-center pt-24">
       <Image src="/maintenance.svg" width={200} height={200} alt="EnginetifAI" />
       <header className="flex flex-col items-center">
         <h1 className="text-4xl font-bold mt-8 text-red-primary">EnginetifAI</h1>
