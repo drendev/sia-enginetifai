@@ -26,7 +26,7 @@ export default function Home() {
       <header className="flex flex-col items-center">
         <h1 className="text-4xl font-bold mt-8 text-red-primary">EnginetifAI</h1>
         <p className="text-lg mt-4 text-gray-500 px-6 text-justify">
-        AI-Powered solution for Inventory Management System
+        AI-Powered solution for Inventory Management System. Coming Soon.
         </p>
       </header>
       <footer className="absolute bottom-0 mt-8">
