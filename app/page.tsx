@@ -1,8 +1,24 @@
+'use client';
+
 import Image from "next/image";
+import React, { useState, useEffect } from 'react';
+import Loading from "./loading";
 
+export default function Home() {
+  // Loading state
+  const [ready, setReady] = useState(false);
 
-export default async function Home() {
-  await new Promise((resolve) => setTimeout(resolve, 4000));
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setReady(true); 
+    }, 3000);
+
+    return () => clearTimeout(timer);
+  }, []); 
+
+  if (!ready) {
+    return <div><Loading /></div> 
+  }
 
   return (
     <main className="flex min-h-full flex-col items-center pt-24">
