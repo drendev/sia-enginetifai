@@ -25,7 +25,7 @@ export default function Home() {
       <Image src="/maintenance.svg" width={200} height={200} alt="EnginetifAI" />
       <header className="flex flex-col items-center">
         <h1 className="text-4xl font-bold mt-8 text-red-primary">EnginetifAI</h1>
-        <p className="text-lg mt-4 text-gray-500 px-6 text-justify">
+        <p className="text-lg mt-4 text-gray-500 px-6 text-left">
         AI-Powered solution for Inventory Management System. 
         <span className="text-lg font-bold text-gray-500 ml-1">
         Coming Soon.</span>
