@@ -22,19 +22,17 @@ export default function Maintenance() {
 
   return (
     <div className="flex flex-col items-center">
-    <Image src="/maintenance.svg" width={200} height={200} alt="EnginetifAI" />
-    <header className="flex flex-col items-center">
-      <h1 className="text-4xl font-bold mt-8 text-red-primary">EnginetifAI</h1>
-      <p className="text-lg mt-4 text-gray-500 px-6 text-center lg:max-2xl:mb-40">
-      AI-Powered solution for Inventory Management System. 
-      <span className="text-lg font-bold text-gray-500 ml-1">
-      Coming Soon.
-      </span>
-      </p>
-    </header>
-    <div className="absolute bottom-0 mt-8">
-      <Image src={"/wave.svg"} width={2990} height={1068} alt="" />
-    </div>
-  </div>  
+      <Image src="/maintenance.svg" width={200} height={200} alt="EnginetifAI" />
+      <div className="flex flex-col items-center">
+        <h1 className="text-4xl font-bold mt-8 text-red-primary">EnginetifAI</h1>
+        <p className="text-lg mt-4 text-gray-500 px-6 text-center lg:max-2xl:mb-40">
+          AI-Powered solution for Inventory Management System. 
+          <span className="text-lg font-bold text-gray-500 ml-1">Coming Soon.</span>
+        </p>
+      </div>
+      <div className="absolute bottom-0 mt-8">
+        <Image src={"/wave.svg"} width={2990} height={1068} alt="" />
+      </div>
+    </div>  
   );
 }
