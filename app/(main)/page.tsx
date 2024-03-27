@@ -1,4 +1,4 @@
-import Maintenance from "./@maintenance/page";
+import Maintenance from "./@index/maintenance";
 
 export default function Home() {
     const isLoggedIn = false;
