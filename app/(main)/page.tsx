@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import React, { useState, useEffect } from 'react';
-import Loading from "./loading";
+import Loading from "../loading";
 
 export default function Home() {
   // Loading state
