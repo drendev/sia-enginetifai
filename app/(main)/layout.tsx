@@ -1,5 +1,6 @@
 type Props = {
     children: React.ReactNode;
+    maintenance: React.ReactNode;
 }   
 
 const Main = ({ children }: Props) => {
