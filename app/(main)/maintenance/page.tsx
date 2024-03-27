@@ -33,7 +33,7 @@ export default function Maintenance() {
       </p>
     </header>
     <div className="absolute bottom-0 mt-8">
-      <Image src={"/wave.svg"} width={2990} height={1068} alt="Waves" />
+      <Image src={"/wave.svg"} width={2990} height={1068} alt="" />
     </div>
   </div>  
   );
