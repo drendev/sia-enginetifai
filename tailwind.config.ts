@@ -12,10 +12,18 @@ const config: Config = {
         "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
         "gradient-conic":
           "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
+        "waves":  "url('/waves.svg')",
       },
       colors: {
         "red-primary": "#BB4747",
         "gray-primary": "#E5E5E5",
+      },
+      fontFamily: {
+        custom: ["Caveat"],
+      },
+      borderWidth: {
+        '1': '1px',
+        '6': '6px',
       }
     },
   },

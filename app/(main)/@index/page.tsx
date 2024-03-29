@@ -3,6 +3,7 @@
 import { Header } from "@/components/ui/index/header";
 import Signin from "./signin";
 import Services from "./services";
+import Footer from "./footer";
 
 export default function Index() {
     return (
@@ -12,6 +13,7 @@ export default function Index() {
         <Services />
         <Signin />
         </div>
+        <Footer />
         </>
     )
 }

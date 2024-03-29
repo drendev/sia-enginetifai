@@ -10,8 +10,8 @@ const Signin: React.FC = () =>  {
       };
     return (
         <>
-            <div className="flex flex-auto relative md:ml-40 h-69 bg-slate-500 w-full">
-                <div className="flex-col h-72 w-full">
+            <div className="flex flex-auto relative md:ml-40 h-69 bg-gray-primary w-full rounded-2xl border-solid border-opacity-75 border-1 border-[#ababab] border-r-6 border-b-6 rounded-r-2xl rounded-b-xl">
+                <div className="flex-col h-96 w-80 p-10">   
                     <Form
                     name="normal_login"
                     className="login-form"
