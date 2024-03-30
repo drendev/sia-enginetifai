@@ -1,7 +1,25 @@
 import { Button, Form, Input, ConfigProvider } from 'antd';
+import { PoweroffOutlined } from '@ant-design/icons';
+import { useState } from 'react';
 
 const Signin: React.FC = () =>  {
+    const [loadings, setLoadings] = useState<boolean[]>([]);
 
+    const enterLoading = (index: number) => {
+      setLoadings((prevLoadings) => {
+        const newLoadings = [...prevLoadings];
+        newLoadings[index] = true;
+        return newLoadings;
+      });
+  
+      setTimeout(() => {
+        setLoadings((prevLoadings) => {
+          const newLoadings = [...prevLoadings];
+          newLoadings[index] = false;
+          return newLoadings;
+        });
+      }, 3000);
+    };
     const onFinish = (values: any) => {
         console.log('Received values of form: ', values);
       };
@@ -28,7 +46,7 @@ const Signin: React.FC = () =>  {
                         rules={[{ required: true, message: 'Please input your Username!' }]}
                         >
                             <Input placeholder="Username" 
-                            className="p-2 px-5 rounded-full"
+                            className="p-2 px-5 rounded-full shadow-inner"
                             />
                         </Form.Item>
 
@@ -39,7 +57,7 @@ const Signin: React.FC = () =>  {
                             <Input
                             type="password"
                             placeholder="Password"
-                            className="py-2 px-5 rounded-full"
+                            className="py-2 px-5 rounded-full shadow-inner"
                             />
                         </Form.Item>
                     
@@ -47,7 +65,10 @@ const Signin: React.FC = () =>  {
                                 <Button
                                 type="primary" 
                                 htmlType="submit" 
-                                className="bg-red-primary hover:bg-red-primary font-bold rounded-full text-md w-full h-auto py-2 px-7 tracking-wider border-red-800 border-2 border-b-4 active:border-b-2">
+                                className="bg-red-primary hover:bg-red-primary font-bold rounded-full text-md w-full h-auto py-2 px-7 tracking-wider border-red-800 border-2 border-b-4 active:border-b-2"
+                                loading={loadings[2]}
+                                onClick={() => enterLoading(2)}
+                                >
                                 Log in
                                 </Button>             
                         </Form.Item>
