@@ -6,7 +6,7 @@ export default function Footer() {
         <>
         <div className="justify-center absolute bottom-0 mb-20">
         <span className={caveat.className}>
-        <h2 className="text-5xl text-white"> Dev Abi </h2>
+        <h2 className="text-5xl text-white"> Future of Inventory Management System </h2>
         </span>
         </div>
         </>
