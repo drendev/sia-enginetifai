@@ -2,7 +2,7 @@ import Image from "next/image";
 
 export function Header() {
     return(
-    <div className="flex flex-col top-0 fixed w-full p-6 shadow-lg bg-gray-primary">
+    <div className="flex flex-col top-0 absolute w-full p-6 shadow-lg bg-gray-primary z-30">
         <a>
         <div className="flex flex-row ml-4">
         <Image src="/logo.png" width={60} height={60} alt=""/>

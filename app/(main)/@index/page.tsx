@@ -8,10 +8,10 @@ import Footer from "./footer";
 export default function Index() {
     return (
         <>
-        <div className="min-h-full min-w-full flex flex-col bg-waves bg-no-repeat bg-cover">
+        <div className="min-h-full w-full flex flex-col bg-waves bg-no-repeat bg-cover">
         <main className="flex-1 flex flex-col items-center justify-center">
         <Header />
-        <div className="flex max-md:flex-wrap-reverse max-md:m-5 max-md:mt-5 max-md:gap-10 items-center justify-center m-8 relative gap-10">
+        <div className="flex max-md:flex-wrap-reverse max-md:m-5 max-md:mt-10 max-md:gap-10 items-center justify-center relative lg:gap-10">
         <Services />
         <Signin />
         </div>
