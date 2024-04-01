@@ -10,11 +10,6 @@ export default function Footer() {
         <h2 className="text-5xl text-white"> Future of Inventory Management System </h2>
         </span>
         </div>
-        <div className="absolute md:hidden">
-        <span className={caveat.className}>
-        <h2 className="text-2xl mt-48 text-white"> Future of Inventory Management System </h2>
-        </span>
-        </div>
         </>
     )
 }
