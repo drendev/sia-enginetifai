@@ -1,5 +1,4 @@
 import { Caveat } from "next/font/google";
-import Image from "next/image";
 
 const caveat = Caveat({ subsets: ["latin"] });
 export default function Footer() {
