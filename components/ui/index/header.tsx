@@ -1,7 +1,11 @@
 import Image from "next/image";
+import { Caveat } from "next/font/google";
+
+const caveat = Caveat({ subsets: ["latin"] });
 
 export function Header() {
     return(
+    <>
     <div className="flex flex-col top-0 absolute w-full p-2 md:p-6 shadow-lg bg-gray-primary z-30">
         <a>
         <div className="flex flex-row ml-4">
@@ -10,5 +14,11 @@ export function Header() {
         </div>
         </a>
     </div>
+    <div className="mt-20 sm:hidden">
+        <span className={caveat.className}>
+        <h2 className="text-2xl text-red-primary text-center"> Future of Inventory Management System </h2>
+        </span>
+    </div>
+    </>
     )
 }
