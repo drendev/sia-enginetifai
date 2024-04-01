@@ -25,7 +25,7 @@ const Signin: React.FC = () =>  {
       };
     return (
         <>
-            <div className="flex flex-col relative justify-center mt-20 lg:mt-0 md:mt-0 lg:ml-40 h-69 bg-white rounded-2xl border-solid border-opacity-75 border-1 border-[#ababab] border-r-6 border-b-6 rounded-r-2xl rounded-b-xl">
+            <div className="flex flex-col relative pa justify-center mt-20 lg:mt-0 md:mt-0 lg:ml-40 h-69 bg-white rounded-2xl border-solid border-opacity-75 border-1 border-[#ababab] border-r-6 border-b-6 rounded-r-2xl rounded-b-xl">
                 <div className="flex flex-col w-80 lg:w-80 lg:h-80 p-5 m-auto text-center">
                 <ConfigProvider
                         theme={{
