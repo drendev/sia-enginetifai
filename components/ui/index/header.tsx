@@ -6,7 +6,7 @@ const caveat = Caveat({ subsets: ["latin"] });
 export function Header() {
     return(
     <>
-    <div className="flex flex-col top-0 absolute w-full p-2 md:p-6 shadow-lg bg-gray-primary">
+    <div className="top-0 fixed block w-full p-2 md:p-6 shadow-lg bg-gray-primary z-10">
         <a>
         <div className="flex flex-row ml-4">
         <Image src="/logo.png" width={60} height={60} alt=""/>
