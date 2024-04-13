@@ -30,7 +30,7 @@ export default function Maintenance() {
           <span className="text-lg font-bold text-gray-500 ml-1">Coming Soon.</span>
         </p>
       </div>
-      <div className="absolute bottom-0 mt-8">
+      <div className="absolute bottom-0 mt-7">
         <Image src={"/wave.svg"} width={2990} height={1068} alt="" />
       </div>
     </div>
