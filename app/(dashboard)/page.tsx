@@ -1,8 +1,8 @@
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
-import AdminDashboard from './@admin/page';
-import EmployeeDashboard from './@employee/page';
-import DeliveryDashboard from './@delivery/page';
+import AdminDashboard from './@admin/admin';
+import EmployeeDashboard from './@employee/employee';
+import DeliveryDashboard from './@delivery/delivery';
 
 export default async function Dashboard() {
     const session = await getServerSession(authOptions);
