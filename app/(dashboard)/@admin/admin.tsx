@@ -20,11 +20,9 @@ const AdminDashboard: React.FC = () => {
         <>
 		<Space direction="vertical" style={{ width: '100%' }} size={20}>
       <Skeleton loading={loading} active>
-        <h4 style={{ marginBottom: 16 }}>Ant Design, a design language</h4>
+        <h4 style={{ marginBottom: 16 }}>Masipag na member</h4>
         <p>
-          We supply a series of design principles, practical patterns and high quality design
-          resources (Sketch and Axure), to help people create their product prototypes beautifully
-          and efficiently.
+          Deserve ng ice coffee sa MCDO :D 
         </p>
       </Skeleton>
     </Space>
