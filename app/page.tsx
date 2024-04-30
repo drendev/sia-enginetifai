@@ -1,4 +1,4 @@
-import Index from "./(main)/@index/page";
+import Index from "./(main)/@index";
 import { authOptions } from "@/lib/auth";
 import { getServerSession } from "next-auth";
 import Dashboard from "./(dashboard)/layout";
