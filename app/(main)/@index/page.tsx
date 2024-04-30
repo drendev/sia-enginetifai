@@ -1,11 +1,26 @@
 'use client';
     
 import { Header } from "@/components/ui/index/header";
-import Signin from "./signin";
-import Services from "./services";
-import Footer from "./footer";
+import Signin from "@/components/auth/SignIn";
+import Services from "@/components/ui/index/services";
+import Footer from "@/components/ui/index/footer";
+import { useEffect, useState } from "react";
+import Loading from "@/app/loading";
 
 export default function Index() {
+    const [ready, setReady] = useState(false);
+
+    useEffect(() => {
+      const timer = setTimeout(() => {
+        setReady(true); 
+      }, 2000);
+
+      return () => clearTimeout(timer);
+    }, []); 
+
+    if (!ready) {
+      return <div><Loading /></div> 
+    }
     return (
         <>
         <main className="min-h-full w-full flex flex-col bg-waves bg-no-repeat bg-cover">
