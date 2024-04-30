@@ -1,7 +1,7 @@
 import Index from "./(main)/@index/page";
 import { authOptions } from "@/lib/auth";
 import { getServerSession } from "next-auth";
-import Dashboard from "./(dashboard)/page";
+import Dashboard from "./(dashboard)/layout";
 
 export default async function Home() {
     const session = await getServerSession(authOptions);
