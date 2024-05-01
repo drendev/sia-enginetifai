@@ -32,7 +32,6 @@ const AdminDashboard: React.FC = () => {
 		onClick={(e) => {
 			e.preventDefault();
 			signOut();
-			router.push("/");
 		}}
 		>
 						Sign out

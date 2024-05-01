@@ -1,8 +1,9 @@
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
-import AdminDashboard from './@admin/admin';
-import EmployeeDashboard from './@employee/employee';
-import DeliveryDashboard from './@delivery/delivery';
+import AdminDashboard from '../../components/dashboard/main/admin';
+import EmployeeDashboard from '../../components/dashboard/main/employee';
+import DeliveryDashboard from '../../components/dashboard/main/delivery';
+import Link from 'next/link';
 
 export default async function Dashboard() {
     const session = await getServerSession(authOptions);
@@ -12,6 +13,10 @@ export default async function Dashboard() {
          <>
          {role === 'admin' ? <AdminDashboard /> : role === 'employee' ? <EmployeeDashboard /> : <DeliveryDashboard />}
          <h2>For Testing Only</h2>
+         <Link
+         href={'/create-user'}>
+            Create User
+         </Link>
          </>
         )
 }

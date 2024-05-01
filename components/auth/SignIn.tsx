@@ -19,7 +19,7 @@ import { signIn } from 'next-auth/react';
   const SignInForm = () => {
     const router = useRouter();
     const [loadings, setLoadings] = useState<boolean[]>([]);  
-
+    
     const enterLoading = (index: number) => {
       setLoadings((prevLoadings) => {
         const newLoadings = [...prevLoadings];
@@ -53,11 +53,13 @@ import { signIn } from 'next-auth/react';
       redirect: false,
     })
     if(signInData?.error) {
+      setLoadings([false]);
       openNotificationWithIcon('error');
     } else {
+      setLoadings([true]);
       router.refresh();
     }
-  };  
+  };
 
   return (
     <>
