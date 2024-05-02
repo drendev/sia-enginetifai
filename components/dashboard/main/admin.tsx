@@ -20,9 +20,9 @@ const AdminDashboard: React.FC = () => {
         <>
 		<Space direction="vertical" style={{ width: '100%' }} size={20}>
       <Skeleton loading={loading} active>
-        <h4 style={{ marginBottom: 16 }}>Masipag na member</h4>
+        <h4 style={{ marginBottom: 16 }}>Skeleton Loading Testing </h4>
         <p>
-          Deserve ng ice coffee sa MCDO :D 
+          Data Loading Testing
         </p>
       </Skeleton>
     </Space>

@@ -24,7 +24,11 @@ const config: Config = {
       borderWidth: {
         '1': '1px',
         '6': '6px',
+      },
+      fontSize: {
+        '1sm': '0.7rem'
       }
+
     },
   },
   plugins: [],

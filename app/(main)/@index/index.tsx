@@ -5,7 +5,7 @@ import Signin from "@/components/auth/SignIn";
 import Services from "@/components/ui/index/services";
 import Footer from "@/components/ui/index/footer";
 import { useEffect, useState } from "react";
-import Loading from "@/app/loading";
+import Loading from "@/components/ui/index/loading";
 
 export default function Index() {
     const [ready, setReady] = useState(false);
