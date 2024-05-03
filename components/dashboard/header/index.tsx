@@ -1,5 +1,6 @@
 import Image from "next/image";
 import { CameraOutlined, FundOutlined, ProductFilled, SnippetsOutlined, SolutionOutlined, TruckOutlined } from "@ant-design/icons";
+import UserHeader from "./userheader";
 
 const DashboardHeader = () => {
     return (
@@ -34,10 +35,7 @@ const DashboardHeader = () => {
                 <span className="text-xs text-center hidden group-hover:block text-red-primary">Employees</span>
                 </div>
             </div>
-            <div className="flex px-3 py-3">
-                <span className="pr-4 text-sm"> Dark Mode Switch </span>
-                <Image className="rounded-xl" src="/example1.png" width={50} height={24} alt=""/>
-            </div>
+            <UserHeader />
         </header>
     )
 }
