@@ -46,7 +46,8 @@ export const authOptions: NextAuthOptions = {
                 id: `${existingUser.id}`,
                 username: existingUser.username,
                 email: existingUser.email,
-                role: existingUser.role
+                role: existingUser.role,
+                picture: existingUser.picture
             }
           }
         })
@@ -54,25 +55,31 @@ export const authOptions: NextAuthOptions = {
 
       callbacks: {
         async jwt ({token, user }){
-            if(user){
+        const latestUser = await db.user.findUnique({
+            where: { id: Number(token.sub) },
+            });
+            
+            if(latestUser){
                 return {
                     ...token,
-                    username: user.username,
-                    role: user.role
+                    username: latestUser.username,
+                    role: latestUser.role,
+                    picture: latestUser.picture
                 }
             }
             return token
         },
         
-        async session ({session, token}){
+        async session ({ session, token }) {
             return {
-                ...session, 
+                ...session,
                 user: {
                     ...session.user,
                     username: token.username,
-                    role: token.role
+                    role: token.role,
+                    picture: token.picture
                 },
-            }
+            };
         },
       }
 }

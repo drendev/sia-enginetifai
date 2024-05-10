@@ -2,7 +2,6 @@
 
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import Image from "next/image";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { PoweroffOutlined } from "@ant-design/icons";
@@ -11,6 +10,8 @@ import { signOut } from "next-auth/react";
 export default function UserHeader() {
     const { data: session } =  useSession();
     const router = useRouter();
+
+    const image = session?.user?.picture
 
     const [dropdownOpen, setDropdownOpen] = useState(false);
     const trigger = useRef<any>(null);
@@ -49,7 +50,7 @@ export default function UserHeader() {
             href="#"
             >
                 <span className="hidden text-right lg:block">
-                <span className="block text-sm font-medium text-black dark:text-white">
+                <span className="block text-sm font-medium text-black">
                     {session?.user?.username}
                 </span>
                 <span className="block text-xs">
@@ -58,13 +59,12 @@ export default function UserHeader() {
                 </span>
 
                 <span className="h-10 w-10 rounded-full border-solid overflow-hidden border-red-primary border-1">
-                <Image
-                    width={112}
-                    height={112}
-                    src={"/tracking.svg"}
+                <img
+                    className="inherit"
+                    src={`${image}`}
                     style={{
-                    width: "auto",
-                    height: "auto",
+                    width: "100%",
+                    height: "100%",
                     }}
                     alt="User Photo"
                 />
