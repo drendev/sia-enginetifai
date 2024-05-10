@@ -96,8 +96,8 @@ export default function UserHeader() {
         >
             <ul className="flex flex-col gap-5 border-b border-stroke px-6 py-6 dark:border-strokedark">
                 <li>
-                    <Link className="flex items-center gap-3 text-sm font-medium duration-300 ease-in-out hover:text-red-primary lg:text-sm" href="/profile">
-                        Edit Profile
+                    <Link className="flex items-center gap-3 text-sm font-medium duration-300 ease-in-out hover:text-red-primary lg:text-sm" href="/upload-picture">
+                        Change Profile Picture
                     </Link>
                 </li>
                 <li>
