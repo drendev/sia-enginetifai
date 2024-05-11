@@ -18,7 +18,9 @@ export default function Home() {
 
     formData.append("file", file);
     formData.append('upload_preset', 'last-try');
+    formData.append('transformation', 'w_110,h_110');
     formData.append('api_key', '778527333889189');
+    
     
 
     const results = await fetch('https://api.cloudinary.com/v1_1/hnqdnvduj/image/upload', {
