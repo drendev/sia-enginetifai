@@ -22,8 +22,6 @@ export default function Home() {
     formData.append('upload_preset', `${uploadPreset}`);
     formData.append('api_key', `${apiKey}`);
     
-    
-
     const results = await fetch('https://api.cloudinary.com/v1_1/hnqdnvduj/image/upload', {
       method: 'POST',
       body: formData
