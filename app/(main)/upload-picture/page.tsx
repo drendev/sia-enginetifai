@@ -8,7 +8,9 @@ export default function Home() {
   const [file, setFile] = useState<File | undefined>();
 
   const user = session?.user?.username;
-  
+  const uploadPreset = process.env.NEXT_PUBLIC_UPLOAD_PRESET;
+  const apiKey = process.env.NEXT_PUBLIC_CLOUDINARY_API;
+
   async function handleOnSubmit(e: React.SyntheticEvent) {
     e.preventDefault();
 
@@ -17,9 +19,8 @@ export default function Home() {
     const formData = new FormData();
 
     formData.append("file", file);
-    formData.append('upload_preset', 'last-try');
-    formData.append('transformation', 'w_110,h_110');
-    formData.append('api_key', '778527333889189');
+    formData.append('upload_preset', `${uploadPreset}`);
+    formData.append('api_key', `${apiKey}`);
     
     
 
