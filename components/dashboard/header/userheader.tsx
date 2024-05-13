@@ -46,7 +46,7 @@ export default function UserHeader() {
         <Link
             ref={trigger}
             onClick={() => setDropdownOpen(!dropdownOpen)}
-            className="flex items-center gap-4"
+            className="flex items-center gap-4 hover:opacity-60 active:opacity-85"
             href="#"
             >
                 <span className="hidden text-right lg:block">
@@ -96,29 +96,29 @@ export default function UserHeader() {
         >
             <ul className="flex flex-col gap-5 border-b border-stroke px-6 py-6 dark:border-strokedark">
                 <li>
-                    <Link className="flex items-center gap-3 text-sm font-medium duration-300 ease-in-out hover:text-red-primary lg:text-sm" href="/upload-picture">
+                    <Link className="flex items-center gap-3 text-sm font-medium duration-300 ease-in-out text-red-primary hover:opacity-60 active:opacity-90 lg:text-sm" href="/upload-picture">
                         Change Profile Picture
                     </Link>
                 </li>
                 <li>
                 <Link
                     href="#"
-                    className="flex items-center gap-3 text-sm font-medium duration-300 ease-in-out hover:text-red-primary lg:text-sm"
+                    className="flex items-center gap-3 text-sm font-medium duration-300 ease-in-out text-red-primary hover:opacity-60 active:opacity-90 lg:text-sm"
                     >
                     Settings
                 </Link>
                 </li>
                 <li>
                 <Link
-                    href="/settings"
-                    className="flex items-center gap-3 text-sm font-medium duration-300 ease-in-out hover:text-red-primary lg:text-sm"
+                    href="#"
+                    className="flex items-center gap-3 text-sm font-medium duration-300 ease-in-out text-red-primary hover:opacity-60 active:opacity-90 lg:text-sm"
                 >
                     Help
                 </Link>
                 </li>
             </ul>
             <button 
-            className="flex items-center gap-3.5 px-6 py-4 text-sm font-medium duration-300 ease-in-out hover:text-red-primary lg:text-sm"
+            className="flex items-center gap-3.5 px-6 py-4 text-sm font-medium duration-300 ease-in-out text-red-primary hover:opacity-60 active:opacity-90 lg:text-sm"
             onClick={(e) => {
                 e.preventDefault();
                 signOut();
