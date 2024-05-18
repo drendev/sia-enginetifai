@@ -3,13 +3,11 @@
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { useSession } from "next-auth/react";
-import { useRouter } from "next/navigation";
 import { PoweroffOutlined } from "@ant-design/icons";
 import { signOut } from "next-auth/react";
 
 export default function UserHeader() {
     const { data: session } =  useSession();
-    const router = useRouter();
 
     const image = session?.user?.picture
 
