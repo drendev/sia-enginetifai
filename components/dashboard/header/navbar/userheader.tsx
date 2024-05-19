@@ -41,6 +41,7 @@ export default function UserHeader() {
 
     return(
         <div className="flex mr-5 p-1">
+        <div className="flex justify-center self-center mt-1">
         <Link
             ref={trigger}
             onClick={() => setDropdownOpen(!dropdownOpen)}
@@ -83,7 +84,7 @@ export default function UserHeader() {
           />
         </svg>
         </Link>
-
+        </div>
         <div
             ref={dropdown}
             onFocus={() => setDropdownOpen(true)}
