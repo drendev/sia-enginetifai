@@ -42,11 +42,10 @@ export default function UserHeader() {
     return(
         <div className="flex mr-5 p-1">
         <div className="flex justify-center self-center mt-1">
-        <Link
+        <button
             ref={trigger}
             onClick={() => setDropdownOpen(!dropdownOpen)}
             className="flex items-center gap-4 hover:opacity-60 active:opacity-85"
-            href="#"
             >
                 <span className="hidden text-right lg:block">
                 <span className="block text-sm font-medium text-black">
@@ -57,7 +56,7 @@ export default function UserHeader() {
                 </span>
                 </span>
 
-                <span className="h-10 w-10 rounded-full border-solid overflow-hidden border-red-primary border-1">
+                <span className="h-10 w-10  rounded-full border-solid overflow-hidden border-red-primary border-1">
                 <img
                     className="inherit"
                     src={`${image}`}
@@ -83,7 +82,7 @@ export default function UserHeader() {
             fill=""
           />
         </svg>
-        </Link>
+        </button>
         </div>
         <div
             ref={dropdown}
