@@ -26,7 +26,7 @@ export const NavIcon = ({ children }: any) => {
 export const NavLabel = ({ children }: any) => {
     return (
         <>
-            <span className={cn("text-xs text-nowrap sm:hidden group-hover:block text-red-primary")}>
+            <span className={cn("text-xs text-nowrap hidden group-hover:block text-red-primary")}>
                 {children}
             </span>
         </>
