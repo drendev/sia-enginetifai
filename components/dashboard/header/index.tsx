@@ -54,7 +54,7 @@ const DashboardHeader = () => {
               )}
             />
         </header>
-        <footer className="flex bottom-0 fixed md:hidden justify-evenly w-full mb-1">
+        <footer className="flex bottom-0 fixed md:hidden justify-evenly w-full mb-1 shadow-top-md">
               <NavAdmin />
         </footer>
       </>
