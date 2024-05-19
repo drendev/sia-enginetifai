@@ -45,7 +45,7 @@ export default function UserHeader() {
         <button
             ref={trigger}
             onClick={() => setDropdownOpen(!dropdownOpen)}
-            className="flex items-center gap-4 hover:opacity-60 active:opacity-85"
+            className="flex items-center gap-2 md:gap-4 hover:opacity-60 active:opacity-85"
             >
                 <span className="hidden text-right lg:block">
                 <span className="block text-sm font-medium text-black">
@@ -56,7 +56,7 @@ export default function UserHeader() {
                 </span>
                 </span>
 
-                <span className="h-10 w-10  rounded-full border-solid overflow-hidden border-red-primary border-1">
+                <span className="md:h-10 md:w-10 h-8 w-8 rounded-full border-solid overflow-hidden border-red-primary border-1">
                 <img
                     className="inherit"
                     src={`${image}`}
@@ -68,7 +68,7 @@ export default function UserHeader() {
                 />
                 </span>
                 <svg
-          className="hidden fill-current sm:block"
+          className="fill-current"
           width="12"
           height="8"
           viewBox="0 0 12 8"

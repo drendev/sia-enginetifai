@@ -33,7 +33,7 @@ const DashboardHeader = () => {
 
     return (
       <>
-        <header className="stick-0 top-0 flex justify-between w-full shadow-md h-14">
+        <header className="stick-0 top-0 flex justify-between w-full shadow-md md:h-14 h-12">
             <span ref={ref1}>
               <NavLogo />
             </span>
