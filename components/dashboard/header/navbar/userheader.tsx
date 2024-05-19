@@ -40,7 +40,7 @@ export default function UserHeader() {
     });
 
     return(
-        <div className="flex mr-5 p-1">
+        <div className="flex mr-2 md:mr-5 p-1">
         <div className="flex justify-center self-center mt-1">
         <button
             ref={trigger}
