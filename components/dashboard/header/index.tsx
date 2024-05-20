@@ -11,7 +11,7 @@ export default async function DashboardHeader ({ children }: any) {
 
     return (
       <>
-        <header className="stick-0 top-0 flex justify-between w-full shadow-md md:h-14 h-12">
+        <header className="stick-0 top-0 flex justify-between w-full shadow-md">
           <NavLogo />
         <div className="justify-evenly pt-1 hidden md:flex md:sticky">           
           <NavAdmin />

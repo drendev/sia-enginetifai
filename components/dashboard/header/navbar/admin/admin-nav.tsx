@@ -1,55 +1,40 @@
-import { NavButton, NavIcon, NavLabel } from "../nav-utils";
-import { ProductFilled, FundOutlined, CameraOutlined, TruckOutlined, SolutionOutlined } from "@ant-design/icons";
+"use client"
 
+import { NavButton, NavIcon, NavLabel } from "../nav-utils";
+import { ProductFilled, FundOutlined, CameraOutlined, TruckOutlined, 
+ProductOutlined, FundFilled, CameraFilled, TruckFilled, ProfileOutlined, ProfileFilled } from "@ant-design/icons";
+import { usePathname } from "next/navigation";
+
+const NavUtils = [
+    {key: 0, label: 'Dashboard', path: '/', icon: <ProductOutlined />, activeIcon: <ProductFilled />},
+    {key: 1, label: 'Data Visualization', path: '/datavisualization', icon: <FundOutlined />, activeIcon: <FundFilled />},
+    {key: 2, label: 'Find Engine', path: '/find-engine', icon: <CameraOutlined />, activeIcon: <CameraFilled />},
+    {key: 3, label: 'Delivery Tracking', path: '/delivery-tracking', icon: <TruckOutlined />, activeIcon: <TruckFilled />},
+    {key: 4, label: 'Employees', path: '/employees', icon: <ProfileOutlined />, activeIcon: <ProfileFilled />},
+]
 
 export const NavAdmin = () => {
+    const pathName = usePathname();
     return(
         <>
-            <NavButton active>
-                <NavIcon>
-                    <ProductFilled />
-                </NavIcon>
-                <NavLabel>
-                    Dashboard
-                </NavLabel>
-            </NavButton>
+           {NavUtils.map((labels) => { 
+            const isActive = pathName === labels.path || pathName.startsWith(labels.path.length > 1 ? labels.path : labels.path + '/');
 
-            <NavButton>
+            return(
+                <NavButton
+                key={labels.key}
+                path={labels.path}
+                active={isActive}
+                >
                 <NavIcon>
-                    <FundOutlined />
+                    {isActive ? labels.activeIcon : labels.icon}
                 </NavIcon>
                 <NavLabel>
-                    Data Visualization
+                    {labels.label}
                 </NavLabel>
-            </NavButton>
-
-            <NavButton>
-                <NavIcon>
-                    <CameraOutlined />
-                </NavIcon>
-                <NavLabel>
-                    Find Engine
-                </NavLabel>
-            </NavButton>
-
-            <NavButton>
-                <NavIcon>
-                    <TruckOutlined />
-                </NavIcon>
-                <NavLabel>
-                    Delivery Tracking
-                </NavLabel>
-            </NavButton>
-
-            <NavButton>
-                <NavIcon>
-                    <SolutionOutlined/>
-                </NavIcon>
-                <NavLabel>
-                    Employees
-                </NavLabel>
-            </NavButton>
+                </NavButton>
+            )}
+           )}
         </>
-
     )
 }

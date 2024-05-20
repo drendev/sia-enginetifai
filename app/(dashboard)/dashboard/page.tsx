@@ -1,8 +1,8 @@
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
-import AdminDashboard from '../../components/dashboard/main/admin';
-import EmployeeDashboard from '../../components/dashboard/main/employee';
-import DeliveryDashboard from '../../components/dashboard/main/delivery';
+import AdminDashboard from '../../../components/dashboard/main/admin';
+import EmployeeDashboard from '../../../components/dashboard/main/employee';
+import DeliveryDashboard from '../../../components/dashboard/main/delivery';
 import Link from 'next/link';
 import DashboardHeader from '@/components/dashboard/header';
 
@@ -12,7 +12,7 @@ export default async function Dashboard() {
     
     return (
          <>
-         <main className='w-full max-w-screen-xl min-w-full'>
+         <main className='w-full max-w-screen-xl min-w-full h-full'>
          <DashboardHeader>
          <div className='m-5'>
          {role === 'admin' ? <AdminDashboard /> : role === 'employee' ? <EmployeeDashboard /> : <DeliveryDashboard />}
