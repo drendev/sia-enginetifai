@@ -13,7 +13,7 @@ export default async function Dashboard() {
     return (
          <>
          <main className='w-full max-w-screen-xl min-w-full'>
-         <DashboardHeader />
+         <DashboardHeader>
          <div className='m-5'>
          {role === 'admin' ? <AdminDashboard /> : role === 'employee' ? <EmployeeDashboard /> : <DeliveryDashboard />}
          <h2>For Testing Only</h2>
@@ -22,6 +22,7 @@ export default async function Dashboard() {
             Create User
          </Link>
          </div>
+         </DashboardHeader>
          </main>
          </>
         )
