@@ -8,8 +8,8 @@ import { usePathname } from "next/navigation";
 const NavUtils = [
     {key: 0, label: 'Dashboard', path: '/', icon: <ProductOutlined />, activeIcon: <ProductFilled />},
     {key: 1, label: 'Data Visualization', path: '/datavisualization', icon: <FundOutlined />, activeIcon: <FundFilled />},
-    {key: 2, label: 'Find Engine', path: '/find-engine', icon: <CameraOutlined />, activeIcon: <CameraFilled />},
-    {key: 3, label: 'Delivery Tracking', path: '/delivery-tracking', icon: <TruckOutlined />, activeIcon: <TruckFilled />},
+    {key: 2, label: 'Find Engine', path: '/findengine', icon: <CameraOutlined />, activeIcon: <CameraFilled />},
+    {key: 3, label: 'Delivery Tracking', path: '/deliverytracking', icon: <TruckOutlined />, activeIcon: <TruckFilled />},
     {key: 4, label: 'Employees', path: '/employees', icon: <ProfileOutlined />, activeIcon: <ProfileFilled />},
 ]
 

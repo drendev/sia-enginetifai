@@ -5,21 +5,20 @@ import { NavAdmin } from "./navbar/admin/admin-nav";
 import { NavLogo } from "./navbar/nav-logo";
 
 
-export default async function DashboardHeader ({ children }: any) {
+export default async function DashboardHeader () {
     const session = await getServerSession(authOptions);
     const role = session?.user.role;
 
     return (
       <>
-        <header className="stick-0 top-0 flex justify-between w-full shadow-md">
-          <NavLogo />
-        <div className="justify-evenly pt-1 hidden md:flex md:sticky">           
+        <header className="top-0 flex fixed justify-between w-full shadow-md bg-white z-[1]">
+          <NavLogo /> 
+        <div className="justify-evenly pt-1 hidden md:flex md:relative">           
           <NavAdmin />
         </div>
           <UserHeader />
         </header>
-        {children}
-        <footer className="flex bottom-0 fixed md:hidden justify-evenly w-full mb-1 shadow-top-md">
+        <footer className="flex bottom-0 fixed md:hidden justify-evenly w-full mb-1 bg-white shadow-top-md">
           <NavAdmin />
         </footer>
       </>
