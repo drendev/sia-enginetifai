@@ -6,6 +6,7 @@ import { authOptions } from "@/lib/auth";
 import { getServerSession } from "next-auth";
 import DashboardHeader from "@/components/dashboard/header";
 import Index from "./(main)/@index";
+import { redirect } from "next/navigation";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -19,12 +20,11 @@ export default async function RootLayout({
   children: React.ReactNode;
 }) {
   const session = await getServerSession(authOptions);
-  
   return (
     <html lang="en">
       <body className={inter.className}>
         <Provider>
-        {session ? <DashboardHeader /> : <Index />}
+        {session && <DashboardHeader />}
         {children}
         </Provider>
         </body>

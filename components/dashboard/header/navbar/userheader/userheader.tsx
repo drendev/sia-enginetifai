@@ -2,18 +2,16 @@
 
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import { useSession } from "next-auth/react";
 import { PoweroffOutlined } from "@ant-design/icons";
 import { signOut } from "next-auth/react";
+import { useRouter } from 'next/navigation';
 
 export default function UserHeader({children}: any) {
-    const { data: session } =  useSession();
-
-    
-
     const [dropdownOpen, setDropdownOpen] = useState(false);
     const trigger = useRef<any>(null);
     const dropdown = useRef<any>(null);
+
+    const router = useRouter();
 
     useEffect(() => {
         const clickHandler = ({ target }: MouseEvent) => {
@@ -86,6 +84,7 @@ export default function UserHeader({children}: any) {
                 onClick={(e) => {
                     e.preventDefault();
                     signOut();
+                    router.push("/");
                 }}>
                     <span>
                     <PoweroffOutlined />
