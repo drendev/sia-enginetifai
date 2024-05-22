@@ -8,7 +8,8 @@ type Props = {
 
 const Dashboard = async ({ children }: Props) => {
     const session = await getServerSession(authOptions);
-    if(!session) redirect('/')
+    const admin = session?.user?.role === 'admin';
+    if(!session || !admin ) redirect('/')
     return(
         <>
             {children}
