@@ -12,7 +12,7 @@ export default async function DashboardHeader () {
 
     return (
       <>
-        <header className="top-0 flex fixed justify-between w-full shadow-md bg-white z-[1]">
+        <header className="top-0 flex fixed justify-between w-full shadow-md bg-white z-[0]">
           <NavLogo /> 
         <div className="justify-evenly pt-1 hidden md:flex md:relative">           
           <NavAdmin />
