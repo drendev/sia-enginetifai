@@ -14,7 +14,7 @@ const Dashboard = async ({ children }: Props) => {
         
     return(
         <>
-            {children}
+        {children}
         </>
     )
 }
