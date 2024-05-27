@@ -26,7 +26,9 @@ export const NavAdmin = () => {
                 path={labels.path}
                 active={isActive}
                 >
-                <NavIcon>
+                <NavIcon
+                active={isActive}
+                >
                     {isActive ? labels.activeIcon : labels.icon}
                 </NavIcon>
                 <NavLabel>

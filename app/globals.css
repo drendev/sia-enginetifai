@@ -144,8 +144,8 @@ body,
   --stars-color: #fff;
   --clouds-color: #F3FDFF;
   --back-clouds-color: #AACADF;
-  --transition: .5s cubic-bezier(0, -0.02, 0.4, 1.25);
-  --circle-transition: .3s cubic-bezier(0, -0.02, 0.35, 1.17);
+  --transition: 1s cubic-bezier(0, -0.02, 0.4, 1.25);
+  --circle-transition: 1s cubic-bezier(0, -0.02, 0.35, 1.17);
 }
 
 .theme-switch, .theme-switch *, .theme-switch *::before, .theme-switch *::after {
@@ -325,4 +325,19 @@ body,
   -webkit-transform: translateY(-50%);
   -ms-transform: translateY(-50%);
   transform: translateY(-50%);
+}
+
+.animate-spin-once {
+  animation: spin-once 1s ease-in-out;
+  animation-duration: 1s;
+  animation-timing-function: ease-in-out;
+  animation-delay: 0s;
+  animation-iteration-count: 1;
+  animation-direction: normal;
+  animation-fill-mode: none;
+  animation-play-state: running;
+  animation-name: spin-once;
+  animation-timeline: auto;
+  animation-range-start: normal;
+  animation-range-end: normal;
 }

@@ -31,6 +31,21 @@ const config: Config = {
       },
       boxShadow: {
         'top-md': '0 -4px 6px -1px rgba(0, 0, 0, 0.1), 0 -2px 4px -1px rgba(0, 0, 0, 0.06)'
+      },
+      animation: {
+        'waving-hand': 'wave 3s linear 1',
+      },
+      keyframes: {
+        wave: {
+          '0%': { transform: 'rotate(0.0deg)' },
+          '10%': { transform: 'rotate(34deg)' },
+          '20%': { transform: 'rotate(-18deg)' },
+          '30%': { transform: 'rotate(34deg)' },
+          '40%': { transform: 'rotate(-24deg)' },
+          '50%': { transform: 'rotate(30.0deg)' },
+          '60%': { transform: 'rotate(0.0deg)' },
+          '100%': { transform: 'rotate(0.0deg)' },
+        },
       }
 
     },
