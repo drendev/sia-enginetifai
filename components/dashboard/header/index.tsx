@@ -18,7 +18,7 @@ export default async function DashboardHeader () {
         </div>
           <Dropdown />
         </header>
-        <footer className="flex bottom-0 fixed md:hidden justify-evenly w-full mb-1 bg-white shadow-top-md">
+        <footer className="flex bottom-0 fixed md:hidden justify-evenly w-full pb-1 bg-white shadow-top-md dark:bg-slate-900">
           <NavAdmin />
         </footer>
       </>
