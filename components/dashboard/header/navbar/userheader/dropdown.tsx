@@ -9,10 +9,10 @@ export default async function Dropdown() {
     return(
         <UserHeader>
             <span className="hidden text-right lg:block">
-                <span className="block text-sm font-medium text-black">
+                <span className="block text-sm font-medium text-black dark:text-slate-300">
                     {session?.user?.username}
                 </span>
-                <span className="block text-xs">
+                <span className="block text-xs text-black dark:text-slate-300">
                     {session?.user?.role}
                 </span>
                 </span>

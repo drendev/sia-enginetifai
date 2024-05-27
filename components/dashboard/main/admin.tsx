@@ -5,7 +5,7 @@ export default async function AdminDashboard () {
   return(
     <>
       <div>
-        <h1>Testing Page Speed</h1>
+        <h1 className="text-black">Testing Page Speed</h1>  
         <Suspense fallback={<div>Loading...</div>}>
         <Image src="/maintenance.svg" alt="admin" width={500} height={500} />
         <Image src="/secured.svg" alt="admin" width={500} height={500} />

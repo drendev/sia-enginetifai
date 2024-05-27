@@ -5,6 +5,7 @@ import Provider from "@/components/Provider";
 import { authOptions } from "@/lib/auth";
 import { getServerSession } from "next-auth";
 import DashboardHeader from "@/components/dashboard/header";
+import { ThemeProvider } from "@/components/dashboard/header/navbar/darkmode/themeprovider";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -21,10 +22,17 @@ export default async function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
+      <ThemeProvider
+          attribute="class"
+          defaultTheme="dark"
+          enableSystem
+          disableTransitionOnChange
+        >
         <Provider>
         {session && <DashboardHeader />}
         {children}
         </Provider>
+        </ThemeProvider>
         </body>
     </html>
   );

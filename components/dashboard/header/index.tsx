@@ -1,6 +1,5 @@
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
-import UserHeader from "./navbar/userheader/userheader";
 import { NavAdmin } from "./navbar/admin/admin-nav";
 import { NavLogo } from "./navbar/nav-logo";
 import Dropdown from './navbar/userheader/dropdown';
@@ -12,7 +11,7 @@ export default async function DashboardHeader () {
 
     return (
       <>
-        <header className="top-0 flex fixed justify-between w-full shadow-md bg-white z-[0]">
+        <header className="top-0 flex fixed justify-between w-full shadow-md bg-white z-[0] dark:bg-slate-900">
           <NavLogo /> 
         <div className="justify-evenly pt-1 hidden md:flex md:relative">           
           <NavAdmin />
