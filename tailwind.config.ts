@@ -48,8 +48,8 @@ const config: Config = {
         },
       },
       gridRow: {
-        "span-16": 'span 16 / span 16',
-        "span-14": 'span 14 / span 14',
+        "span-16": 'span 17 / span 17',
+        "span-14": 'span 16 / span 16',
       }
     },
   },
