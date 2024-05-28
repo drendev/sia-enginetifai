@@ -46,8 +46,11 @@ const config: Config = {
           '60%': { transform: 'rotate(0.0deg)' },
           '100%': { transform: 'rotate(0.0deg)' },
         },
+      },
+      gridRow: {
+        "span-16": 'span 16 / span 16',
+        "span-14": 'span 14 / span 14',
       }
-
     },
   },
   plugins: [],
