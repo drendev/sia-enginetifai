@@ -1,6 +1,11 @@
 Front-end code for DKI Inventory System Management 
 
-### Steps
+### RUN:
+#### CMD:
+- npm install
+- npm run dev
+
+### Progress
 
 #### Landing Page
 - Page Routing
