@@ -11,4 +11,11 @@ Front-end code for DKI Inventory System Management
 - Deployed Database
 - Set-up Database (Tables, Columns, Data types, Security)
 - Optimization
-- Connection Set-up (Express, Node)
+- Prisma ORM
+#### Navbars
+- Server side implementation
+- Dropdown user and role server side
+- Active status
+- Dark Mode (local storage)
+- Few Animations
+- Mobile responsive
