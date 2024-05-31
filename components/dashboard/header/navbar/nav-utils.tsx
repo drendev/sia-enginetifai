@@ -18,9 +18,9 @@ export const NavButton = ({ children, active, path}: any) => {
 export const NavIcon = ({ children, active }: any) => {
     return (    
         <>
-        <span className={cn("text-red-primary text-2xl px-5", active && "animate-waving-icon")}>
-            {children}
-        </span>
+            <span className={cn("text-red-primary text-2xl px-5", active && "animate-waving-icon")}>
+                {children}
+            </span>
         </>
     )
 }
