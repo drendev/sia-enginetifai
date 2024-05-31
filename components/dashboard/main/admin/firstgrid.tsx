@@ -20,7 +20,11 @@ export function FirstGrid(){
                 Recent Engines
             </div>
         </div>
-        <div className="md:row-span-4 md:col-span-1 h-full bg-red-primary/5 rounded-lg">Delivery Transactions</div>
+        <div className="md:row-span-4 md:col-span-1 h-full bg-red-primary/5 rounded-lg">
+            <div className="bg-red-primary/20 h-[25.5rem] rounded-lg m-3">
+                Transactions
+            </div>
+        </div>
         </div>
         
         </>
