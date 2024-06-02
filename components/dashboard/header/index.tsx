@@ -1,13 +1,9 @@
-import { getServerSession } from 'next-auth';
-import { authOptions } from '@/lib/auth';
+
 import { NavAdmin } from "./navbar/admin/admin-nav";
 import { NavLogo } from "./navbar/nav-logo";
 import Dropdown from './navbar/userheader/dropdown';
 
-
 export default async function DashboardHeader () {
-    const session = await getServerSession(authOptions);
-    const role = session?.user.role;
 
     return (
       <>
