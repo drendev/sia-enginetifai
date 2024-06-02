@@ -1,9 +1,11 @@
 import { FirstGrid } from "./firstgrid";
 
-export default async function AdminDashboard () {
+function AdminDashboard () {
   return(
     <>
       <FirstGrid />
     </>
   )
 }
+
+export default AdminDashboard;
