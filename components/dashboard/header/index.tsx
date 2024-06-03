@@ -4,7 +4,6 @@ import { NavLogo } from "./navbar/nav-logo";
 import Dropdown from './navbar/userheader/dropdown';
 
 export default async function DashboardHeader () {
-
     return (
       <>
         <header className="top-0 flex fixed justify-between w-full shadow-md bg-white z-[0] dark:bg-slate-900">

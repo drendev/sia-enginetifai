@@ -15,6 +15,7 @@ const NavUtils = [
 
 export const NavAdmin = () => {
     const pathName = usePathname();
+
     return(
         <>
            {NavUtils.map((labels) => { 

@@ -32,7 +32,7 @@ export default function Home() {
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ 
+      body: JSON.stringify({
         picture: results.secure_url,
         username: user
       })

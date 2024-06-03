@@ -6,7 +6,7 @@ import { authOptions } from "@/lib/auth";
 import { getServerSession } from "next-auth";
 import DashboardHeader from "@/components/dashboard/header";
 import { ThemeProvider } from "@/components/dashboard/header/navbar/darkmode/themeprovider";
-
+import './nprogress.css';
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
@@ -29,7 +29,7 @@ export default async function RootLayout({
           disableTransitionOnChange
         >
         <Provider>
-        {session && <DashboardHeader />}
+        {session && <DashboardHeader/>}
         {children}
         </Provider>
         </ThemeProvider>
