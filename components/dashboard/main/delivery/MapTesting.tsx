@@ -213,7 +213,7 @@
     }, []);
 
     return (
-        <div className="flex h-[20rem] w-[30rem] p-4">
+        <div className="flex h-[20rem] md:w-[30rem] p-4 w-full">
         <div
         ref={mapContainer}
         style={{ width: "100%", height: "100%"}}
