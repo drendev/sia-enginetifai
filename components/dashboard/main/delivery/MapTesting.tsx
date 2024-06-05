@@ -27,7 +27,6 @@
         path: [],
         },
 
-        // Add more vessels as needed
     ];
 
     useEffect(() => {
@@ -44,22 +43,19 @@
             attributionControl: false,
         });
         
-        
-        // Add zoom controls
+
         map.addControl(new mapboxgl.NavigationControl(), "top-left");
 
         map.on("style.load", () => {
             map.loadImage(
-            "https://docs.mapbox.com/mapbox-gl-js/assets/cat.png",
+            "https://res.cloudinary.com/hnqdnvduj/image/upload/v1716195724/profile-pictures/llwdpvszpresxczvxp5b.jpg",
             (error, image) => {
                 if (error) throw error;
 
                 if (image) {
-                // Add custom image to the map
                 map.addImage("custom-marker", image);
 
                 vessels.forEach((vessel) => {
-                    // Add vessel point source and layer
                     map.addSource(`vessel-source-${vessel.id}`, {
                     type: "geojson",
                     data: {
@@ -70,16 +66,15 @@
 
                     map.addLayer({
                     id: `vessel-layer-${vessel.id}`,
-                    type: "symbol", // Change the layer type to "symbol"
+                    type: "symbol",
                     source: `vessel-source-${vessel.id}`,
                     layout: {
                         "icon-image": "custom-marker",
-                        "icon-size": 0.09, // Adjust the size of the custom image
-                        "icon-allow-overlap": true, // Allow overlapping symbols
+                        "icon-size": 0.3, 
+                        "icon-allow-overlap": true,
                     },
                     });
 
-                    // Add vessel line source and layer
                     map.addSource(`vessel-line-source-${vessel.id}`, {
                     type: "geojson",
                     data: {
@@ -99,7 +94,7 @@
                     });
                     
                     map.on('load', function () {
-                        // Add the 3D building layer.
+
                         map.addLayer({
                           id: '3d-buildings',
                           source: 'composite',
@@ -132,7 +127,6 @@
                         });
                       });
 
-                    // Initialize vessel path
                     vessel.path = [
                     {
                         type: "Feature",
@@ -182,7 +176,7 @@
                     `vessel-line-source-${vessel.id}`
                 );
                 if (lineSource && lineSource.type === "geojson") {
-                    // Update vessel path
+
                     vessel.path.push(newFeature);
 
                     const lineStringFeature: GeoJSON.Feature<
@@ -207,13 +201,12 @@
             }, 1000); // Update every 20 seconds
         });
 
-        // Clean up on unmount
         return () => map.remove();
         }
     }, []);
 
     return (
-        <div className="flex h-[20rem] md:w-[30rem] p-4 w-full">
+        <div className="flex h-[20rem] md:w-[30rem] p-4 w-full rounded-xl">
         <div
         ref={mapContainer}
         style={{ width: "100%", height: "100%"}}
