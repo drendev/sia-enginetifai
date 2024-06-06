@@ -18,7 +18,6 @@
 
     const MapComponent: React.FC = () => {
     const mapContainer = useRef<HTMLDivElement>(null);
-    const mapBoxAccessToken = process.env.MAPBOX_API;
     const vessels: Vessel[] = [
         {
         id: 1,
@@ -30,7 +29,7 @@
     ];
 
     useEffect(() => {
-        mapboxgl.accessToken = `${process.env.NEXT_PUBLIC_MAPBOX_API}`;
+        mapboxgl.accessToken = "pk.eyJ1IjoiZHJlbmRldiIsImEiOiJjbHgwa2t6YjIwMWNzMmtzYTBiZnIzNG53In0.frLf9qdvpp34baFqC_ObCQ";
 
         if (mapContainer.current) {
         const map = new mapboxgl.Map({
@@ -205,7 +204,7 @@
     }, []);
 
     return (
-        <div className="flex h-[20rem] md:w-[30rem] p-4 w-full rounded-xl">
+        <div className="flex h-[20rem] md:w-[30rem] p-4 w-full">
         <div
         ref={mapContainer}
         style={{ width: "100%", height: "100%"}}
