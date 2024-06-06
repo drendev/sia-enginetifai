@@ -33,7 +33,7 @@ model Engine {
   engineName  String   @unique
   engineType  String
   price       Float
-  picture     String
+  picture     String   @default("test")
   description String
   createAt    DateTime @default(now())
   updatedAt   DateTime @updatedAt
