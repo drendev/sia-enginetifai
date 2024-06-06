@@ -32,6 +32,7 @@ model Engine {
   userName    String
   engineName  String   @unique
   engineType  String
+  quantity    Int
   price       Float
   picture     String   @default("test")
   description String
