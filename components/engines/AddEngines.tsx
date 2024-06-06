@@ -66,41 +66,34 @@ const AddEngine = () => {
     autoComplete="off"
   >
     <Form.Item
-      label="Username"
-      name="username"
+      label="Engine Name"
+      name="engineName"
       rules={[{ required: true, message: 'Please input your username!' }]}
     >
       <Input />
     </Form.Item>
 
     <Form.Item
-      label="Role"
-      name="role"
+      label="Engine Type"
+      name="engineType"
       rules={[{ required: true, message: 'Please input your username!' }]}
     >
       <Input />
     </Form.Item>
     <Form.Item
-      label="Email"
-      name="email"
+      label="Price"
+      name="price"
       rules={[{ required: true, message: 'Please input your username!' }]}
     >
       <Input />
     </Form.Item>
 
     <Form.Item
-      label="Password"
-      name="password"
-      rules={[{ required: true, message: 'Please input your password!' }]}
+      label="Description"
+      name="description"
+      rules={[{ required: true, message: 'Please input your username!' }]}
     >
-      <Input.Password />
-    </Form.Item>
-    <Form.Item
-      label="Confirm Password"
-      name="confirmPassword"
-      rules={[{ required: true, message: 'Please input your password!' }]}
-    >
-      <Input.Password />
+      <Input />
     </Form.Item>
 
     <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
