@@ -1,40 +1,50 @@
-  import type { NextApiRequest, NextApiResponse } from 'next';
-  import { z } from 'zod';
+import { NextResponse } from 'next/server'
+import { db } from '@/lib/db';
+import { hash } from 'bcrypt';
+import { z } from 'zod';
 
-  // Define a schema 
-  const FormSchema = z.object({
-    engineId: z.string().min(1, 'Engine ID is required'),
-    deliveryDate: z.string().refine(date => !isNaN(Date.parse(date)), 'Invalid date format'),
-    deliveryAddress: z.string().min(1, 'Delivery address is required'),
-    quantity: z.number().min(1, 'Quantity must be at least 1'),
-  });
+// Ito yung nag hahandle ng errors sa pag add ng transaction sa database
+const transactionSchema = z
+  .object({
+    transactionUser: z.string().min(5, 'Username Max Limit.').max(30),
+    engineName: z.string().min(5, 'Engine Max Limit.').max(30),
+    totalPrice: z.number().min(1, 'Price is required').max(10000),
+    quantity: z.number().min(1, 'Quantity is required').max(100),
+    delivery: z.boolean(),
+    deliveryDate: z.date(),
+    description: z.string().min(5, 'Description is required').max(250),
+  })
 
-  type FormSchemaType = z.infer<typeof FormSchema>;
+export async function POST(req: Request) {
+    try {
+        const body = await req.json();
+        const {
+             transactionUser, 
+             engineName, 
+             totalPrice, 
+             quantity,
+             delivery,
+             deliveryDate } = transactionSchema.parse(body);
 
-  export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-    if (req.method === 'POST') {
-      try {
-        
-        const result = FormSchema.parse(req.body);
+        // check if engine is in use
 
-        
-        
-        console.log('New transaction:', result);
+        const newTransaction = await db.transaction.create({
+            data: {
+                transactionUser,
+                engineName,
+                quantity,
+                totalPrice,
+                delivery,
+                deliveryDate
+            }
+        });
 
-      
-        res.status(200).json({ message: 'Transaction added successfully' });
-      } catch (error) {
-        if (error instanceof z.ZodError) {
-        
-          res.status(400).json({ errors: error.errors });
-        } else {
-          
-          res.status(500).json({ message: 'Internal Server Error' });
-        }
-      }
-    } else {
-      
-      res.setHeader('Allow', ['POST']);
-      res.status(405).end(`Method ${req.method} Not Allowed`);
+        return NextResponse.json({
+            message: 'Transaction successfully added.'},
+            {status: 201}
+        )
     }
-  }
+    catch(error){
+        return NextResponse.json({ message: "Something went wrong."}, { status: 500 })
+    }
+}

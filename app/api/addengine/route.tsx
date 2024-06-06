@@ -9,7 +9,7 @@ const engineSchema = z
     userName: z.string().min(5, 'Username Max Limit.').max(30),
     engineName: z.string().min(5, 'Engine Max Limit.').max(30),
     engineType: z.string().min(8, 'Engine Type is required').max(100),
-    price: z.number().min(1, 'Price is required').max(100),
+    price: z.number().min(1, 'Price is required').max(10000),
     quantity: z.number().min(1, 'Quantity is required').max(100),
     picture: z.string().min(5, 'Picture is required').max(100),
     description: z.string().min(5, 'Description is required').max(250),
@@ -18,7 +18,14 @@ const engineSchema = z
 export async function POST(req: Request) {
     try {
         const body = await req.json();
-        const { userName, engineName, engineType, price, quantity, picture, description } = engineSchema.parse(body);
+        const {
+             userName, 
+             engineName, 
+             engineType, 
+             price, 
+             quantity, 
+             picture, 
+             description } = engineSchema.parse(body);
 
         // check if engine is in use
         const existingEngine = await db.engine.findUnique({

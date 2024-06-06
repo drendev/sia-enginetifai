@@ -21,7 +21,8 @@ model User {
   updatedAt DateTime @updatedAt
 
   // Relational Tables
-  engines Engine[]
+  engines      Engine[]
+  transactions Transaction[]
 }
 
 // Engines
@@ -37,4 +38,21 @@ model Engine {
   description String
   createAt    DateTime @default(now())
   updatedAt   DateTime @updatedAt
+
+  // Relational Tables
+  transactions Transaction[]
+}
+
+model Transaction {
+  id              Int       @id @default(autoincrement())
+  user            User      @relation(fields: [transactionUser], references: [username])
+  transactionUser String
+  engine          Engine    @relation(fields: [engineName], references: [engineName])
+  engineName      String
+  quantity        Int
+  totalPrice      Float
+  delivery        Boolean
+  deliveryDate    DateTime?
+  createAt        DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
 }
