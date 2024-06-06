@@ -30,7 +30,7 @@ const AddTransaction = () => {
   });
 
   const onSubmit = async (values: z.infer<typeof FormSchema>) => {
-    const response = await fetch('dashboard/api/addtransaction/route', {
+    const response = await fetch('/api/addtransaction', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

@@ -26,8 +26,6 @@ export async function POST(req: Request) {
              delivery,
              deliveryDate } = transactionSchema.parse(body);
 
-        // check if engine is in use
-
         const newTransaction = await db.transaction.create({
             data: {
                 transactionUser,

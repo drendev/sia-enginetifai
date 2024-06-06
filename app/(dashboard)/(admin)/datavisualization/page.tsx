@@ -1,4 +1,4 @@
-import AddTransaction from "@/components/dataVisualization/AddTransaction"
+import AddTransaction from "@/components/transaction/AddTransaction"
 
 export default function AddTrans(){
 
