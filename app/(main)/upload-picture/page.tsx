@@ -53,7 +53,7 @@ export default function Home() {
     setFile(target.files?.[0])
   }
   return (
-    <main>
+    <main className="pt-14">
       <h1>Test Upload</h1>
       <form onSubmit={handleOnSubmit}>
 

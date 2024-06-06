@@ -1,3 +1,12 @@
+import AddEngine from '@/components/engines/AddEngines'
+
 export default function AddEngines(){
-    return <div>Add Engines</div>
+    return (
+        <>
+            <div>
+                <AddEngine />
+                    
+            </div>
+        </>
+    )
 }
