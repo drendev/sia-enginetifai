@@ -1,43 +1,56 @@
-"use client";
+"use client"
 
-import { FormEvent } from 'react';
 import * as z from 'zod';
+import { useSession } from "next-auth/react";
 import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Button, Form, Input, DatePicker } from 'antd';
+import { Button, Form, Input, DatePicker, InputNumber, Select } from 'antd';
 import moment from 'moment';
+import { db } from '@/lib/db';
+import dayjs from 'dayjs';
+
 
 const FormSchema = z.object({
-  engineId: z.string().min(1, 'Engine ID is requiredd'),
-
-  deliveryDate: z.date().refine(date => date >= new Date(), 'Delivery date must be in the future'),
-  deliveryAddress: z.string().min(1, 'Delivery address is required'),
-  quantity: z.number().min(1, 'Quantity must be at least 1'),
-});
+    transactionUser: z.string().min(5, 'Username Max Limit.').max(30),
+    engineName: z.string().min(5, 'Engine Max Limit.').max(30),
+    quantity: z.number().min(1, 'Quantity is required').max(100),
+    delivery: z.boolean(),
+    deliveryDate: z.date(),
+    description: z.string().min(5, 'Description is required').max(250),
+  })
 
 const AddTransaction = () => {
+  const { data: session } = useSession();
   const router = useRouter();
+  const user = session?.user.username;
 
+  const { Option } = Select;
+
+ 
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
-      engineId: '',
-      deliveryDate: new Date(),
-      deliveryAddress: '',
+      transactionUser: '',
+      engineName: '',
       quantity: 1,
+      delivery: false,
     },
   });
 
   const onSubmit = async (values: z.infer<typeof FormSchema>) => {
+
     const response = await fetch('/api/addtransaction', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        ...values,
-        deliveryDate: values.deliveryDate.toISOString(), 
+        transactionUser: user,
+        engineName: values.engineName,
+        quantity: values.quantity,
+        delivery: values.delivery,
+        deliveryDate: values.deliveryDate,
       }),
     });
 
@@ -53,34 +66,38 @@ const AddTransaction = () => {
       labelCol={{ span: 8 }}
       wrapperCol={{ span: 16 }}
       style={{ maxWidth: 600 }}
-      onFinish={form.handleSubmit(onSubmit)}
+      onFinish={onSubmit}
       autoComplete="off"
     >
+      
       <Form.Item
-        label="Engine ID"
-        name="engineId"
+        label="Engine Name"
+        name="engineName"
         rules={[{ required: true, message: 'Please input the engine ID!' }]}
       >
-        <Input {...form.register('engineId')} />
+        <Input />
       </Form.Item>
-
       <Form.Item
         label="Delivery Date"
         name="deliveryDate"
         rules={[{ required: true, message: 'Please select the delivery date!' }]}
+        initialValue={dayjs()}
       >
-        <DatePicker
-          onChange={(date) => form.setValue('deliveryDate', date ? date.toDate() : new Date())}
-          defaultValue={moment()}
+        <DatePicker 
+          format={'DD/MM/YYYY'}
+          onChange={(date) => form.setValue('deliveryDate', date.toDate())}
         />
       </Form.Item>
 
       <Form.Item
-        label="Delivery Address"
-        name="deliveryAddress"
-        rules={[{ required: true, message: 'Please input the delivery address!' }]}
+        label="Delivery"
+        name="delivery"
+        initialValue={false}
       >
-        <Input {...form.register('deliveryAddress')} />
+        <Select>
+          <Option value={true}>Yes</Option>
+          <Option value={false}>No</Option>
+        </Select>
       </Form.Item>
 
       <Form.Item
@@ -88,7 +105,7 @@ const AddTransaction = () => {
         name="quantity"
         rules={[{ required: true, message: 'Please input the quantity!' }]}
       >
-        <Input type="number" {...form.register('quantity')} />
+      <InputNumber />
       </Form.Item>
 
       <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
