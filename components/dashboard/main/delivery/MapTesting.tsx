@@ -18,7 +18,7 @@
 
     const MapComponent: React.FC = () => {
     const mapContainer = useRef<HTMLDivElement>(null);
-
+    const mapBoxAccessToken = process.env.MAPBOX_API;
     const vessels: Vessel[] = [
         {
         id: 1,
@@ -30,8 +30,7 @@
     ];
 
     useEffect(() => {
-        mapboxgl.accessToken =
-        "pk.eyJ1IjoiZHJlbmRldiIsImEiOiJjbHgwa2t6YjIwMWNzMmtzYTBiZnIzNG53In0.frLf9qdvpp34baFqC_ObCQ";
+        mapboxgl.accessToken = `${process.env.NEXT_PUBLIC_MAPBOX_API}`;
 
         if (mapContainer.current) {
         const map = new mapboxgl.Map({
