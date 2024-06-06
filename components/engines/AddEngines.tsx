@@ -2,50 +2,54 @@
 
 import { FormEvent } from 'react'
 import * as z from 'zod';
+import { useSession } from "next-auth/react";
 import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Button, Checkbox, Form, Input } from 'antd';
+import { Button, Checkbox, Form, Input, InputNumber } from 'antd';
 
 const FormSchema = z
 .object({
-    username: z.string().min(1, 'Username is required').max(100),
-    email: z.string().min(1, 'Email is required').email('Invalid email'),
-    password: z
-    .string()
-    .min(1, 'Password is required')
-    .min(8, 'Password must have than 8 characters'),
-    confirmPassword: z.string().min(1, 'Password confirmation is required'),
-    role: z.enum(['user', 'admin']).optional(),
+  userName: z.string().min(5, 'Username Max Limit.').max(30),
+  engineName: z.string().min(5, 'Engine Max Limit.').max(30),
+  engineType: z.string().min(8, 'Engine Type is required').max(100),
+  price: z.number().min(1, 'Price is required').max(100),
+  quantity: z.number().min(1, 'Quantity is required').max(100),
+  picture: z.string().min(5, 'Picture is required').max(100),
+  description: z.string().min(5, 'Description is required').max(250),
 })
-.refine((data) => data.password === data.confirmPassword, {
-    path: ['confirmPassword'],
-    message: 'Password do not match',
-});
 
 const AddEngine = () => {
+  const { data: session, status } = useSession();
     const router = useRouter();
+    const user = session?.user.username;
 
     const form = useForm<z.infer<typeof FormSchema>>({
         resolver: zodResolver(FormSchema),
         defaultValues: {
-        username: '',
-        email: '',
-        password: '',
-        confirmPassword: '',
+        userName: '',
+        engineName: '',
+        engineType: '',
+        price: 0,
+        quantity: 0,
+        picture: '',
+        description: '',
         },
     });
     const onSubmit = async (values: z.infer<typeof FormSchema>) => {
-        const response = await fetch('/api/user',{
+        const response = await fetch('/api/addengine',{
             method: 'POST',
             headers: {
             'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-            username: values.username,
-            email: values.email,
-            password: values.password,
-            role: values.role
+            userName: user,
+            engineName: values.engineName,
+            engineType: values.engineType,
+            price: values.price,
+            quantity: values.quantity,
+            picture: values.picture,
+            description: values.description,
             })
         })
     
@@ -56,13 +60,11 @@ const AddEngine = () => {
             console.log('Something went wrong.');
         }
         };
- 
   return (
     <Form
-    
     labelCol={{ span: 8 }}
     wrapperCol={{ span: 16 }}
-    style={{ maxWidth: 600 , marginTop: 50 }}
+    style={{ maxWidth: 600 }}
     onFinish={onSubmit}
     autoComplete="off"
   >
@@ -82,11 +84,18 @@ const AddEngine = () => {
       <Input />
     </Form.Item>
     <Form.Item
+      label="Quantity"
+      name="quantity"
+      rules={[{ required: true, message: 'Please input your username!' }]}
+    >
+      <InputNumber />
+    </Form.Item>
+    <Form.Item
       label="Price"
       name="price"
       rules={[{ required: true, message: 'Please input your username!' }]}
     >
-      <Input />
+      <InputNumber />
     </Form.Item>
 
     <Form.Item
@@ -94,6 +103,15 @@ const AddEngine = () => {
       name="description"
       rules={[{ required: true, message: 'Please input your username!' }]}
     >
+      
+      <Input />
+    </Form.Item>
+    <Form.Item
+      label="Picture"
+      name="picture"
+      rules={[{ required: true, message: 'Please input your username!' }]}
+    >
+      
       <Input />
     </Form.Item>
 
