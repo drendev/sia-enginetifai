@@ -28,7 +28,6 @@ model User {
 model Engine {
   id          Int      @id @default(autoincrement())
   userAdded   User     @relation(fields: [userName], references: [username])
-  userId      Int
   userName    String
   engineName  String   @unique
   engineType  String
