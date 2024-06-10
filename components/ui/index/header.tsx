@@ -10,9 +10,9 @@ export function Header() {
         <a>
         <div className="flex flex-row ml-4">
         <Image src="/logo.png" width={60} height={60} alt=""/>
-        <h1 className="ml-4 self-center font-bold tracking-wider text-xl">ENGINETIF<span className="text-red-900 font-bold">AI</span></h1>
-        </div>
-        </a>
+        <h1 className="ml-4 self-center font-bold tracking-wider text-xl text-slate-800">ENGINETIF<span className="text-red-900 font-bold">AI</span></h1>
+        </div>  
+        </a>    
     </div>
     <div className="mt-20 sm:hidden">
         <span className={caveat.className}>
