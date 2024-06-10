@@ -340,3 +340,6 @@ body,
   animation-range-start: normal;
   animation-range-end: normal;
 }
+.custom-dots li button {
+  @apply bg-red-primary !important; /* Change this to your desired color */
+}

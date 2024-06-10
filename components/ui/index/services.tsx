@@ -6,13 +6,12 @@ const contentStyle: React.CSSProperties = {
     color: '#000',
     lineHeight: '40px',
     textAlign: 'center',
-    
   };
 const caveat = Caveat({ subsets: ["latin"] });
 
   const Services: React.FC = () => (
         <div className="flex flex-col w-96 justify-center relative md:mb-0 md:mr-10 mb-4 bg-gray-primary rounded-full h-full">
-            <Carousel autoplay style={contentStyle}>
+            <Carousel autoplay style={contentStyle} dots={{className: "custom-dots"}}>
                 <div className="justify-center mt-6">
                 <Image className="rounded-lg" src={'/visual.svg'} width={350} height={250} alt=''/>
                 <span className={caveat.className}>
