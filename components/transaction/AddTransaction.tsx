@@ -6,7 +6,7 @@ import { useSession } from "next-auth/react";
 import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Button, Form, Input, DatePicker, InputNumber, Select, AutoComplete } from 'antd';
+import { Button, Form, Input, DatePicker, InputNumber, Select, AutoComplete, ConfigProvider, Switch } from 'antd';
 import dayjs from 'dayjs';
 
 const FormSchema = z.object({
@@ -36,8 +36,6 @@ const AddTransaction = () => {
   const { data: session } = useSession();
   const router = useRouter();
   const user = session?.user.username;
-
-  const { Option } = Select;
 
   // fetch data
 
@@ -78,7 +76,19 @@ const AddTransaction = () => {
   });
 
   const onSubmit = async (values: z.infer<typeof FormSchema>) => {
+    // update stock
+    const responseStock = await fetch('/api/enginetransacted', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        engineName: values.engineName,
+        quantity: values.quantity,
+      }),
+    });
 
+    // forward transaction data to database
     const response = await fetch('/api/addtransaction', {
       method: 'POST',
       headers: {
@@ -93,7 +103,7 @@ const AddTransaction = () => {
       }),
     });
 
-    if (response.ok) {
+    if (response.ok && responseStock.ok) {
       router.push('/');
     } else {
       console.log('Something went wrong.');
@@ -108,6 +118,13 @@ const AddTransaction = () => {
   };  
   
   return (
+    <ConfigProvider
+            theme={{
+              token: {
+                colorPrimary: '#BB4747',
+                colorLink: '#BB4747',
+              },
+            }}>
     <Form
       labelCol={{ span: 8 }}
       wrapperCol={{ span: 16 }}
@@ -132,7 +149,7 @@ const AddTransaction = () => {
       </Form.Item>
 
       <Form.Item
-        label="Delivery Date"
+        label="Transaction Date"
         name="deliveryDate"
         rules={[{ required: true, message: 'Please select the delivery date!' }]}
         initialValue={dayjs()
@@ -149,20 +166,19 @@ const AddTransaction = () => {
         name="delivery"
         initialValue={false}
       >
-        <Select>
-          <Option value={true}>Yes</Option>
-          <Option value={false}>No</Option>
-        </Select>
+          <Switch
+          className='shadow-inner bg-slate-200'
+          />
       </Form.Item>
-      
+
       <Form.Item
         label="Quantity"
         name="quantity"
         rules={[{ required: true, message: 'Please input the quantity!' },
           () => ({
             validator(_, value) {
-              if (value % 1 !== 0) {
-                return Promise.reject('Quantity must be a whole number');
+              if (value % 1 !== 0 && value > 0) {
+                return Promise.reject('Invalid Quantity');
               }
               if (engine && value > engine?.quantity) {
                 return Promise.reject('Quantity exceeds the available stock');
@@ -180,21 +196,31 @@ const AddTransaction = () => {
       />
       </Form.Item>
       <Form.Item
-        label="Price"
+        label="Total Transaction Price"
       >
-        {engine && engine.price ? engine.price * calcQuantity : 'N/A'}
+        {engine && engine.price && calcQuantity <= engine.quantity && calcQuantity % 1 == 0 ? engine.price * calcQuantity : 'N/A'}
       </Form.Item>
       <Form.Item
         label="Available Stock"
       >
         {engine && engine.quantity ? engine.quantity : 'N/A'}
       </Form.Item>
+      <Form.Item
+        label="Engine Price"
+      >
+        {engine && engine.price ? engine.price : 'N/A'}
+      </Form.Item>
       <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
-        <Button type="primary" htmlType="submit">
-          Submit
+        <Button
+         type="primary" 
+         htmlType="submit"
+         className='bg-red-primary hover:bg-red-primary font-bold rounded-full text-md w-full h-auto py-2 px-7 tracking-wider border-red-800 border-2 border-b-4 active:border-b-2'
+         >
+          Add Transaction
         </Button>   
       </Form.Item>
     </Form>
+    </ConfigProvider>
   );
 }
 

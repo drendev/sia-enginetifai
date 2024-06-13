@@ -78,6 +78,7 @@ import { signIn } from 'next-auth/react';
               className="justify-center"
               initialValues={{ remember: true }}
               onFinish={onSubmit}
+              requiredMark={false} 
             >
               <Form.Item
                 name="username"
