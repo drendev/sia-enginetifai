@@ -13,8 +13,7 @@ const FormSchema = z.object({
     engineName: z.string().min(5, 'Engine Max Limit.').max(30),
     quantity: z.any(),
     delivery: z.boolean(),
-    deliveryDate: z.date(),
-    description: z.string().min(5, 'Description is required').max(250),
+    deliveryDate: z.date().min(dayjs().startOf('day').toDate(), { message: 'Delivery Date is required' })
   })
 
 const AddTransaction = () => {
