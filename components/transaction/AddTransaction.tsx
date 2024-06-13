@@ -17,19 +17,21 @@ const FormSchema = z.object({
     deliveryDate: z.date().min(dayjs().startOf('day').toDate(), { message: 'Delivery Date is required' })
   })
 
-  type Engine = {
-    map(arg0: (user: any, index: any) => any): import("react").ReactNode;
-    filter(arg0: (arg0: (d: any) => boolean) => any): any;
-    engineName?: string;
+  interface Engine {  
+    price: number
+    quantity: number,
+    picture: string,
+    description: string,
+    engineType: string,
+    engineName: string
   }
 
 const AddTransaction = () => {
   const [engineName, setEngineName] = useState<string | undefined>(undefined)
-  const [engine, setEngine] = useState<{ price: number } | undefined>(undefined)
-  const [calcQuantity, setTotalPrice] = useState<number>(1)
-  const [inputValue, setInputValue] = useState<string | undefined>(undefined)
-  const [data, setData] = useState<string[]>([]);
-  const [engineData, setEngineData] = useState<Engine | null>(null);
+  const [engine, setEngine] = useState<Engine | undefined>(undefined)
+  const [calcQuantity, setTotalPrice] = useState<number>(0)
+  const [data, setData] = useState([]);
+  const [engineData, setEngineData] = useState([]);
 
   const { data: session } = useSession();
   const router = useRouter();
@@ -44,7 +46,7 @@ const AddTransaction = () => {
       if (!engineName) return setEngineName(undefined)
 
       const res = await fetch(`/api/enginelist?engineName=${engineName}`)
-      const data = (await res.json()) as {price: number}
+      const data = (await res.json()) as {price: number, quantity: number, picture: string, description: string, engineType: string, engineName: string}
       setEngine(data)
     }
 
@@ -57,11 +59,12 @@ const AddTransaction = () => {
       const res = await fetch('/api/findengine',{
         method: 'GET'
       })
-      const data = await res.json() 
-      setEngineData(data)
+      const data = await res.json()
+      JSON.stringify(data)
+      setEngineData(data.map((item: { engineName: any; }) => item.engineName))
     }
 
-    fetchEngineData()
+    fetchEngineData() 
   }, [])
 
   const form = useForm<z.infer<typeof FormSchema>>({
@@ -97,18 +100,13 @@ const AddTransaction = () => {
     }
   };
 
-  const normalArray = JSON.parse(engineData.engineName || '[]');
-
   const handleSearch = (value: any) => {
-    if (!value || value === "") {
-      setData([]);
-    } else {
-      setData(normalArray.filter((d: any) => d.includes(value)) || []);
-    }
+    const filteredSuggestions = engineData.filter((d: any) =>
+      d.includes(value)
+    );  
+    setData(filteredSuggestions);
   };  
-
-console.log(norm);
-
+  
   return (
     <Form
       labelCol={{ span: 8 }}
@@ -117,20 +115,10 @@ console.log(norm);
       onFinish={onSubmit}
       autoComplete="off"
     >
+
       <Form.Item
         label="Engine Name"
         name="engineName"
-        rules={[{ required: true, message: 'Please input the engine ID!' }]}
-      >
-        <Input
-        value={engineName}
-        onChange={(e) => setEngineName(e.target.value)}
-        />  
-      </Form.Item>
-
-      <Form.Item
-        label="Input"
-        name="input"
         rules={[
           { required: true, message: "Please input your text!" },
         ]}
@@ -138,8 +126,8 @@ console.log(norm);
         <AutoComplete
           options={data.map((option) => ({ value: option }))}
           onSearch={handleSearch}
-          value={inputValue}
-          onChange={(value) => setInputValue(value)}
+          value={engineName}
+          onChange={(value) => setEngineName(value)}
         />
       </Form.Item>
 
@@ -170,12 +158,22 @@ console.log(norm);
       <Form.Item
         label="Quantity"
         name="quantity"
-        rules={[{ required: true, message: 'Please input the quantity!' }]}
+        rules={[{ required: true, message: 'Please input the quantity!' },
+          () => ({
+            validator(_, value) {
+              if (engine && value > engine?.quantity) {
+                return Promise.reject('Quantity exceeds the available stock');
+              }
+              return Promise.resolve();
+            },
+
+          })
+        ]}
       >
       <InputNumber
       min={1}
       value={calcQuantity}
-      onChange={value => setTotalPrice(value || 1)}
+      onChange={value => setTotalPrice(value || 0)}
       />
       </Form.Item>
       <Form.Item
@@ -183,10 +181,15 @@ console.log(norm);
       >
         {engine && engine.price ? engine.price * calcQuantity : 'N/A'}
       </Form.Item>
+      <Form.Item
+        label="Available Stock"
+      >
+        {engine && engine.quantity ? engine.quantity : 'N/A'}
+      </Form.Item>
       <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
         <Button type="primary" htmlType="submit">
           Submit
-        </Button>
+        </Button>   
       </Form.Item>
     </Form>
   );
