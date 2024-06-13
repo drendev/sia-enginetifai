@@ -1,14 +1,15 @@
+"use client"
+
 import z from 'zod';
 import { NextResponse } from 'next/server';
 import { db } from '@/lib/db';
-import { message } from 'antd';
 
 const imageSchema = z.object({
     picture: z.any(),
     username: z.string().min(3, 'Username is required').max(30),
 })
 
-export async function POST(req: Request) {
+export async function POST(req: Request) {  
     try {
         const body = await req.json();
         const { picture, username } = imageSchema.parse(body);

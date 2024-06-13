@@ -1,16 +1,40 @@
+"use client";
 
-import { db } from "@/lib/db";
+import { useEffect, useState } from "react";
 
-export default async function AddEngine() {
-        const enginePrice = await db.engine.findUnique({
-      where: {engineName: 'TestName'},
-      select: {price: true}
-    });
+type User = {
+    map(arg0: (user: any, index: any) => any): import("react").ReactNode;
+    username?: string;
+    email?: string;
+    password?: string;
+    role?: string;
+}
 
-    const engineTotalPrice = enginePrice ? enginePrice.price * 10 : 0;
+export default function Page() {
+    const [user, setUser] = useState<User | null>(null);
+
+    const getUser = async () => {
+        const res = await fetch('/api/testapi', {
+            method: 'GET'
+        });
+        const data = await res.json();
+        if(data) setUser(data);
+    }
+
+    useEffect(() => {
+        getUser();
+    }, [])
+
     return(
-        <>
-        <h2>{engineTotalPrice}</h2>
-        </>
+        <div className="mt-16">
+            {user && user.map((user, index) => (
+                <div key={index} className="mb-10">
+                    <p className="text-lg font-bold">Username: {user.username}</p>
+                    <p className="text-lg font-bold">Email: {user.email}</p>
+                    <p className="text-lg font-bold">Password: {user.password}</p>
+                    <p className="text-lg font-bold">Role: {user.role}</p>
+                </div>
+            ))}
+        </div>
     )
 }

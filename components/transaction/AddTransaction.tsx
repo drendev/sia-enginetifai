@@ -6,15 +6,12 @@ import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Button, Form, Input, DatePicker, InputNumber, Select } from 'antd';
-import moment from 'moment';
-import { db } from '@/lib/db';
 import dayjs from 'dayjs';
-
 
 const FormSchema = z.object({
     transactionUser: z.string().min(5, 'Username Max Limit.').max(30),
     engineName: z.string().min(5, 'Engine Max Limit.').max(30),
-    quantity: z.number().min(1, 'Quantity is required').max(100),
+    quantity: z.any(),
     delivery: z.boolean(),
     deliveryDate: z.date(),
     description: z.string().min(5, 'Description is required').max(250),
@@ -27,10 +24,10 @@ const AddTransaction = () => {
 
   const { Option } = Select;
 
- 
+
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
-    defaultValues: {
+    defaultValues: {  
       transactionUser: '',
       engineName: '',
       quantity: 1,
@@ -60,7 +57,6 @@ const AddTransaction = () => {
       console.log('Something went wrong.');
     }
   };
-
   return (
     <Form
       labelCol={{ span: 8 }}
@@ -81,7 +77,8 @@ const AddTransaction = () => {
         label="Delivery Date"
         name="deliveryDate"
         rules={[{ required: true, message: 'Please select the delivery date!' }]}
-        initialValue={dayjs()}
+        initialValue={dayjs()
+        }
       >
         <DatePicker 
           format={'DD/MM/YYYY'}
