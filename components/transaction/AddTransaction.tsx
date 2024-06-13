@@ -161,6 +161,9 @@ const AddTransaction = () => {
         rules={[{ required: true, message: 'Please input the quantity!' },
           () => ({
             validator(_, value) {
+              if (value % 1 !== 0) {
+                return Promise.reject('Quantity must be a whole number');
+              }
               if (engine && value > engine?.quantity) {
                 return Promise.reject('Quantity exceeds the available stock');
               }
