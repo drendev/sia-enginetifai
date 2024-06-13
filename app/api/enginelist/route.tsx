@@ -3,11 +3,12 @@ import { db } from '@/lib/db';
 import { NextResponse } from 'next/server';
 
 
-export async function POST(req: Request) {
+export async function GET(req: Request) {
     try {
-        const body = await req.json();
-        const { engineName } = body;
-        
+        const url = new URL(req.url);
+        const engineNameFromUrl = url.searchParams.get('engineName');
+        const engineName = engineNameFromUrl ? engineNameFromUrl : '';
+
         const selectEngine = await db.engine.findUnique({
             where: { engineName: engineName},
             select: {
