@@ -9,12 +9,13 @@ const transactionSchema = z.object({
   quantity: z.number().min(1, 'Quantity is required').max(100),
   delivery: z.boolean(),
   deliveryDate: z.string(),
+  paymentMethod: z.string().min(5, 'Payment method must be at least 5 characters.').max(30)
 });
 
 export async function POST(req: Request) {
   try {
     const body = await req.json();
-    const { transactionUser, engineName, quantity, delivery, deliveryDate } = transactionSchema.parse(body);
+    const { transactionUser, engineName, quantity, delivery, deliveryDate, paymentMethod } = transactionSchema.parse(body);
 
     const enginePrice = await db.engine.findUnique({
       where: { engineName },
@@ -34,6 +35,7 @@ export async function POST(req: Request) {
         totalPrice: engineTotalPrice,
         delivery,
         deliveryDate,
+        paymentMethod
       },
     });
 

@@ -23,6 +23,15 @@ model User {
   // Relational Tables
   engines      Engine[]
   transactions Transaction[]
+  userInfo     UserInfo?
+}
+
+model UserInfo {
+  id       Int    @id @default(autoincrement())
+  user     User   @relation(fields: [userId], references: [id])
+  userId   Int    @unique
+  fullName String
+  sex      String
 }
 
 // Engines

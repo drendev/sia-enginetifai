@@ -6,7 +6,7 @@ import { useSession } from "next-auth/react";
 import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Button, Form, Input, DatePicker, InputNumber, Select, AutoComplete, ConfigProvider, Switch } from 'antd';
+import { Button, Form, Input, DatePicker, InputNumber, Select, AutoComplete, ConfigProvider, Switch, } from 'antd';
 import dayjs from 'dayjs';
 
 const FormSchema = z.object({
@@ -14,7 +14,8 @@ const FormSchema = z.object({
     engineName: z.string().min(5, 'Engine Max Limit.').max(30),
     quantity: z.any(),
     delivery: z.boolean(),
-    deliveryDate: z.date().min(dayjs().startOf('day').toDate(), { message: 'Delivery Date is required' })
+    deliveryDate: z.date().min(dayjs().startOf('day').toDate(), { message: 'Delivery Date is required' }),
+    transactionMethod: z.string().min(5, 'Transaction Not Valid').max(30),
   })
 
   interface Engine {  
@@ -36,6 +37,8 @@ const AddTransaction = () => {
   const { data: session } = useSession();
   const router = useRouter();
   const user = session?.user.username;
+
+  const { Option } = Select;
 
   // fetch data
 
@@ -72,6 +75,7 @@ const AddTransaction = () => {
       engineName: '',
       quantity: 1,
       delivery: false,
+      transactionMethod: '',
     },
   });
 
@@ -100,6 +104,7 @@ const AddTransaction = () => {
         quantity: values.quantity,
         delivery: values.delivery,
         deliveryDate: values.deliveryDate,
+        paymentMethod: values.transactionMethod,
       }),
     });
 
@@ -162,6 +167,17 @@ const AddTransaction = () => {
       </Form.Item>
 
       <Form.Item
+        label="Transaction Method"
+        name="transactionMethod"
+        initialValue='Delivery'
+      >
+        <Select className='shadow-inner bg-slate-200'>
+          <Option value={'Delivery'}>Delivery</Option>
+          <Option value={'Cash'}>Cash</Option>
+        </Select>
+      </Form.Item>
+
+      <Form.Item
         label="Delivery"
         name="delivery"
         initialValue={false}
@@ -170,7 +186,7 @@ const AddTransaction = () => {
           className='shadow-inner bg-slate-200'
           />
       </Form.Item>
-
+      
       <Form.Item
         label="Quantity"
         name="quantity"
