@@ -20,10 +20,6 @@ export async function GET(req: Request) {
                 description: true
             }
         });
-        if(!selectEngine) {
-            return NextResponse.json({ message: 'Engine not found' }, { status: 404 });
-        }
-
         return NextResponse.json(selectEngine);
     } catch (error) {
         console.error("Error fetching engine price:", error);

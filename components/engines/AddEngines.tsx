@@ -55,7 +55,7 @@ const AddEngine = () => {
         method: 'POST',
         body: formData
       }).then(r => r.json());
-      console.log(results.secure_url);
+
       const response = await fetch('/api/addengine',{
           method: 'POST',
           headers: {
@@ -97,7 +97,7 @@ const AddEngine = () => {
         setValue('picture', file.name);
         return false; // Prevent auto upload
       };
-    console.log(file)
+    
   return (
     <Form
     labelCol={{ span: 8 }}

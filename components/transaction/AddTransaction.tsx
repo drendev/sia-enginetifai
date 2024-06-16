@@ -121,7 +121,7 @@ const AddTransaction = () => {
     );  
     setData(filteredSuggestions);
   };  
-  
+
   return (
     <ConfigProvider
             theme={{
@@ -226,6 +226,7 @@ const AddTransaction = () => {
       >
         {engine && engine.price ? engine.price : 'N/A'}
       </Form.Item>
+      <img src={`${engine && engine?.picture ? engine.picture: null}`} alt={engine?.engineName} />
       <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
         <Button
          type="primary" 
