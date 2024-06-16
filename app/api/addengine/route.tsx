@@ -11,7 +11,7 @@ const engineSchema = z
     engineType: z.string().min(8, 'Engine Type is required').max(100),
     price: z.number().min(1, 'Price is required').max(10000),
     quantity: z.number().min(1, 'Quantity is required').max(100),
-    picture: z.string().min(5, 'Picture is required').max(100),
+    picture: z.any(),
     description: z.string().min(5, 'Description is required').max(250),
   })
 

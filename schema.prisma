@@ -49,7 +49,73 @@ model Engine {
   updatedAt   DateTime @updatedAt
 
   // Relational Tables
-  transactions Transaction[]
+  transactions  Transaction[]
+  specification Specification?
+
+  @@unique([id, engineName])
+}
+
+model Specification {
+  id                Int     @id @default(autoincrement())
+  engine            Engine  @relation(fields: [engineId, engineName], references: [id, engineName])
+  engineId          Int     @unique
+  engineName        String  @unique
+  BorexStroke       String?
+  Displacement      String?
+  EngineSpeed       String?
+  RatedOutput       String?
+  MaxOutPut         String?
+  LubeOilCapacity   String?
+  FuelTankCapacity  String?
+  FuelConsumption   String?
+  Dimension         String?
+  NetWeight         String?
+  PackageDimension  String?
+  GrossWeight       String?
+  LoadingQty        String?
+  RateACOutput      String?
+  MaxACOutput       String?
+  Noise             String?
+  StartingSystem    String?
+  Frequency         String?
+  PowerFactor       String?
+  EngineModel       String?
+  DCOutput          String?
+  Voltage           String?
+  Inlet             String?
+  MaxCapacity       String?
+  MaxDischarge      String?
+  SelfPrimingTime   String?
+  MaxSuctionHead    String?
+  Kw3600            String?
+  Kw3000            String?
+  Kw2600            String?
+  MaxNetTorque      String?
+  CompressionRatio  String?
+  IdleSpeed         String?
+  EngineOilCapacity String?
+  Size              String?
+  ContinuousOpHours String?
+  Type              String?
+  RunningTime       String?
+  Optional          String?
+  NoLoadVoltage     String?
+  OperatingWelding  String?
+  OperatingCurrent  String?
+  MaxArcingCurrent  String?
+  DutyCycle         String?
+  EngineRatedPower  String?
+  TillingWidth      String?
+  TransmissionMode  String?
+  PackingSize       String?
+  TillingDepth      String?
+  ShiftingGears     String?
+  TransportingWheel String?
+  TillingBlades     String?
+  ContLoad20        String?
+  ContLoad40        String?
+
+  @@unique([engineId, engineName])
 }
 
 model Transaction {
@@ -85,7 +151,7 @@ model Delivery {
   latitude      Decimal
   longitude     Decimal
   deliveryUser  String
-  deliveryDone  Boolean
+  deliverStatus String
   createAt      DateTime    @default(now())
   updatedAt     DateTime    @updatedAt
 }

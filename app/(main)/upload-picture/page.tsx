@@ -27,6 +27,7 @@ export default function Home() {
       body: formData
     }).then(r => r.json());
 
+    console.log(results.secure_url);
     const response = await fetch('/api/upload', {
       method: 'POST',
       headers: {
@@ -37,7 +38,7 @@ export default function Home() {
         username: user
       })
     })
-
+    
     if(response.ok){
       console.log('Image uploaded successfully');
     }
@@ -52,6 +53,7 @@ export default function Home() {
     }
     setFile(target.files?.[0])
   }
+  console.log(file);    
   return (
     <main className="pt-14">
       <h1>Test Upload</h1>
