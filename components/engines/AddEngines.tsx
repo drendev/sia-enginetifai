@@ -1,7 +1,7 @@
 'use client'
 
 import * as z from 'zod';
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
@@ -20,14 +20,35 @@ const FormSchema = z
   description: z.string().min(5, 'Description is required').max(250),
 })
 
+interface Engine {  
+  engineName: string
+}
+
+
 const AddEngine = () => {
     const { data: session } = useSession();
     const router = useRouter();
     const [file, setFile] = useState<File | undefined>();
+    const [engineName, setEngineName] = useState<string | undefined>(undefined)
+    const [engine, setEngine] = useState<Engine | undefined>(undefined)
 
-    const uploadPreset = process.env.NEXT_PUBLIC_UPLOAD_PRESET;
+    const uploadPreset = process.env.NEXT_PUBLIC_ENGINE_PRESET;
     const apiKey = process.env.NEXT_PUBLIC_CLOUDINARY_API;
     const user = session?.user.username;
+
+
+    // Check Engine List
+    useEffect(() => {
+      const fetchData = async () => {
+        if (!engineName) return setEngineName(undefined)
+  
+        const res = await fetch(`/api/enginelist?engineName=${engineName}`)
+        const data = (await res.json()) as {engineName: string}
+        setEngine(data)
+      }
+  
+      fetchData()
+    }, [engineName])  
     
     const {setValue} = useForm<z.infer<typeof FormSchema>>({
         resolver: zodResolver(FormSchema),
@@ -41,9 +62,10 @@ const AddEngine = () => {
         description: '',
         },
     });
+
     const onSubmit = async (values: z.infer<typeof FormSchema>) => {
       
-      if (!file) return;
+      if (typeof file === "undefined") return;
 
       const formData = new FormData();
   
@@ -78,6 +100,7 @@ const AddEngine = () => {
       else {
           console.log('Something went wrong.');
       }
+
       };
 
       const normFile = (e: any) => {
@@ -86,19 +109,14 @@ const AddEngine = () => {
         }
         return e?.fileList;
       };  
-      function handleOnChange(e: React.ChangeEvent<HTMLInputElement>) {
-        const target = e.target as HTMLInputElement & {
-          files: FileList
-        }
-        setFile(target.files?.[0])
-      }
+
       const handleBeforeUpload = (file: File) => {
         setFile(file);
         setValue('picture', file.name);
         return false; // Prevent auto upload
       };
-    
-  return (
+  return (  
+    <>
     <Form
     labelCol={{ span: 8 }}
     wrapperCol={{ span: 16 }}
@@ -109,9 +127,22 @@ const AddEngine = () => {
     <Form.Item    
       label="Engine Name"
       name="engineName"
-      rules={[{ required: true, message: 'Please input Engine Name' }]}
+      rules={[{ required: true, message: 'Please input Engine Name' },
+        () => ({
+          validator(_, value) {
+            if (value === engine?.engineName) {
+              return Promise.reject('Engine already exist');
+            }
+            return Promise.resolve();
+          },
+
+        })
+      ]}
     >
-      <Input />
+      <Input 
+        value={engineName}
+        onChange={(e) => setEngineName(e.target.value)}
+      />
     </Form.Item>
 
     <Form.Item
@@ -162,6 +193,7 @@ const AddEngine = () => {
       </Button>
     </Form.Item>
   </Form>
+  </>
   )
     }
   export default AddEngine;
