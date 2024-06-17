@@ -1,40 +1,17 @@
-"use client";
 
-import { useEffect, useState } from "react";
-
-type User = {
-    map(arg0: (user: any, index: any) => any): import("react").ReactNode;
-    username?: string;
-    email?: string;
-    password?: string;
-    role?: string;
-}
-
-export default function Page() {
-    const [user, setUser] = useState<User | null>(null);
-
-    const getUser = async () => {
-        const res = await fetch('/api/testapi', {
-            method: 'GET'
-        });
-        const data = await res.json();
-        if(data) setUser(data);
-    }
-
-    useEffect(() => {
-        getUser();
-    }, [])
-
+export default function FirstGrid(){
     return(
-        <div className="mt-16">
-            {user && user.map((user, index) => (
-                <div key={index} className="mb-10">
-                    <p className="text-lg font-bold">Username: {user.username}</p>
-                    <p className="text-lg font-bold">Email: {user.email}</p>
-                    <p className="text-lg font-bold">Password: {user.password}</p>
-                    <p className="text-lg font-bold">Role: {user.role}</p>
-                </div>
-            ))}
+        <>
+        <div className="pt-16">
+        <div className="md:grid md:grid-rows-3 md:p-6 grid-cols-2 p-3 max-w-screen-xl mx-auto md:grid-flow-col flex flex-col gap-4">
+        <div className="md:row-span-5 md:col-span-1 bg-red-primary/5 rounded-lg md:w-full">
+        
         </div>
+        <div className="md:row-span-5 md:col-span-1 bg-red-primary/5 rounded-lg md:w-full">
+        
+        </div>
+        </div>
+        </div>
+        </>
     )
 }

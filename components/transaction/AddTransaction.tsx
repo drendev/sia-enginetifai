@@ -8,6 +8,8 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Button, Form, Input, DatePicker, InputNumber, Select, AutoComplete, ConfigProvider, Switch, } from 'antd';
 import dayjs from 'dayjs';
+import EngineButton from '../ui/index/button';
+import Grid from '../ui/engineforms/FormGrid';
 
 const FormSchema = z.object({
     transactionUser: z.string().min(5, 'Username Max Limit.').max(30),
@@ -130,14 +132,14 @@ const AddTransaction = () => {
                 colorLink: '#BB4747',
               },
             }}>
+    
     <Form
-      labelCol={{ span: 8 }}
-      wrapperCol={{ span: 16 }}
-      style={{ maxWidth: 600 }}
+      className='flex flex-col md:flex-row p-3 max-w-screen-xl mx-auto gap-4'
       onFinish={onSubmit}
       autoComplete="off"
     >
-
+      
+      <Grid>
       <Form.Item
         label="Engine Name"
         name="engineName"
@@ -152,7 +154,29 @@ const AddTransaction = () => {
           onChange={(value) => setEngineName(value)}
         />
       </Form.Item>
-
+      <Form.Item
+        label="Engine Type"
+      >
+        {engine && engine.engineType ? engine.engineType : 'N/A'}
+      </Form.Item>
+      <Form.Item
+        label="Engine Image"
+      >
+        <img src={`${engine && engine?.picture ? engine.picture: null}`} width={200} height={200} alt={engine?.engineName} />
+      </Form.Item>
+      <Form.Item
+        label="Available Stock"
+      >
+        {engine && engine.quantity ? engine.quantity : 'N/A'}
+      </Form.Item>
+      <Form.Item
+        label="Engine Price"
+      >
+        {engine && engine.price ? engine.price : 'N/A'}
+      </Form.Item>
+      
+      </Grid>
+      <Grid>
       <Form.Item
         label="Transaction Date"
         name="deliveryDate"
@@ -216,29 +240,17 @@ const AddTransaction = () => {
       >
         {engine && engine.price && calcQuantity <= engine.quantity && calcQuantity % 1 == 0 ? engine.price * calcQuantity : 'N/A'}
       </Form.Item>
-      <Form.Item
-        label="Available Stock"
-      >
-        {engine && engine.quantity ? engine.quantity : 'N/A'}
-      </Form.Item>
-      <Form.Item
-        label="Engine Price"
-      >
-        {engine && engine.price ? engine.price : 'N/A'}
-      </Form.Item>
-      <img src={`${engine && engine?.picture ? engine.picture: null}`} alt={engine?.engineName} />
+      
       <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
-        <Button
-         type="primary" 
-         htmlType="submit"
-         className='bg-red-primary hover:bg-red-primary font-bold rounded-full text-md w-full h-auto py-2 px-7 tracking-wider border-red-800 border-2 border-b-4 active:border-b-2'
-         >
-          Add Transaction
-        </Button>   
+        <EngineButton>
+        Add Transaction  
+        </EngineButton>   
       </Form.Item>
+      </Grid>
+      
     </Form>
     </ConfigProvider>
   );
-}
+} 
 
 export default AddTransaction;

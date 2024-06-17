@@ -6,8 +6,9 @@ import { useSession } from "next-auth/react";
 import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Button, Checkbox, Form, Input, InputNumber, Upload } from 'antd';
+import { Button, Checkbox, Form, Input, InputNumber, Upload, ConfigProvider } from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
+import EngineButton from '../ui/index/button';
 
 const FormSchema = z
 .object({
@@ -66,6 +67,7 @@ const AddEngine = () => {
     const onSubmit = async (values: z.infer<typeof FormSchema>) => {
       
       if (typeof file === "undefined") return;
+      if (values.engineName === engine?.engineName) return;
 
       const formData = new FormData();
   
@@ -117,6 +119,13 @@ const AddEngine = () => {
       };
   return (  
     <>
+    <ConfigProvider
+      theme={{
+        token: {
+          colorPrimary: '#BB4747',
+          colorLink: '#BB4747',
+        },
+      }}>        
     <Form
     labelCol={{ span: 8 }}
     wrapperCol={{ span: 16 }}
@@ -188,11 +197,12 @@ const AddEngine = () => {
       </Upload>
     </Form.Item>
     <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
-      <Button type="primary" htmlType="submit">
-        Submit
-      </Button>
+      <EngineButton>
+        Add Engine
+      </EngineButton>
     </Form.Item>
   </Form>
+  </ConfigProvider>
   </>
   )
     }
