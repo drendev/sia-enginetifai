@@ -1,17 +1,48 @@
+"use client"
 
-export default function FirstGrid(){
-    return(
-        <>
-        <div className="pt-16">
-        <div className="md:grid md:grid-rows-3 md:p-6 grid-cols-2 p-3 max-w-screen-xl mx-auto md:grid-flow-col flex flex-col gap-4">
-        <div className="md:row-span-5 md:col-span-1 bg-red-primary/5 rounded-lg md:w-full">
-        
-        </div>
-        <div className="md:row-span-5 md:col-span-1 bg-red-primary/5 rounded-lg md:w-full">
-        
-        </div>
-        </div>
-        </div>
-        </>
-    )
-}
+import React from 'react';
+import { DownOutlined } from '@ant-design/icons';
+import { Select } from 'antd';
+
+const MAX_COUNT = 3;
+
+const App: React.FC = () => {
+  const [value, setValue] = React.useState<string[]>([]);
+
+  const suffix = (
+    <>
+      <span>
+        {value.length} / {MAX_COUNT}
+      </span>
+      <DownOutlined />
+    </>
+  );
+console.log('value', value)
+
+  return (
+    <div className='pt-16'>
+    <Select
+      mode="multiple"
+      maxCount={MAX_COUNT}
+      value={value}
+      style={{ width: '100%' }}
+      onChange={setValue}
+      suffixIcon={suffix}
+      placeholder="Please select"
+      options={[
+        { value: 'Ava Swift', label: 'Ava Swift' },
+        { value: 'Cole Reed', label: 'Cole Reed' },
+        { value: 'Mia Blake', label: 'Mia Blake' },
+        { value: 'Jake Stone', label: 'Jake Stone' },
+        { value: 'Lily Lane', label: 'Lily Lane' },
+        { value: 'Ryan Chase', label: 'Ryan Chase' },
+        { value: 'Zoe Fox', label: 'Zoe Fox' },
+        { value: 'Alex Grey', label: 'Alex Grey' },
+        { value: 'Elle Blair', label: 'Elle Blair' },
+      ]}
+    />
+    </div>
+  );
+};
+
+export default App;

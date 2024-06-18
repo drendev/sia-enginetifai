@@ -28,7 +28,7 @@ export async function POST(req: Request) {
         const updateQuantity = await db.engine.update({
             where: { engineName },
             data: {
-                quantity: newQuantity   
+                quantity: newQuantity
             }
          })
 

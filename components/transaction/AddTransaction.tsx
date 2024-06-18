@@ -6,7 +6,7 @@ import { useSession } from "next-auth/react";
 import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Button, Form, Input, DatePicker, InputNumber, Select, AutoComplete, ConfigProvider, Switch, } from 'antd';
+import {  Form, DatePicker, InputNumber, Select, AutoComplete, ConfigProvider, Switch, Image, Badge, } from 'antd';
 import dayjs from 'dayjs';
 import EngineButton from '../ui/index/button';
 import Grid from '../ui/engineforms/FormGrid';
@@ -21,19 +21,18 @@ const FormSchema = z.object({
   })
 
   interface Engine {  
-    price: number
-    quantity: number,
-    picture: string,
-    description: string,
-    engineType: string,
-    engineName: string
+    price: number[],
+    quantity: number[],
+    picture: string[],
+    description: string[],
+    engineType: string[],
+    engineName: string[]
   }
 
 const AddTransaction = () => {
-  const [engineName, setEngineName] = useState<string | undefined>(undefined)
-  const [engine, setEngine] = useState<Engine | undefined>(undefined)
-  const [calcQuantity, setTotalPrice] = useState<number>(0)
-  const [data, setData] = useState([]);
+  const [engineName, setEngineName] = useState<string[]>([]);
+  const [engine, setEngine] = useState<Engine[]>([]);
+  const [calcQuantity, setTotalPrice] = useState<number[]>([]);
   const [engineData, setEngineData] = useState([]);
 
   const { data: session } = useSession();
@@ -46,10 +45,11 @@ const AddTransaction = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      if (!engineName) return setEngineName(undefined)
+      if (!engineName) return setEngineName([])
 
-      const res = await fetch(`/api/enginelist?engineName=${engineName}`)
-      const data = (await res.json()) as {price: number, quantity: number, picture: string, description: string, engineType: string, engineName: string}
+      const queryString = engineName.map(name => `engineName=${name}`).join('&');
+      const res = await fetch(`/api/enginelist?${queryString}`);
+      const data = (await res.json()) as Engine[];
       setEngine(data)
     }
 
@@ -103,7 +103,7 @@ const AddTransaction = () => {
       body: JSON.stringify({
         transactionUser: user,
         engineName: values.engineName,
-        quantity: values.quantity,
+        quantity: calcQuantity,
         delivery: values.delivery,
         deliveryDate: values.deliveryDate,
         paymentMethod: values.transactionMethod,
@@ -116,13 +116,12 @@ const AddTransaction = () => {
       console.log('Something went wrong.');
     }
   };
-
-  const handleSearch = (value: any) => {
-    const filteredSuggestions = engineData.filter((d: any) =>
-      d.includes(value)
-    );  
-    setData(filteredSuggestions);
-  };  
+  // Quantity
+  const handleQuantityChange = (index: number, value: number) => {
+    const newQuantities = [...calcQuantity];
+    newQuantities[index] = value;
+    setTotalPrice(newQuantities);
+  };
 
   return (
     <ConfigProvider
@@ -131,12 +130,23 @@ const AddTransaction = () => {
                 colorPrimary: '#BB4747',
                 colorLink: '#BB4747',
               },
+              components:{
+                Form:{
+                  itemMarginBottom: 10,
+                  inlineItemMarginBottom: 10,
+                  colorText: 'dark:text-gray-900',
+                  labelColor: 'dark:text-gray-900',
+                  marginLG: 4,
+                }
+              }
             }}>
-    
     <Form
-      className='flex flex-col md:flex-row p-3 max-w-screen-xl mx-auto gap-4'
+      className='flex flex-col md:flex-row max-w-screen-xl mx-auto gap-4 px-2'
       onFinish={onSubmit}
       autoComplete="off"
+      requiredMark={false}
+      wrapperCol={{ span: 16 }}
+      layout='inline'
     >
       
       <Grid>
@@ -147,9 +157,10 @@ const AddTransaction = () => {
           { required: true, message: "Please input your text!" },
         ]}
       >
-        <AutoComplete
-          options={data.map((option) => ({ value: option }))}
-          onSearch={handleSearch}
+        <Select
+          mode='multiple'
+          maxCount={10}
+          options={engineData.map((option) => ({ value: option }))}
           value={engineName}
           onChange={(value) => setEngineName(value)}
         />
@@ -157,22 +168,32 @@ const AddTransaction = () => {
       <Form.Item
         label="Engine Type"
       >
-        {engine && engine.engineType ? engine.engineType : 'N/A'}
+        {engine && engine.map((engine) => (
+          <p>{engine.engineName}: {engine.engineType}</p>
+        ))}
       </Form.Item>
       <Form.Item
         label="Engine Image"
       >
-        <img src={`${engine && engine?.picture ? engine.picture: null}`} width={200} height={200} alt={engine?.engineName} />
+        {engine && engine.map((engine) => (
+        <Badge.Ribbon text={engine?.engineName} color="#BB4747" placement='start'>
+        <Image src={`${engine && engine?.picture}`} width={120} height={120} className='rounded-lg'/>
+        </Badge.Ribbon>
+        ))}
       </Form.Item>
       <Form.Item
         label="Available Stock"
       >
-        {engine && engine.quantity ? engine.quantity : 'N/A'}
+        {engine && engine.map((engine) => (
+          <p>{engine.engineName}: {engine.quantity}</p>
+        ))}
       </Form.Item>
       <Form.Item
         label="Engine Price"
       >
-        {engine && engine.price ? engine.price : 'N/A'}
+        {engine && engine.map((engine) => (
+          <p>{engine.engineName}: {engine.price}</p>
+        ))}
       </Form.Item>
       
       </Grid>
@@ -191,11 +212,12 @@ const AddTransaction = () => {
       </Form.Item>
 
       <Form.Item
+        className='flex-1'
         label="Transaction Method"
         name="transactionMethod"
         initialValue='Delivery'
       >
-        <Select className='shadow-inner bg-slate-200'>
+        <Select>
           <Option value={'Delivery'}>Delivery</Option>
           <Option value={'Cash'}>Cash</Option>
         </Select>
@@ -210,10 +232,11 @@ const AddTransaction = () => {
           className='shadow-inner bg-slate-200'
           />
       </Form.Item>
-      
+      {engine && engine.map((engine, index) => (
       <Form.Item
-        label="Quantity"
-        name="quantity"
+        label={`Quantity ${engine.engineName}`}
+        name={`quantity_${index}`}
+        key={index}
         rules={[{ required: true, message: 'Please input the quantity!' },
           () => ({
             validator(_, value) {
@@ -230,24 +253,25 @@ const AddTransaction = () => {
         ]}
       >
       <InputNumber
-      min={1}
-      value={calcQuantity}
-      onChange={value => setTotalPrice(value || 0)}
+        min={1}
+        value={calcQuantity[index] || 1}
+        onChange={value => handleQuantityChange(index, value || 0)}
       />
       </Form.Item>
+      ))}
+
       <Form.Item
         label="Total Transaction Price"
       >
-        {engine && engine.price && calcQuantity <= engine.quantity && calcQuantity % 1 == 0 ? engine.price * calcQuantity : 'N/A'}
+        {engine && engine.map((engine, index) => (
+          <p>{engine.engineName}: {calcQuantity[index] * Number(engine.price)}</p>
+        ))}
       </Form.Item>
-      
-      <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
         <EngineButton>
         Add Transaction  
         </EngineButton>   
-      </Form.Item>
       </Grid>
-      
+
     </Form>
     </ConfigProvider>
   );

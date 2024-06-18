@@ -6,11 +6,15 @@ import { NextResponse } from 'next/server';
 export async function GET(req: Request) {
     try {
         const url = new URL(req.url);
-        const engineNameFromUrl = url.searchParams.get('engineName');
-        const engineName = engineNameFromUrl ? engineNameFromUrl : '';
+        const engineNames = url.searchParams.getAll('engineName');
 
-        const selectEngine = await db.engine.findUnique({
-            where: { engineName: engineName},
+
+
+        const selectEngine = await db.engine.findMany({
+            where: { 
+                engineName: {
+                    in: engineNames
+            }},
             select: {
                 engineName: true,
                 engineType: true,

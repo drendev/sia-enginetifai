@@ -49,7 +49,7 @@ model Engine {
   updatedAt   DateTime @updatedAt
 
   // Relational Tables
-  transactions  Transaction[]
+  transactions  TransactionEngine[]
   specification Specification?
 
   @@unique([id, engineName])
@@ -122,8 +122,6 @@ model Transaction {
   id              Int      @id @default(autoincrement())
   user            User     @relation(fields: [transactionUser], references: [username])
   transactionUser String
-  engine          Engine   @relation(fields: [engineName], references: [engineName])
-  engineName      String
   quantity        Int
   totalPrice      Float
   paymentMethod   String
@@ -134,8 +132,19 @@ model Transaction {
 
   // Relational Tables
   deliveryInformation Delivery[]
+  engines             TransactionEngine[]
 
   @@unique([id, transactionUser, paymentMethod, deliveryDate])
+}
+
+model TransactionEngine {
+  id            Int         @id @default(autoincrement())
+  transactionId Int
+  engineName    String
+  transaction   Transaction @relation(fields: [transactionId], references: [id])
+  engine        Engine      @relation(fields: [engineName], references: [engineName])
+
+  @@unique([transactionId, engineName])
 }
 
 model Delivery {

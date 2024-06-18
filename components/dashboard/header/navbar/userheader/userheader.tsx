@@ -53,11 +53,11 @@ export default function UserHeader({children}: any) {
                 ref={dropdown}
                 onFocus={() => setDropdownOpen(true)}
                 onBlur={() => setDropdownOpen(false)}
-                className={`absolute right-0 mt-12 flex w-60 flex-col rounded-xl mr-5 border border-stroke bg-white shadow-md dark:border-slate-700 dark:bg-slate-900 ${
+                className={`absolute right-0 mt-12 flex w-60 flex-col rounded-xl mr-5 border border-stroke bg-white shadow-md dark:border-slate-700 z-[1000] dark:bg-slate-900 ${
                 dropdownOpen === true ? "block" : "hidden"
                 }`}
             >
-                <ul className="flex flex-col gap-5 border-b border-stroke px-6 py-6 dark:border-slate-700">
+                <ul className="flex flex-col gap-5 border-b border-stroke px-6 py-6 dark:border-slate-700 z-[1000]">
                     <li>
                         <ToggleMode />
                     </li>

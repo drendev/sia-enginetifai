@@ -5,7 +5,7 @@ import { z } from 'zod';
 // Define schema
 const transactionSchema = z.object({
   transactionUser: z.string().min(5, 'Username must be at least 5 characters.').max(30),
-  engineName: z.string().min(5, 'Engine name must be at least 5 characters.').max(30),
+  engineNames: z.string().min(5, 'Engine name must be at least 5 characters.').max(30),
   quantity: z.number().min(1, 'Quantity is required').max(100),
   delivery: z.boolean(),
   deliveryDate: z.string(),
@@ -15,10 +15,10 @@ const transactionSchema = z.object({
 export async function POST(req: Request) {
   try {
     const body = await req.json();
-    const { transactionUser, engineName, quantity, delivery, deliveryDate, paymentMethod } = transactionSchema.parse(body);
+    const { transactionUser, engineNames, quantity, delivery, deliveryDate, paymentMethod } = transactionSchema.parse(body);
 
     const enginePrice = await db.engine.findUnique({
-      where: { engineName },
+      where: { engineName: engineNames },
       select: { price: true },
     });
     if (!enginePrice) {
@@ -30,12 +30,16 @@ export async function POST(req: Request) {
     const newTransaction = await db.transaction.create({
       data: {
         transactionUser,
-        engineName,
         quantity,
         totalPrice: engineTotalPrice,
         delivery,
         deliveryDate,
-        paymentMethod
+        paymentMethod,
+        engines: {
+          create: [engineNames].map(engineName => ({
+            engine: { connect: { engineName: engineName } }
+          }))
+        }
       },
     });
 

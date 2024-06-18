@@ -4,8 +4,8 @@ export default function AddTrans(){
 
     return (
         <>
-        <div className="h-full py-16">
-            <h1>Data Visualization</h1>
+        <div className="min-h-full py-16">
+            <h1>Transactions</h1>
             <AddTransaction />
         </div>
         </>

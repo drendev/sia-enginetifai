@@ -33,9 +33,10 @@ import { signIn } from 'next-auth/react';
           newLoadings[index] = false;
           return newLoadings;
         });
-      }, 3000);
+      }, 7000);
     };
-    const [api, contextHolder] = notification.useNotification();
+
+  const [api, contextHolder] = notification.useNotification();
 
   const openNotificationWithIcon = (type: NotificationType) => {
     api[type]({
