@@ -268,7 +268,7 @@ const AddTransaction = () => {
         label="Total Transaction Price"
       >
         {engine && engine.map((engine, index) => (
-          <p>{engine.engineName}: {calcQuantity[index] * Number(engine.price)}</p>
+          <p key={index}>{engine.engineName}: {calcQuantity[index] * Number(engine.price)}</p>
         ))}
       </Form.Item>
         <EngineButton>
