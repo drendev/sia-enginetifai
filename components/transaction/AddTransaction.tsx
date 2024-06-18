@@ -172,31 +172,31 @@ const AddTransaction = () => {
       <Form.Item
         label="Engine Type"
       >
-        {engine && engine.map((engine) => (
-          <p>{engine.engineName}: {engine.engineType}</p>
+        {engine && engine.map((engine, index) => (
+          <p key={index}>{engine.engineName}: {engine.engineType}</p>
         ))}
       </Form.Item>
       <Form.Item
         label="Engine Image"
       >
-        {engine && engine.map((engine) => (
-        <Badge.Ribbon text={engine?.engineName} color="#BB4747" placement='start'>
-        <Image src={`${engine && engine?.picture}`} width={120} height={120} className='rounded-lg'/>
+        {engine && engine.map((engine, index) => (
+        <Badge.Ribbon key={index} text={engine?.engineName} color="#BB4747" placement='start'>
+        <Image key={index} src={`${engine && engine?.picture}`} width={120} height={120} className='rounded-lg'/>
         </Badge.Ribbon>
         ))}
       </Form.Item>
       <Form.Item
         label="Available Stock"
       >
-        {engine && engine.map((engine) => (
-          <p>{engine.engineName}: {engine.quantity}</p>
+        {engine && engine.map((engine, index) => (
+          <p key={index}>{engine.engineName}: {engine.quantity}</p>
         ))}
       </Form.Item>
       <Form.Item
         label="Engine Price"
       >
-        {engine && engine.map((engine) => (
-          <p>{engine.engineName}: {engine.price}</p>
+        {engine && engine.map((engine, index) => (
+          <p key={index}>{engine.engineName}: {engine.price}</p>
         ))}
       </Form.Item>
       
