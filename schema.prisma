@@ -138,11 +138,12 @@ model Transaction {
 }
 
 model TransactionEngine {
-  id            Int         @id @default(autoincrement())
-  transactionId Int
-  engineName    String
-  transaction   Transaction @relation(fields: [transactionId], references: [id])
-  engine        Engine      @relation(fields: [engineName], references: [engineName])
+  id                  Int         @id @default(autoincrement())
+  transactionId       Int
+  engineName          String
+  quantityTransaction Int[]
+  transaction         Transaction @relation(fields: [transactionId], references: [id])
+  engine              Engine      @relation(fields: [engineName], references: [engineName])
 
   @@unique([transactionId, engineName])
 }

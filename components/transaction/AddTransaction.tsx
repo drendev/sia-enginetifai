@@ -82,6 +82,11 @@ const AddTransaction = () => {
   });
 
   const onSubmit = async (values: z.infer<typeof FormSchema>) => {
+
+    const transactions = engineName.map((engineName, index) => ({
+      engineName,
+      quantity: calcQuantity[index],
+    }));
     // update stock
     const responseStock = await fetch('/api/enginetransacted', {
       method: 'POST',
@@ -89,11 +94,10 @@ const AddTransaction = () => {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        engineName: values.engineName,
-        quantity: values.quantity,
+        transactions
       }),
     });
-
+    console.log(transactions)
     // forward transaction data to database
     const response = await fetch('/api/addtransaction', {
       method: 'POST',
@@ -110,7 +114,7 @@ const AddTransaction = () => {
       }),
     });
 
-    if (response.ok && responseStock.ok) {
+    if (responseStock.ok) {
       router.push('/');
     } else {
       console.log('Something went wrong.');
