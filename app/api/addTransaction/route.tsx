@@ -5,8 +5,8 @@ import { z } from 'zod';
 // Define schema
 const transactionSchema = z.object({
   transactionUser: z.string().min(5, 'Username must be at least 5 characters.').max(30),
-  engineNames: z.string().min(5, 'Engine name must be at least 5 characters.').max(30),
-  quantity: z.number().min(1, 'Quantity is required').max(100),
+  engineNames: z.array(z.string()),
+  quantity: z.array(z.number().min(1, 'Quantity is required').max(100)),
   delivery: z.boolean(),
   deliveryDate: z.string(),
   paymentMethod: z.string().min(5, 'Payment method must be at least 5 characters.').max(30)
@@ -17,29 +17,37 @@ export async function POST(req: Request) {
     const body = await req.json();
     const { transactionUser, engineNames, quantity, delivery, deliveryDate, paymentMethod } = transactionSchema.parse(body);
 
-    const enginePrice = await db.engine.findUnique({
-      where: { engineName: engineNames },
-      select: { price: true },
+    const enginePrices = await db.engine.findMany({
+      where: {
+        engineName: {
+          in: engineNames,
+        },
+      },
+      select: {
+        engineName: true,
+        price: true,
+      },
     });
-    if (!enginePrice) {
-      return NextResponse.json({ message: 'Engine not found' }, { status: 404 });
+    if (enginePrices.length !== engineNames.length) {
+      return NextResponse.json({ message: 'One or more engines not found' }, { status: 404 });
     }
-
-    const engineTotalPrice = enginePrice.price * quantity;
+    
+    const engineTotalPrice = engineNames.reduce((total, engineName, index) => {
+      const engine = enginePrices.find(e => e.engineName === engineName);
+        if (!engine) return total;
+        total += engine.price * quantity[index];
+      return total;
+    }, 0);
 
     const newTransaction = await db.transaction.create({
       data: {
         transactionUser,
-        quantity,
+        engineName: engineNames,
+        quantity: quantity,
         totalPrice: engineTotalPrice,
         delivery,
         deliveryDate,
         paymentMethod,
-        engines: {
-          create: [engineNames].map(engineName => ({
-            engine: { connect: { engineName: engineName } }
-          }))
-        }
       },
     });
 

@@ -97,7 +97,6 @@ const AddTransaction = () => {
         transactions
       }),
     });
-    console.log(transactions)
     // forward transaction data to database
     const response = await fetch('/api/addtransaction', {
       method: 'POST',
@@ -106,7 +105,7 @@ const AddTransaction = () => {
       },
       body: JSON.stringify({
         transactionUser: user,
-        engineName: values.engineName,
+        engineNames: engineName,
         quantity: calcQuantity,
         delivery: values.delivery,
         deliveryDate: values.deliveryDate,
