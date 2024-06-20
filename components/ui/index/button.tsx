@@ -19,7 +19,7 @@ const enterLoading = (index: number) => {
         newLoadings[index] = false;
         return newLoadings;
         });
-    }, 10000);
+    }, 3000);
     };
 
     return(
