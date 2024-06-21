@@ -1,26 +1,23 @@
 import { db } from '@/lib/db';
 import { NextResponse } from 'next/server';
-import { startOfDay, endOfDay, subDays, setHours, setMinutes, setSeconds, setMilliseconds } from 'date-fns';
+import { startOfDay, endOfDay, subDays } from 'date-fns';
 import { toZonedTime } from 'date-fns-tz';
 
 export async function GET() {
     try {
         const timeZone = 'Asia/Manila';
-        const now = toZonedTime(new Date(), timeZone)
 
-        const todayStart = startOfDay(now);
-        const todayEnd = setMilliseconds(setSeconds(setMinutes(setHours(startOfDay(now), 23), 59), 59), 999);
-        const weekStart = startOfDay(subDays(now, 6));
+        const todayStart = toZonedTime(startOfDay(new Date()), timeZone);
+        const todayEnd = toZonedTime(endOfDay(new Date()), timeZone);
+        const weekStart = toZonedTime(startOfDay(subDays(endOfDay(new Date()), 6)), timeZone);
 
-        const todayStartUtc = toZonedTime(todayStart, timeZone);
-        const todayEndUtc = toZonedTime(todayEnd, timeZone);
-        const weekStartUtc = toZonedTime(weekStart, timeZone);
-
+        console.log(todayStart, todayEnd, weekStart)
+        
         const transactionsToday = await db.transaction.count({
             where: {
                 createAt: {
                     gte: todayStart,
-                    lte: todayEndUtc
+                    lte: todayEnd
                 }
             }
         })
@@ -31,7 +28,7 @@ export async function GET() {
             },
             where: {
                 createAt: {
-                    gte: todayStartUtc,
+                    gte: todayStart,
                     lte: todayEnd
                 }
             }
@@ -43,7 +40,7 @@ export async function GET() {
             },
             where: {
               createAt: {
-                gte: weekStartUtc,
+                gte: weekStart,
                 lte: todayEnd
               }
             }
