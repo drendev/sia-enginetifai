@@ -1,27 +1,18 @@
 import { db } from '@/lib/db';
 import { NextResponse } from 'next/server';
 import moment from 'moment-timezone';
-
 export async function GET() {
     try {
         const timeZone = 'Asia/Manila';
 
-        const utcDate = new Date(); // Assuming this is your UTC date
-        const currentDay = moment.tz(utcDate, "Asia/Manila").toDate();
-        
-        const formatter = new Intl.DateTimeFormat('en-US', {
-            timeZone,
-            year: 'numeric',
-            month: '2-digit',
-            day: '2-digit',
-            hour: 'numeric',
-            minute: 'numeric',
-            second: 'numeric'
-        });
+        const utcDate = new Date();
 
-        const todayStart = new Date(formatter.format(new Date(currentDay.setHours(0, 0, 0, 0))));
-        const todayEnd = new Date(formatter.format(new Date(currentDay.setHours(23, 59, 59, 999))));
-        const weekStart = new Date(formatter.format(new Date(currentDay.setDate(currentDay.getDate() - 6))));
+        const todayStart = moment.tz(utcDate, timeZone).startOf('day').format('YYYY-MM-DDTHH:mm:ss.SSS[Z]');
+        const todayEnd = moment.tz(utcDate, timeZone).endOf('day').format('YYYY-MM-DDTHH:mm:ss.SSS[Z]');
+        
+        const weekStart = moment.tz(utcDate, timeZone).startOf('week').format('YYYY-MM-DDTHH:mm:ss.SSS[Z]');
+
+        
         
         const transactionsToday = await db.transaction.count({
             where: {

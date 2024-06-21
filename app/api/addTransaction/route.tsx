@@ -13,8 +13,8 @@ const transactionSchema = z.object({
 });
 
 export async function POST(req: Request) {
-  const utcDate = new Date(); // Assuming this is your UTC date
-  const dateToday = moment.tz(utcDate, "Asia/Manila").format();
+  const utcDate = new Date(); 
+  const dateToday = moment.tz(utcDate, "Asia/Manila").format('YYYY-MM-DDTHH:mm:ss.SSS[Z]');
 
   try {
     const body = await req.json();
