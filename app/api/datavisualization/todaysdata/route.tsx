@@ -11,7 +11,7 @@ export async function GET() {
         const todayStart = toZonedTime(startOfDay(new Date()), timeZone);
         const todayEnd = toZonedTime(endOfDay(new Date()), timeZone);
         const weekStart = toZonedTime(startOfDay(subDays(endOfDay(new Date()), 6)), timeZone);
-        console.log(todayEnd)
+
         const transactionsToday = await db.transaction.count({
             where: {
                 createAt: {
