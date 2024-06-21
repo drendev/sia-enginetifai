@@ -83,7 +83,7 @@ function formatNumberWithCommas(num: number): string {
     <div className="bg-red-100 border-b border-slate-350 grid grid-cols-11 gap-4">      
       {/* Sales Activity */}
       <div className="col-span-6 border-r border-slate-300 p-8">
-        <h2 className="mb-6 text-xl">Today's Activity</h2>
+        <h2 className="mb-6 text-xl">Todays Activity</h2>
         <div className="grid grid-cols-3 gap-2">
           {/* Cards */}
             {salesActivity.map((item,i)=>{
