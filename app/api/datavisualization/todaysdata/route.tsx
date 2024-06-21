@@ -1,11 +1,14 @@
 import { db } from '@/lib/db';
 import { NextResponse } from 'next/server';
+import moment from 'moment-timezone';
 
 export async function GET() {
     try {
         const timeZone = 'Asia/Manila';
 
-        const currentDay = new Date();
+        const utcDate = new Date(); // Assuming this is your UTC date
+        const currentDay = moment.tz(utcDate, "Asia/Manila").toDate();
+        
         const formatter = new Intl.DateTimeFormat('en-US', {
             timeZone,
             year: 'numeric',
