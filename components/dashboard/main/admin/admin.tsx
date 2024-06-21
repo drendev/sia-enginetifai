@@ -9,7 +9,6 @@ function AdminDashboard () {
       <SalesOverview />
       <SecondGrid/>
       <ThirdGrid/>
-      <FirstGrid />
     </>
   )
 }

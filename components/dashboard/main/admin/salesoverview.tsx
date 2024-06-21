@@ -1,6 +1,5 @@
+"use client";
 
-import Item from "antd/es/list/Item";
-import Link from "next/link";
 import React from "react";
 import { SalesActivityCard } from "./SalesActivityCard";
 import { InventorySummaryCard } from "./InventorySummaryCard";
@@ -8,8 +7,7 @@ import { useEffect, useState } from "react";
 
 export interface SalesActivityItem{
   href:string;
-  number: number;
-  unit: string;
+  number: any;
   title: string;
   color: string;
 }
@@ -19,34 +17,51 @@ export interface InventorySummaryItem{
   number: number;
 }
 
+interface TodaysTransaction {  
+  today: number,
+  profit: number,
+  averageWeeklyTransactions: number
+}
+
 export function SalesOverview() {
-   
+  const [transaction, setTransaction] = useState<TodaysTransaction>();
+  useEffect(() => {
+    const fetchEngineData = async () => {
+        
+    const res = await fetch('/api/datavisualization/todaysdata',{
+        method: 'GET'
+    })
+    const data = await res.json()
+    setTransaction(data)
+    }
+
+    fetchEngineData() 
+}, [])
+
+function formatNumberWithCommas(num: number): string {
+  return num.toLocaleString('en-US'); // Formats the number with commas
+}
+
+  const TodaysTransactionTotal = transaction?.today;
+  const TodaysProfit = transaction?.profit;
+  const AverageOrderValue = transaction?.averageWeeklyTransactions;
+
   const salesActivity = [
         {
-            title:"To be Packed",
-            number:10,
-            unit: "Qty",
+            title:"Transactions",
+            number: TodaysTransactionTotal || 0,
             href:"#",
             color: "text-red-600",
         },
         {
-            title:"Transacted Engines",
-            number:0,
-            unit: "Qty",
+            title:"Total Sales",
+            number: TodaysProfit ? `₱ ${formatNumberWithCommas(TodaysProfit)}` : 0,
             href:"#",
             color: "text-red-600",
         },
         {
-            title:"Delivered Engines",
-            number:5,
-            unit: "Pkgs",
-            href:"#",
-            color: "text-red-600",
-        },
-        {
-            title:"To be Invoiced",
-            number:10,
-            unit: "Qty",
+            title:"Average Order Value",
+            number: AverageOrderValue || 0,
             href:"#",
             color: "text-red-600",
         },
@@ -62,14 +77,14 @@ export function SalesOverview() {
         number: 0,
       }
     ]
-
+    console.log(transaction)
 
   return (
-    <div className="bg-red-100 border-b border-slate-350  grid grid-cols-12 gap-4">      
+    <div className="bg-red-100 border-b border-slate-350 grid grid-cols-11 gap-4">      
       {/* Sales Activity */}
-      <div className="col-span-8 border-r border-slate-300 p-8">
-        <h2 className="mb-6 text-xl">Sales Activity</h2>
-        <div className="pr-7 grid grid-cols-4 gap-2">
+      <div className="col-span-6 border-r border-slate-300 p-8">
+        <h2 className="mb-6 text-xl">Today's Activity</h2>
+        <div className="grid grid-cols-3 gap-2">
           {/* Cards */}
             {salesActivity.map((item,i)=>{
                 return(

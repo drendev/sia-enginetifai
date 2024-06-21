@@ -2,9 +2,9 @@
 import { db } from '@/lib/db';
 import { NextResponse } from 'next/server';
 
-
 export async function GET() {
     try {
+
         const selectEngine = await db.engine.findMany({
             select: {
                 engineName: true,
@@ -31,8 +31,7 @@ export async function GET() {
                 engineName: engine.engineName,
                 picture: engine.picture,
                 quantity: engine.quantity,
-                transactionCount: engine.transactions.length,
-                totalTransactionQuantity: totalQuantity
+                totalTransactionQuantity: totalQuantity,
             };
         });
         return NextResponse.json(engineDetails);
