@@ -42,26 +42,22 @@ function formatNumberWithCommas(num: number): string {
   return num.toLocaleString('en-US'); // Formats the number with commas
 }
 
-  const TodaysTransactionTotal = transaction?.today;
-  const TodaysProfit = transaction?.profit;
-  const AverageOrderValue = transaction?.averageWeeklyTransactions;
-
   const salesActivity = [
         {
             title:"Transactions",
-            number: TodaysTransactionTotal || 0,
+            number: transaction?.today,
             href:"#",
             color: "text-red-600",
         },
         {
             title:"Total Sales",
-            number: TodaysProfit ? `₱ ${formatNumberWithCommas(TodaysProfit)}` : 0,
+            number: transaction?.profit,
             href:"#",
             color: "text-red-600",
         },
         {
             title:"Average Order Value",
-            number: AverageOrderValue || 0,
+            number: transaction?.averageWeeklyTransactions,
             href:"#",
             color: "text-red-600",
         },
@@ -80,7 +76,7 @@ function formatNumberWithCommas(num: number): string {
     console.log(transaction)
 
   return (
-    <div className="bg-red-100 border-b border-slate-350 grid grid-cols-11 gap-4">      
+    <div className="bg-red-primary/20 border-b border-slate-350 grid grid-cols-11 gap-4">      
       {/* Sales Activity */}
       <div className="col-span-6 border-r border-slate-300 p-8">
         <h2 className="mb-6 text-xl">Todays Activity</h2>

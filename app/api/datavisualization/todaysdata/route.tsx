@@ -8,17 +8,14 @@ export async function GET() {
         const todayEnd = endOfDay(new Date());
         const weekStart = startOfDay(subDays(todayEnd, 6));
 
-        const transactionsToday = await db.transaction.aggregate({
-            _count: {
-                quantity: true 
-            },
+        const transactionsToday = await db.transaction.count({
             where: {
                 createAt: {
                     gte: todayStart,
                     lte: todayEnd
                 }
             }
-        });
+        })
 
         const profitToday = await db.transaction.aggregate({
             _sum: {
@@ -55,7 +52,7 @@ export async function GET() {
 
         const totalQuantity = totalTransactions._sum.quantity || 0;
 
-        const today = transactionsToday._count.quantity;
+        const today = transactionsToday;
         const profit = profitToday._sum.totalPrice;
         const averageWeeklyTransactions = (totalQuantity / 7).toFixed(2);
         const engineLowStockCount = engineStock;
