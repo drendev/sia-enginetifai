@@ -10,7 +10,6 @@ import {
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 import { useEffect, useState } from "react";
 
-
 ChartJS.register(
     ArcElement,
     Tooltip,
@@ -21,9 +20,9 @@ ChartJS.register(
 interface ChartData {
     labels: string[];
     datasets: {
-        data: any[];
-        backgroundColor: string[];
-        hoverBackgroundColor: string[];
+    data: any[];
+    backgroundColor: string[];
+    hoverBackgroundColor: string[];
     }[];
 }
 

@@ -6,7 +6,6 @@ import { toZonedTime } from 'date-fns-tz';
 export async function GET() {
     try {
         const timeZone = 'Asia/Manila';
-        const now = new Date();
 
         const todayStart = toZonedTime(startOfDay(new Date()), timeZone);
         const todayEnd = toZonedTime(endOfDay(new Date()), timeZone);
