@@ -1,18 +1,16 @@
 import { db } from '@/lib/db';
 import { NextResponse } from 'next/server';
 import { startOfDay, endOfDay, subDays } from 'date-fns';
-import { toZonedTime } from 'date-fns-tz';
+import { toZonedTime, fromZonedTime } from 'date-fns-tz';
 
 export async function GET() {
     try {
         const timeZone = 'Asia/Manila';
 
-        const todayStart = toZonedTime(startOfDay(new Date()), timeZone);
-        const todayEnd = toZonedTime(endOfDay(new Date()), timeZone);
-        const weekStart = toZonedTime(startOfDay(subDays(endOfDay(new Date()), 6)), timeZone);
+        const todayStart = fromZonedTime(startOfDay(new Date()), timeZone);
+        const todayEnd = fromZonedTime(endOfDay(new Date()), timeZone);
+        const weekStart = fromZonedTime(startOfDay(subDays(endOfDay(new Date()), 6)), timeZone);
 
-        console.log(todayStart, todayEnd, weekStart)
-        
         const transactionsToday = await db.transaction.count({
             where: {
                 createAt: {
