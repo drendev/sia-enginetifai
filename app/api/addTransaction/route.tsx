@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { db } from '@/lib/db';
 import { z } from 'zod';
+import moment from 'moment-timezone';
 
 const transactionSchema = z.object({
   transactionUser: z.string().min(5, 'Username must be at least 5 characters.').max(30),
@@ -12,6 +13,9 @@ const transactionSchema = z.object({
 });
 
 export async function POST(req: Request) {
+  const utcDate = new Date(); // Assuming this is your UTC date
+  const dateToday = moment.tz(utcDate, "Asia/Manila").format();
+
   try {
     const body = await req.json();
     const { transactionUser, engineNames, quantity, delivery, deliveryDate, paymentMethod } = transactionSchema.parse(body);
@@ -52,6 +56,7 @@ export async function POST(req: Request) {
         delivery,
         deliveryDate,
         paymentMethod,
+        createAt: dateToday,
       },
     });
 

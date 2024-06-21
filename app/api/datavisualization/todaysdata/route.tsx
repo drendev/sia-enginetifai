@@ -1,8 +1,5 @@
 import { db } from '@/lib/db';
 import { NextResponse } from 'next/server';
-import { startOfDay, endOfDay, subDays } from 'date-fns';
-import { toZonedTime } from 'date-fns-tz';
-import moment from 'moment-timezone';
 
 export async function GET() {
     try {
@@ -22,7 +19,7 @@ export async function GET() {
         const todayStart = new Date(formatter.format(new Date(currentDay.setHours(0, 0, 0, 0))));
         const todayEnd = new Date(formatter.format(new Date(currentDay.setHours(23, 59, 59, 999))));
         const weekStart = new Date(formatter.format(new Date(currentDay.setDate(currentDay.getDate() - 6))));
-
+        
         const transactionsToday = await db.transaction.count({
             where: {
                 createAt: {
