@@ -1,7 +1,6 @@
 import { NextResponse } from 'next/server';
 import { db } from '@/lib/db';
 import { z } from 'zod';
-import { toZonedTime } from 'date-fns-tz';
 
 const transactionSchema = z.object({
   transactionUser: z.string().min(5, 'Username must be at least 5 characters.').max(30),
@@ -16,10 +15,6 @@ export async function POST(req: Request) {
   try {
     const body = await req.json();
     const { transactionUser, engineNames, quantity, delivery, deliveryDate, paymentMethod } = transactionSchema.parse(body);
-    const timeZone = 'Asia/Manila';
-    const now = new Date();
-
-    const createNow = toZonedTime(now, timeZone);
 
     const enginePrices = await db.engine.findMany({
       where: {
@@ -57,7 +52,6 @@ export async function POST(req: Request) {
         delivery,
         deliveryDate,
         paymentMethod,
-        createAt: createNow,
       },
     });
 
