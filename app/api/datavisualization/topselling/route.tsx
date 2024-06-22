@@ -30,7 +30,6 @@ export async function GET() {
             return {
                 engineName: engine.engineName,
                 picture: engine.picture,
-                quantity: engine.quantity,
                 totalTransactionQuantity: totalQuantity,
             };
         });

@@ -13,7 +13,6 @@ export async function GET() {
         const weekStart = moment.tz(utcDate, timeZone).startOf('week').format('YYYY-MM-DDTHH:mm:ss.SSS[Z]');
 
         
-        
         const transactionsToday = await db.transaction.count({
             where: {
                 createAt: {
