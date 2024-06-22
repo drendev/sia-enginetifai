@@ -5,7 +5,9 @@ import * as z from 'zod';
 import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Button, Checkbox, Form, Input } from 'antd';
+import React, { useState } from 'react';
+import type { RadioChangeEvent } from 'antd';
+import { Button, Checkbox, Form, Input, Radio } from 'antd';
 
 const FormSchema = z
 .object({
@@ -24,6 +26,15 @@ const FormSchema = z
 });
 
 const CreateUser = () => {
+
+    // Radio Button
+    const [value, setValue] = useState(1);
+
+    const onChange = (e: RadioChangeEvent) => {
+      console.log('radio checked', e.target.value);
+      setValue(e.target.value);
+    };
+
     const router = useRouter();
 
     const form = useForm<z.infer<typeof FormSchema>>({
@@ -78,12 +89,18 @@ const CreateUser = () => {
       name="role"
       rules={[{ required: true, message: 'Please input your username!' }]}
     >
-      <Input />
+    <Radio.Group onChange={onChange} value={value}>
+      <Radio value={1}>Admin</Radio>
+      <Radio value={2}>Employee</Radio>
+      <Radio value={3}>Courier</Radio>
+    </Radio.Group>
+    
     </Form.Item>
+   
     <Form.Item
       label="Email"
       name="email"
-      rules={[{ required: true, message: 'Please input your username!' }]}
+      rules={[{ required: true, message: 'Please input your email!' }]}
     >
       <Input />
     </Form.Item>
