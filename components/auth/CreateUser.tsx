@@ -90,9 +90,9 @@ const CreateUser = () => {
       rules={[{ required: true, message: 'Please input your username!' }]}
     >
     <Radio.Group onChange={onChange} value={value}>
-      <Radio value={1}>Admin</Radio>
-      <Radio value={2}>Employee</Radio>
-      <Radio value={3}>Courier</Radio>
+      <Radio value={"admin"}>Admin</Radio>
+      <Radio value={"employee"}>Employee</Radio>
+      <Radio value={"courier"}>Courier</Radio>
     </Radio.Group>
     
     </Form.Item>
