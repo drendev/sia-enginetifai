@@ -1,6 +1,7 @@
 import z from 'zod';
 import { NextResponse } from 'next/server';
 import { db } from '@/lib/db';
+import moment from 'moment-timezone';
 
 const engineTransactionSchema = z.object({
     transactions: z.array(
@@ -13,6 +14,9 @@ const engineTransactionSchema = z.object({
 
 export async function POST(req: Request) {
     try {
+        const utcDate = new Date(); 
+        const dateToday = moment.tz(utcDate, "Asia/Manila").format('YYYY-MM-DDTHH:mm:ss.SSS[Z]');
+
         const body = await req.json();
         const { transactions } = engineTransactionSchema.parse(body);
 
@@ -57,6 +61,7 @@ export async function POST(req: Request) {
             newTransactions.push({
                 quantity,
                 totalPrice,
+                createAt: dateToday,
                 engine: {
                     connect: { engineName }
                 }

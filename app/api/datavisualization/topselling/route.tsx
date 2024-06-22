@@ -4,7 +4,6 @@ import { NextResponse } from 'next/server';
 
 export async function GET() {
     try {
-
         const selectEngine = await db.engine.findMany({
             select: {
                 engineName: true,
