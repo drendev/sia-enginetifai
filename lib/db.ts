@@ -1,13 +1,11 @@
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient } from "@prisma/client";
 
-declare global {
-  // Allow the use of `global` as the namespace for Prisma
-  // This is important for avoiding issues with Next.js hot reloading
-  var prisma: PrismaClient | undefined;
+const globalForPrisma = global as unknown as {
+    prisma: PrismaClient | undefined;
 }
 
-const prisma = global.prisma || new PrismaClient();
+export const prisma = globalForPrisma.prisma ?? new PrismaClient();
 
-if (process.env.NODE_ENV !== 'production') global.prisma = prisma;
+if (process.env.NODE_ENV !== 'production') globalForPrisma.prisma = prisma;
 
 export const db = prisma;
