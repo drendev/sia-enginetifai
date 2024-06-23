@@ -97,7 +97,7 @@ const AddTransaction = () => {
       }),
     });
     // forward transaction data to database
-    const response = await fetch('/api/addtransaction', {
+    const response = await fetch('/api/addtransac', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
