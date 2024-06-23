@@ -1,4 +1,7 @@
+
 import { db } from '@/lib/db';
+import { NextResponse } from 'next/server';
+
 
 export async function GET() {
     try {
@@ -11,15 +14,9 @@ export async function GET() {
             }
         });
 
-        return new Response(JSON.stringify(enginePrice));
-
+        return NextResponse.json(enginePrice);
     } catch (error) {
         console.error("Error fetching engine price:", error);
-        return new Response(JSON.stringify({ error: 'Internal Server Error' }), {
-            status: 500,
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        });
+        return NextResponse.json({ error: 'Internal Server Error' });
     }
 }
