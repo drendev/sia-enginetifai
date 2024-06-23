@@ -6,7 +6,7 @@ import { z } from 'zod';
 const transactionSchema = z.object({
   transactionUser: z.string().min(5, 'Username must be at least 5 characters.').max(30),
   engineNames: z.array(z.string()),
-  quantity: z.array(z.number().min(1, 'Quantity is required').max(100)),
+  quantity: z.array(z.number()),
   delivery: z.boolean(),
   deliveryDate: z.string(),
   paymentMethod: z.string().min(5, 'Payment method must be at least 5 characters.').max(30)
@@ -49,9 +49,7 @@ export async function POST(req: Request) {
       },
     });
 
-    return NextResponse.json({
-      message: 'Transaction successfully added.',
-    }, { status: 201 });
+    return NextResponse.json({ message: 'Success' });
 
   } catch (error: any) {
     console.error('Error occurred:', error);
