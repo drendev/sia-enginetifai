@@ -1,24 +1,47 @@
+"use client";
+
+import React from 'react';
+import { useState, useEffect } from 'react';
 
 type User = {
-    id: number;
-    username: string;
-    email: string;
-    role: string;
+  map(arg0: (user: any, index: any) => any): import("react").ReactNode;
+  username?: string;
+  email?: string;
+  password?: string;
+  role?: string;
 }
 
-export default async function UserPage(){
-    const response = await fetch('https://enginetifai.vercel.app/api/testapi');
-    const users = await response.json();
+const App: React.FC = () => {
 
-    return(
-        <div className="mt-16">
-            {users && users.map((user:User) => (
-                <div key={user.id} className="bg-white shadow-md p-4 rounded-md">
-                    <h1 className="text-xl font-semibold">{user.username}</h1>
-                    <p className="text-lg">{user.email}</p>
-                    <p className="text-lg">{user.role}</p>
-                </div>
-            ))}
-        </div>
+     const [user, setUser] = useState<User | null>(null);
+
+    const getUser = async () => {
+        const res = await fetch('/api/testapi', {
+            method: 'GET',
+            next: {
+                revalidate: 1
+            }
+        });
+         const data = await res.json(); 
+        setUser(data);
+     }
+
+     useEffect(() => {
+        getUser();
+     }, [])
+
+     return(
+         <div className="mt-16">
+             {user && user.map((user, index) => (
+                 <div key={index} className="mb-10">
+                     <p className="text-lg font-bold">Username: {user.username}</p>
+                     <p className="text-lg font-bold">Email: {user.email}</p>
+                    <p className="text-lg font-bold">Password: {user.password}</p>
+                    <p className="text-lg font-bold">Role: {user.role}</p>
+                 </div>
+             ))}
+         </div>
     )
-}
+};
+
+export default App;
