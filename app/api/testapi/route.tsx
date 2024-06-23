@@ -1,12 +1,11 @@
-import { PrismaClient, Prisma } from '@prisma/client'
+
 import { db } from '@/lib/db';
 import { NextResponse } from 'next/server';
 
-const prisma = new PrismaClient()
 
 export async function GET() {
     try {
-        const enginePrice = await prisma.user.findMany({
+        const enginePrice = await db.user.findMany({
             select: {
                 username: true,
                 email: true,
