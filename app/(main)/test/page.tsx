@@ -7,7 +7,7 @@ type User = {
 }
 
 export default async function UserPage(){
-    const response = await fetch('/api/testapi');
+    const response = await fetch('https://enginetifai.vercel.app/api/testapi');
     const users = await response.json();
 
     return(
