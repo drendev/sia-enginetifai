@@ -50,7 +50,7 @@ export function SecondGrid() {
         const fetchEngineData = async () => {
             
         const res = await fetch('/api/datavisualization/todaysdata',{
-            method: 'GET'
+            method: 'POST'
         })
         const data = await res.json()
         setEngineStock(data)
@@ -63,7 +63,7 @@ export function SecondGrid() {
         const fetchEngineData = async () => {
             
         const res = await fetch('/api/datavisualization/topselling',{
-            method: 'GET'
+            method: 'POST'
         })
         const data = (await res.json()) as EngineTopSelling[];
         setData(data)

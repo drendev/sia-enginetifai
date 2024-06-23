@@ -29,7 +29,7 @@ export function SalesOverview() {
     const fetchEngineData = async () => {
         
     const res = await fetch('/api/datavisualization/todaysdata',{
-        method: 'GET',
+        method: 'POST',
         next: {
           revalidate: 2
         }

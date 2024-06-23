@@ -3,7 +3,7 @@ import { db } from '@/lib/db';
 import { NextResponse } from 'next/server';
 
 
-export async function GET(req: Request) {
+export async function POST(req: Request) {
     try {
         const url = new URL(req.url);
         const engineNames = url.searchParams.getAll('engineName');

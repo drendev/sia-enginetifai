@@ -1,11 +1,8 @@
 "use client";
 
-import React from 'react';
-import { useState, useEffect } from 'react';
-
+import React, { useState, useEffect } from 'react';
 
 type User = {
-  map(arg0: (user: any, index: any) => any): import("react").ReactNode;
   username?: string;
   email?: string;
   password?: string;
@@ -13,36 +10,43 @@ type User = {
 }
 
 const App: React.FC = () => {
-    const [user, setUser] = useState<User | null>(null);
-    try {
-        const getUser = async () => {
-            const res = await fetch('/api/testapi', {
-                method: 'POST'
-            });
-            const data = await res.json();
-            setUser(data);
-         }
-         
-         useEffect(() => {
-            getUser();
-         }, [])
-    } catch (error) {
-        console.error("Error fetching engine price:", error);
-    }
+    const [users, setUsers] = useState<User[]>([]);
     
-     return(
-         <div className="mt-16">
-             {user && user.map((user, index) => (
-                 <div key={index} className="mb-10">
-                     <p className="text-lg font-bold">Username: {user.username}</p>
-                     <p className="text-lg font-bold">Email: {user.email}</p>
+    const getUsers = async () => {
+        try {
+            const res = await fetch('/api/testapi',
+                {
+                    method: 'POST',
+                }
+            );
+            const data = await res.json();
+            setUsers(data);
+        } catch (error) {
+            console.error("Error fetching users:", error);
+        }
+    };
+
+    useEffect(() => {
+        getUsers();
+        const interval = setInterval(() => {
+            getUsers();
+        }, 2000);
+
+        return () => clearInterval(interval);
+    }, []);
+
+    return (
+        <div className="mt-16">
+            {users.map((user, index) => (
+                <div key={index} className="mb-10">
+                    <p className="text-lg font-bold">Username: {user.username}</p>
+                    <p className="text-lg font-bold">Email: {user.email}</p>
                     <p className="text-lg font-bold">Password: {user.password}</p>
                     <p className="text-lg font-bold">Role: {user.role}</p>
-                 </div>
-             ))}
-    
-         </div>
-    )
+                </div>
+            ))}
+        </div>
+    );
 };
 
 export default App;

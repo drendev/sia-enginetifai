@@ -47,8 +47,10 @@ const AddTransaction = () => {
       if (!engineName) return setEngineName([])
 
       const queryString = engineName.map(name => `engineName=${name}`).join('&');
-      const res = await fetch(`/api/enginelist?${queryString}`);
-      const data = (await res.json()) as Engine[];
+      const res = await fetch(`/api/enginelist?${queryString}`, {
+        method: 'POST',
+      });
+      const data = await res.json() as Engine[];
       setEngine(data)
     }
 
@@ -59,7 +61,7 @@ const AddTransaction = () => {
     const fetchEngineData = async () => {
         
       const res = await fetch('/api/findengine',{
-        method: 'GET'
+        method: 'POST'
       })
       const data = await res.json()
       JSON.stringify(data)
