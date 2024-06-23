@@ -29,7 +29,10 @@ export function SalesOverview() {
     const fetchEngineData = async () => {
         
     const res = await fetch('/api/datavisualization/todaysdata',{
-        method: 'GET'
+        method: 'GET',
+        next: {
+          revalidate: 2
+        }
     })
     const data = await res.json()
     setTransaction(data)
