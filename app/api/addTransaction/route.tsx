@@ -17,7 +17,7 @@ export async function POST(req: Request) {
     const body = await req.json();
     const { transactionUser, engineNames, quantity, delivery, deliveryDate, paymentMethod } = transactionSchema.parse(body);
 
-    
+
     const enginePrices = await db.engine.findMany({
       where: {
         engineName: {
@@ -29,12 +29,9 @@ export async function POST(req: Request) {
         price: true,
       },
     });
-    if (enginePrices.length !== engineNames.length) {
-      return NextResponse.json({ message: 'One or more engines not found' }, { status: 404 });
-    }
     
     const engineTotalPrice = engineNames.reduce((total, engineName, index) => {
-      const engine = enginePrices.find(e => e.engineName === engineName);
+      const engine = enginePrices.find(e => e.engineName == engineName);
         if (!engine) return total;
         total += engine.price * quantity[index];
       return total;
