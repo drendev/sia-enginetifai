@@ -1,10 +1,8 @@
 import CreateUser from "@/components/auth/CreateUser"
-import { PrismaClient } from "@prisma/client";
-
-const prisma = new PrismaClient();
+import { db } from "@/lib/db"
 
 export default async function CreateUserPage() {
-    const enginePrice = await prisma.user.findMany({
+    const enginePrice = await db.user.findMany({
         select: {
             username: true,
             email: true,
