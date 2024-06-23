@@ -17,7 +17,7 @@ const App: React.FC = () => {
     try {
         const getUser = async () => {
             const res = await fetch('/api/testapi', {
-                method: 'GET'
+                method: 'POST'
             });
             const data = await res.json();
             setUser(data);
