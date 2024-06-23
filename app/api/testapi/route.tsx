@@ -1,11 +1,19 @@
-
 import { db } from '@/lib/db';
 import { NextResponse } from 'next/server';
 
+export async function GET(request:Request) {
+    if (request.method === 'OPTIONS') {
+        return new NextResponse(null, {
+            headers: {
+                'Access-Control-Allow-Origin': '*',
+                'Access-Control-Allow-Methods': 'GET,OPTIONS',
+                'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+            }
+        });
+    }
 
-export async function GET(req: Request) {
     try {
-        const enginePrice = await db.user.findMany({
+        const users = await db.user.findMany({
             select: {
                 id: true,
                 username: true,
@@ -15,9 +23,20 @@ export async function GET(req: Request) {
             }
         });
 
-        return NextResponse.json(enginePrice);
+        return new NextResponse(JSON.stringify(users), {
+            headers: {
+                'Content-Type': 'application/json',
+                'Access-Control-Allow-Origin': '*'
+            }
+        });
     } catch (error) {
-        console.error("Error fetching engine price:", error);
-        return NextResponse.json({ error: 'Internal Server Error' });
+        console.error("Error fetching users:", error);
+        return new NextResponse(JSON.stringify({ error: 'Internal Server Error' }), {
+            status: 500,
+            headers: {
+                'Content-Type': 'application/json',
+                'Access-Control-Allow-Origin': '*'
+            }
+        });
     }
 }

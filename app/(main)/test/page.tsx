@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { useState, useEffect } from 'react';
-import { db } from '@/lib/db';
+
 
 type User = {
   map(arg0: (user: any, index: any) => any): import("react").ReactNode;
@@ -12,31 +12,14 @@ type User = {
   role?: string;
 }
 
-async function getUser() {
-    const enginePrice = await db.user.findMany({
-        select: {
-            id: true,
-            username: true,
-            email: true,
-            password: true,
-            role: true,
-        }
-    });
-    return enginePrice;
-
-}
-
 const App: React.FC = () => {
     const [user, setUser] = useState<User | null>(null);
     try {
         const getUser = async () => {
             const res = await fetch('/api/testapi', {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json'
-                }
+                method: 'GET'
             });
-             const data = await res.json(); 
+             const data = await res.json();
             setUser(data);
          }
     
@@ -46,7 +29,6 @@ const App: React.FC = () => {
     } catch (error) {
         console.error("Error fetching engine price:", error);
     }
-
     
      return(
          <div className="mt-16">
@@ -58,6 +40,7 @@ const App: React.FC = () => {
                     <p className="text-lg font-bold">Role: {user.role}</p>
                  </div>
              ))}
+    
          </div>
     )
 };
