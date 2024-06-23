@@ -19,10 +19,10 @@ const App: React.FC = () => {
             const res = await fetch('/api/testapi', {
                 method: 'GET'
             });
-             const data = await res.json();
+            const data = await res.json();
             setUser(data);
          }
-    
+         
          useEffect(() => {
             getUser();
          }, [])

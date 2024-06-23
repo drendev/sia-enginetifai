@@ -79,6 +79,7 @@ export const authOptions: NextAuthOptions = {
                     role: token.role,
                     picture: token.picture
                 },
+                
             };
         },
       }
