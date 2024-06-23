@@ -104,8 +104,8 @@ const AddTransaction = () => {
       },
       body: JSON.stringify({
         transactionUser: user,
-        engineNames: engineName,
-        quantity: calcQuantity,
+        engineNames: transactions.map((transaction) => transaction.engineName),
+        quantity: transactions.map((transaction) => transaction.quantity),
         delivery: values.delivery,
         deliveryDate: values.deliveryDate,
         paymentMethod: values.transactionMethod,
