@@ -1,7 +1,6 @@
 import { NextResponse } from 'next/server';
 import { db } from '@/lib/db';
 import { z } from 'zod';
-import moment from 'moment-timezone';
 
 const transactionSchema = z.object({
   transactionUser: z.string().min(5, 'Username must be at least 5 characters.').max(30),
@@ -13,12 +12,12 @@ const transactionSchema = z.object({
 });
 
 export async function POST(req: Request) {
-  const utcDate = new Date(); 
-  const dateToday = moment.tz(utcDate, "Asia/Manila").format('YYYY-MM-DDTHH:mm:ss.SSS[Z]');
-
   try {
     const body = await req.json();
+    console.log('Request body:', body);
+
     const { transactionUser, engineNames, quantity, delivery, deliveryDate, paymentMethod } = transactionSchema.parse(body);
+    console.log('Parsed data:', { transactionUser, engineNames, quantity, delivery, deliveryDate, paymentMethod });
 
     const enginePrices = await db.engine.findMany({
       where: {
@@ -31,15 +30,24 @@ export async function POST(req: Request) {
         price: true,
       },
     });
+    console.log('Engine prices from DB:', enginePrices);
 
     const priceMap = new Map(enginePrices.map(engine => [engine.engineName, engine.price]));
+    console.log('Price map:', priceMap);
+    
+    if (priceMap.size !== engineNames.length) {
+      return NextResponse.json({ message: 'One or more engines not found' }, { status: 404 });
+    }
 
     let engineTotalPrice = 0;
     for (let i = 0; i < engineNames.length; i++) {
       const price = priceMap.get(engineNames[i]);
-      
-      engineTotalPrice += price || 0 * quantity[i];
+      if (price === undefined) {
+        return NextResponse.json({ message: 'One or more engines not found' }, { status: 404 });
+      }
+      engineTotalPrice += price * quantity[i];
     }
+    console.log('Total price calculated:', engineTotalPrice);
 
     const newTransaction = await db.transaction.create({
       data: {
@@ -50,9 +58,9 @@ export async function POST(req: Request) {
         delivery,
         deliveryDate,
         paymentMethod,
-        createAt: dateToday,
       },
     });
+    console.log('New transaction added:', newTransaction);
 
     return NextResponse.json({
       message: 'Transaction successfully added.',
