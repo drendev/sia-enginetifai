@@ -12,7 +12,7 @@ const transactionSchema = z.object({
   paymentMethod: z.string().min(5, 'Payment method must be at least 5 characters.').max(30)
 });
 
-export async function GET(req: Request) {
+export async function POST(req: Request) {
   try {
     const body = await req.json();
     const { transactionUser, engineNames, quantity, delivery, deliveryDate, paymentMethod } = transactionSchema.parse(body);
