@@ -50,6 +50,7 @@ const AddTransaction = () => {
       const res = await fetch(`/api/enginelist?${queryString}`, {
         method: 'POST',
       });
+      
       const data = await res.json() as Engine[];
       setEngine(data)
     }
