@@ -112,7 +112,7 @@ const AddTransaction = () => {
       }),
     });
 
-    if (responseStock.ok) {
+    if (responseStock.ok && response.ok) {
       router.push('/');
     } else {
       console.log('Something went wrong.');
