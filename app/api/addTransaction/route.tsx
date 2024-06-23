@@ -33,18 +33,12 @@ export async function POST(req: Request) {
     });
 
     const priceMap = new Map(enginePrices.map(engine => [engine.engineName, engine.price]));
-    
-    if (priceMap.size !== engineNames.length) {
-      return NextResponse.json({ message: 'One or more engines not found' }, { status: 404 });
-    }
 
     let engineTotalPrice = 0;
     for (let i = 0; i < engineNames.length; i++) {
       const price = priceMap.get(engineNames[i]);
-      if (price === undefined) {
-        return NextResponse.json({ message: 'One or more engines not found' }, { status: 404 });
-      }
-      engineTotalPrice += price * quantity[i];
+      
+      engineTotalPrice += price || 0 * quantity[i];
     }
 
     const newTransaction = await db.transaction.create({
