@@ -14,7 +14,15 @@ const config: Config = {
         "gradient-conic":
           "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
         "waves":  "url('/waves.svg')",
-      },
+        "transactions": "url('/transactionbg.svg')",
+        "salesbg": "url('/salesbg.svg')",
+        "orderbg": "url('/ordervaluebg.svg')",
+        "highlight": "url('/fireworks.svg')",
+        "fireworks": "url('/underline.svg')",
+        "bgcard": "url('/bg-card.png')",
+        "deliverybg": "url('/delivery.svg')",
+        "aibg": "url('/ai.svg')",
+        },
       colors: {
         "red-primary": "#BB4747",
         "gray-primary": "#E5E5E5",

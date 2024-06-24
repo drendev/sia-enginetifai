@@ -5,6 +5,7 @@ export async function POST() {
     try {
         const engines = await db.engine.findMany({
             select: {
+                id: true,
                 engineName: true,
                 picture: true,
                 transactions: {
@@ -18,13 +19,14 @@ export async function POST() {
         const enginesWithTotalQuantity = engines.map(engine => {
             const totalQuantity = engine.transactions.reduce((sum, transaction) => sum + transaction.quantity, 0);
             return {
+                engineId: engine.id,
                 engineName: engine.engineName,
-                picture: engine.picture,
-                totalTransactionQuantity: totalQuantity,
+                engineImage: engine.picture,
+                engineSold: totalQuantity,
             };
         });
 
-        enginesWithTotalQuantity.sort((a, b) => b.totalTransactionQuantity - a.totalTransactionQuantity);
+        enginesWithTotalQuantity.sort((a, b) => b.engineSold - a.engineSold);
 
         const top3Engines = enginesWithTotalQuantity.slice(0, 3);
 

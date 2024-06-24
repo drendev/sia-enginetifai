@@ -1,6 +1,6 @@
 
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Inter, Nunito } from "next/font/google";
 import "./globals.css";
 import Provider from "@/components/Provider";
 import { authOptions } from "@/lib/auth";
@@ -8,7 +8,7 @@ import { getServerSession } from "next-auth";
 import DashboardHeader from "@/components/dashboard/header";
 import { ThemeProvider } from "@/components/dashboard/header/navbar/darkmode/themeprovider";
 import './nprogress.css';
-const inter = Inter({ subsets: ["latin"] });
+const inter = Nunito({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "EnginetifAI",

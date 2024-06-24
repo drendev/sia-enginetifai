@@ -1,52 +1,27 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { SalesOverview } from "./admin/salesoverview";
-import ThirdGrid from "./admin/thirdgrid";
-import { SecondGrid } from "./admin/secondgrid";
-
-
-type User = {
-    map(arg0: (user: any, index: any) => any): import("react").ReactNode;
-    username?: string;
-    email?: string;
-    password?: string;
-    role?: string;
-}
+import { AverageDelivery } from "./admin/averagedelivery";
+import { ImageRecognition } from "./admin/imagerecognition";
+import { InventorySummary } from "./admin/inventorysummary";
+import { ProductDetails } from "./admin/productdetails";
+import { TodayActivity } from "./admin/todaysactivity";
 
 export default function EmployeeDashboard() {
-    // const [user, setUser] = useState<User | null>(null);
-
-    // const getUser = async () => {
-    //     const res = await fetch('/api/testapi', {
-    //         method: 'GET'
-    //     });
-    //     const data = await res.json(); 
-    //     setUser(data);
-    // }
-
-    // useEffect(() => {
-    //     getUser();
-    // }, [])
-
-    // return(
-    //     <div className="mt-16">
-    //         {user && user.map((user, index) => (
-    //             <div key={index} className="mb-10">
-    //                 <p className="text-lg font-bold">Username: {user.username}</p>
-    //                 <p className="text-lg font-bold">Email: {user.email}</p>
-    //                 <p className="text-lg font-bold">Password: {user.password}</p>
-    //                 <p className="text-lg font-bold">Role: {user.role}</p>
-    //             </div>
-    //         ))}
-    //     </div>
-    // )
-
     return (
         <>
-            <SalesOverview/>
-            <SecondGrid />
-            <ThirdGrid />
+            <div className="bg-[#BB4747]/5 h-full px-10">
+                <div className="flex gap-2">
+                    <div className="flex-col md:flex-grow p-6">
+                        <TodayActivity />
+                        <ProductDetails />
+                    </div>
+                    <div className="flex-none w-2/6 space-y-4">
+                        <InventorySummary />
+                        <AverageDelivery />
+                        <ImageRecognition />
+                    </div>
+                </div>
+            </div>
         </>
     )
 
