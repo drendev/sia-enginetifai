@@ -9,7 +9,7 @@ import { TodayActivity } from "./admin/todaysactivity";
 export default function EmployeeDashboard() {
     return (
         <>
-            <div className="bg-[#BB4747]/5 h-full px-10">
+            <div className="h-full px-10">
                 <div className="flex gap-2">
                     <div className="flex-col md:flex-grow p-6">
                         <TodayActivity />

@@ -11,7 +11,7 @@ export default async function Dashboard() {
     
     return (
          <>
-         <div className='pt-10 pb-10 md:pb-0 md:pt-16'>
+         <div className='bg-red-primary/5 pt-10 pb-10 md:pb-0 md:pt-16'>
          {role === 'admin' ? <AdminDashboard /> : role === 'employee' ? <EmployeeDashboard /> : <CourierDashboard/> }
          </div>
          </>

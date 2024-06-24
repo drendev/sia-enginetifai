@@ -7,7 +7,7 @@ import { ImageRecognition } from "./imagerecognition";
 function AdminDashboard () {
   return(
   <>
-    <div className="bg-[#BB4747]/5 h-full px-10">
+    <div className="h-full px-10">
         <div className="flex gap-2">
             <div className="flex-col md:flex-grow p-6">
                 <TodayActivity />
