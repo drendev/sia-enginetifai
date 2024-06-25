@@ -1,7 +1,7 @@
 
 export function InventorySummary() {
     return(
-        <div className="flip-card flex flex-col space-y-5 pt-5">
+        <div className="flip-card flex flex-col space-y-5 md:pt-5">
             <div className="flip-card-inner flex flex-col w-full h-52 rounded-2xl shadow-xl cursor-pointer">
                 <div className="flip-card-front bg-bgcard bg-bottom bg-cover bg-no-repeat p-7">
                     <h3 className="text-red-50 text-3xl font-sans font-extrabold">Inventory Summary</h3>

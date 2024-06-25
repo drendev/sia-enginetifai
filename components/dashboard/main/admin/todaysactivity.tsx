@@ -63,7 +63,7 @@ export function TodayActivity() {
 
     return (
         <>
-        <h1 className="text-4xl font-bold font-sans text-red-950 mb-5">
+        <h1 className="text-3xl md:text-4xl font-bold font-sans text-red-950 mb-5 mt-2 md:mt-0">
             <span className="bg-highlight bg-no-repeat bg-left-top bg-contain pt-6">Todays Activity</span> 
         </h1>
         <div className="flex md:grid grid-cols-3 gap-2 flex-col">

@@ -36,10 +36,10 @@ export function ProductDetails() {
     // Display the data
     const engineDetails = sortedData.map((engine) => (
         <Link key={engine.engineId} href={`/product/${engine.engineId}`}>
-            <div className="border border-gray-200 p-1 rounded-lg flex flex-col items-center justify-center 
-            hover:-translate-y-1 transition-all cursor-pointer hover:shadow-md">
-                <img src={`${engine.engineImage}`} alt="" className=" w-20 h-20 mb-2"/>
-                <h4 className="text-md font-semibold">{engine.engineName}</h4>
+            <div className="border border-gray-200 p-1 rounded-lg flex flex-col items-center
+            hover:-translate-y-1 transition-all cursor-pointer hover:shadow-md w-full">   
+                <img src={`${engine.engineImage}`} alt="" className="w-20 h-20 md:w-20 md:h-20 mb-2"/>
+                <h4 className="text-sm font-semibold">{engine.engineName}</h4>
                 <p className="text-sm text-gray-400">{engine.engineSold} sold</p>
             </div>
         </Link>
@@ -50,11 +50,11 @@ export function ProductDetails() {
         <h1 className="text-2xl font-bold font-sans text-red-950 mb-7 my-5">
         <span className="bg-fireworks bg-no-repeat bg-right-bottom bg-contain pb-4"> Product Details </span> 
         </h1>
-        <div className="grid grid-cols-5 gap-5 my-5 ">
-            <div className="col-span-3 space-y-5">
-                <div className="bg-white shadow-md h-52 w-full rounded-xl p-4 space-y-3">
+        <div className="flex flex-col md:grid md:grid-cols-5 gap-5 md:my-5">
+            <div className="col-span-1 md:col-span-3 space-y-2 md:space-y-5">
+                <div className="bg-white shadow-md md:h-52 rounded-xl p-4 space-y-3">
                     <h3 className="text-red-900 font-bold text-lg font-sans"> Top Selling Engines </h3>
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div className="grid grid-cols-3 gap-2 md:gap-4">
                             {engineDetails}
                         </div>
                 </div>
@@ -62,11 +62,11 @@ export function ProductDetails() {
                     <div className="flex justify-between">
                         <div className="">
                         <h3 className="text-red-900 font-bold text-lg font-sans"> Engine Types </h3>
-                            <h3 className="font-semibold font-sans text-md mt-8">Explore top engine types interactively</h3>
-                            <p className="font-sans font-light"><span className="text-3xl font-semibold text-[#BB4747]"> 16 </span> total engine types</p>
+                            <h3 className="font-semibold font-sans text-sm md:text-md mt-4 md:mt-8">Explore top engine types interactively</h3>
+                            <p className="font-sans font-light"><span className="text-2xl md:text-3xl font-semibold text-[#BB4747]"> 16 </span> total engine types</p>
                         </div>
-                        <div className="justify-center items-center mr-7">
-                            <img src="/enginetype.png" alt="" className="h-36 w-52"/>
+                        <div className="justify-center items-center mr-0 md:mr-7">
+                            <img src="/enginetype.png" alt="" className="h-28 w-40 md:h-36 md:w-52"/>
                         </div>
                     </div>
                 </div> 

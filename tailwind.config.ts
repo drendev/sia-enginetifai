@@ -23,6 +23,10 @@ const config: Config = {
         "deliverybg": "url('/delivery.svg')",
         "aibg": "url('/ai.svg')",
         },
+        backgroundSize: {
+          "16": "12rem",
+          "14": "10rem",
+        },
       colors: {
         "red-primary": "#BB4747",
         "gray-primary": "#E5E5E5",

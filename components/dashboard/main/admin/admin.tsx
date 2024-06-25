@@ -7,13 +7,13 @@ import { ImageRecognition } from "./imagerecognition";
 function AdminDashboard () {
   return(
   <>
-    <div className="h-full px-10">
-        <div className="flex gap-2">
+    <div className="h-full flex-col flex md:px-10">
+        <div className="flex flex-col sm:flex-row md:gap-2">
             <div className="flex-col md:flex-grow p-6">
                 <TodayActivity />
                 <ProductDetails />
             </div>
-            <div className="flex-none w-2/6 space-y-4">
+            <div className="flex flex-col md:flex-none w-full md:w-2/6 space-y-4 p-6 md:p-0">
                 <InventorySummary />
                 <AverageDelivery />
                 <ImageRecognition />
