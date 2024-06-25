@@ -1,7 +1,17 @@
 import EmployeeDashboard from "@/components/dashboard/main/employee";
-import UserProfileCard from "@/components/employees/EmployeeCard";
+import { StaffDisplay } from "@/components/staff/StaffDisplay";
+import { db } from "@/lib/db";
 
-export default function Employees() {
+async function getEmployees(){
+  const employees = await db.user.findMany()
+
+  return employees;
+}
+
+export default async function Employees() {
+
+  const employees = await getEmployees();
+
   return (
     <>
       <div className="pt-20 pl-10 pr-10">
@@ -78,11 +88,11 @@ export default function Employees() {
             Add Employee
           </button>
         </div>
+        
         <div className="flex mt-5">
-          <UserProfileCard />
-          <UserProfileCard />
-          <UserProfileCard />
-          <UserProfileCard />
+          <StaffDisplay />
+   
+
         </div>
       </div>
     </>

@@ -35,6 +35,8 @@ const App: React.FC = () => {
         return () => clearInterval(interval);
     }, []);
 
+    console.log(users)
+
     return (
         <div className="mt-16">
             {users.map((user, index) => (

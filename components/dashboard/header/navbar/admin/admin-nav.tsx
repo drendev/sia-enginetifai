@@ -10,7 +10,7 @@ const NavUtils = [
     {key: 1, label: 'Transactions', path: '/transactions', icon: <FundOutlined />, activeIcon: <FundFilled />},
     {key: 2, label: 'Engines', path: '/engines', icon: <CameraOutlined />, activeIcon: <CameraFilled />},
     {key: 3, label: 'Delivery Tracking', path: '/deliverytracking', icon: <TruckOutlined />, activeIcon: <TruckFilled />},
-    {key: 4, label: 'Employees', path: '/employees', icon: <ProfileOutlined />, activeIcon: <ProfileFilled />},
+    {key: 4, label: 'Staff', path: '/staff', icon: <ProfileOutlined />, activeIcon: <ProfileFilled />},
 ]
 
 export const NavAdmin = () => {

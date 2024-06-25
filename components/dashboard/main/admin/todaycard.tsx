@@ -1,5 +1,5 @@
 import { TodaysActivityItem } from "./todaysactivity";
-import Link from 'next/link';
+import Link from 'next/link'
 
 interface TodaysActivityCardProps {
     item: TodaysActivityItem;
