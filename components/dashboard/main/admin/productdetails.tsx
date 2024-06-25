@@ -4,6 +4,7 @@ import Link from "next/link";
 import React from "react";
 import { useEffect, useState } from "react";
 import { EngineStorage } from "./enginestorage";
+import { EngineTypesChart } from "./enginetypes";
 
 interface TopSellingDetails {
     engineId: number,
@@ -58,18 +59,20 @@ export function ProductDetails() {
                             {engineDetails}
                         </div>
                 </div>
-                <div className="bg-white shadow-md h-44 w-full rounded-xl p-4 space-y-2">
-                    <div className="flex justify-between">
-                        <div className="">
-                        <h3 className="text-red-900 font-bold text-lg font-sans"> Engine Types </h3>
+                <div className="bg-white flex shadow-md h-auto md:h-44 w-full rounded-xl p-4 space-y-2">
+                    <div className="flex flex-col md:flex-row md:justify-between gap-2 md:gap-4 w-full">
+                        <div className="w-full md:w-1/2">
+                            <h3 className="text-red-900 font-bold text-lg font-sans">Engine Types</h3>
                             <h3 className="font-semibold font-sans text-sm md:text-md mt-4 md:mt-8">Explore top engine types interactively</h3>
-                            <p className="font-sans font-light"><span className="text-2xl md:text-3xl font-semibold text-[#BB4747]"> 16 </span> total engine types</p>
+                            <p className="font-sans font-light"><span className="text-2xl md:text-3xl font-semibold text-[#BB4747]">16</span> total engine types</p>
                         </div>
-                        <div className="justify-center items-center mr-0 md:mr-7">
-                            <img src="/enginetype.png" alt="" className="h-28 w-40 md:h-36 md:w-52"/>
+                        <div className="w-full md:w-1/2 flex justify-center items-center">
+                            <div className="max-w-full">
+                                <EngineTypesChart />
+                            </div>
                         </div>
                     </div>
-                </div> 
+                </div>
             </div>
             <div className="h-full bg-white shadow-md col-span-2 rounded-xl p-6">              
                 <EngineStorage />
