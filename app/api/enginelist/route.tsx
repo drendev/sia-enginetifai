@@ -8,8 +8,6 @@ export async function POST(req: Request) {
         const url = new URL(req.url);
         const engineNames = url.searchParams.getAll('engineName');
 
-
-
         const selectEngine = await db.engine.findMany({
             where: { 
                 engineName: {
