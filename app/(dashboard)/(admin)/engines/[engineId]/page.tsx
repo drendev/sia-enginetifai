@@ -17,16 +17,7 @@ interface Engine {
     userAdded:   string,
 }
 
-const config = {
-  title: 'Use Hook!',
-  content: (
-    <>
-      <ReachableContext.Consumer>{(name) => `Reachable: ${name}!`}</ReachableContext.Consumer>
-      <br />
-      <UnreachableContext.Consumer>{(name) => `Unreachable: ${name}!`}</UnreachableContext.Consumer>
-    </>
-  ),
-};
+
 
 export default function Page({ params }: { params: { engineId: string } }) {
   const router = useRouter();
@@ -71,6 +62,16 @@ export default function Page({ params }: { params: { engineId: string } }) {
   if (isDeleted) {
     return null;
   }
+
+  const config = {
+    title: `Delete ${engineData?.engineName}`,
+    content: (
+      <>
+        <ReachableContext.Consumer>{(name) => `Are you sure you want to permanently delete this engine?`}</ReachableContext.Consumer>
+        <br />
+      </>
+    ),
+  };
 
   return (
     <div className="pt-16">
