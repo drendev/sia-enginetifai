@@ -10,10 +10,6 @@ export async function POST(req: Request) {
 
         const engineIdNumber = Number(engineId);
 
-        if (!engineId) {
-            return NextResponse.json({ error: 'Engine ID unknown' });
-        }
-
         const getEngine = await db.engine.findUnique({
             where: {
                 id: engineIdNumber,

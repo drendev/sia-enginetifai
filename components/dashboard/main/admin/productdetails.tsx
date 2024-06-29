@@ -36,7 +36,7 @@ export function ProductDetails() {
     
     // Display the data
     const engineDetails = sortedData.map((engine) => (
-        <Link key={engine.engineId} href={`/product/${engine.engineId}`}>
+        <Link key={engine.engineId} href={`/engines/${engine.engineId}`}>
             <div className="border border-gray-200 p-1 rounded-lg flex flex-col items-center
             hover:-translate-y-1 transition-all cursor-pointer hover:shadow-md w-full">   
                 <img src={`${engine.engineImage}`} alt="" className="w-20 h-20 md:w-20 md:h-20 mb-2"/>
