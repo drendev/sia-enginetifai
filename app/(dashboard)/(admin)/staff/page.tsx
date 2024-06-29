@@ -2,15 +2,8 @@ import EmployeeDashboard from "@/components/dashboard/main/employee";
 import { StaffDisplay } from "@/components/staff/StaffDisplay";
 import { db } from "@/lib/db";
 
-async function getEmployees(){
-  const employees = await db.user.findMany()
-
-  return employees;
-}
 
 export default async function Employees() {
-
-  const employees = await getEmployees();
 
   return (
     <>
@@ -89,10 +82,9 @@ export default async function Employees() {
           </button>
         </div>
         
-        <div className="flex mt-5">
+        <div className="grid grid-cols-1 justify-center gap-x-8 gap-y-4 mt- 5 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-5">
           <StaffDisplay />
    
-
         </div>
       </div>
     </>
