@@ -263,7 +263,7 @@ const AddEngine = () => {
       
       <Input />
     </Form.Item>
-    <DieselEngine /> 
+
     <Form.Item
       name="picture"
       label="Engine Image"
