@@ -34,7 +34,6 @@ export function TodayActivity() {
         })
         const data = await res.json()
         setTransaction(data)
-        console.log(data)
         }
 
         fetchEngineData() 
@@ -61,8 +60,6 @@ export function TodayActivity() {
             background: "bg-orderbg",
         },
     ];
-
-    console.log(todaysActivity);
 
     return (
         <>

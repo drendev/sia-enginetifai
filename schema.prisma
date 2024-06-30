@@ -57,7 +57,7 @@ model Engine {
 
 model Specification {
   id                Int     @id @default(autoincrement())
-  engine            Engine  @relation(fields: [engineId, engineName], references: [id, engineName])
+  engine            Engine  @relation(fields: [engineId, engineName], references: [id, engineName], onDelete: Cascade)
   engineId          Int     @unique
   engineName        String  @unique
   BorexStroke       String?
