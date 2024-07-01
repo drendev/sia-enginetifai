@@ -9,7 +9,8 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { Button, Checkbox, Form, Input, InputNumber, Upload, ConfigProvider, Select } from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
 import EngineButton from '../ui/index/button';
-import { DieselEngine } from './specification/dieselengine';
+import { DieselEngine } from './specification/engines/dieselengine';
+import { DieselWaterPump } from './specification/pumps/dieselwaterpump';
 
 const FormSchema = z
 .object({
@@ -34,7 +35,8 @@ const FormSchema = z
     OperatingWelding: z.string().optional(), OperatingCurrent: z.string().optional(), MaxArcingCurrent: z.string().optional(), DutyCycle: z.string().optional(),
     EngineRatedPower: z.string().optional(), TillingWidth: z.string().optional(), TransmissionMode: z.string().optional(), PackingSize: z.string().optional(),
     TillingDepth: z.string().optional(), ShiftingGears: z.string().optional(), TransportingWheel: z.string().optional(), TillingBlades: z.string().optional(),
-    ContLoad20: z.string().optional(), ContLoad40: z.string().optional(),
+    ContLoad20: z.string().optional(), ContLoad40: z.string().optional(), NetPower: z.string().optional(), DisplacementBore: z.string().optional(), 
+    EngineType: z.string().optional(), Weight: z.string().optional()
 })
 
 interface Engine {  
@@ -89,7 +91,7 @@ const AddEngine = () => {
         EngineOilCapacity: undefined, Size: undefined, ContinuousOpHours: undefined, Type: undefined, RunningTime: undefined, Optional: undefined, NoLoadVoltage: undefined,
         OperatingWelding: undefined, OperatingCurrent: undefined, MaxArcingCurrent: undefined, DutyCycle: undefined, EngineRatedPower: undefined, TillingWidth: undefined,
         TransmissionMode: undefined, PackingSize: undefined, TillingDepth: undefined, ShiftingGears: undefined, TransportingWheel: undefined, TillingBlades: undefined,
-        ContLoad20: undefined, ContLoad40: undefined,
+        ContLoad20: undefined, ContLoad40: undefined, NetPower: undefined, DisplacementBore: undefined, EngineType: undefined, Weight: undefined
         },
     });
 
@@ -135,7 +137,8 @@ const AddEngine = () => {
           NoLoadVoltage: values.NoLoadVoltage, OperatingWelding: values.OperatingWelding, OperatingCurrent: values.OperatingCurrent, MaxArcingCurrent: values.MaxArcingCurrent,
           DutyCycle: values.DutyCycle, EngineRatedPower: values.EngineRatedPower, TillingWidth: values.TillingWidth, TransmissionMode: values.TransmissionMode,
           PackingSize: values.PackingSize, TillingDepth: values.TillingDepth, ShiftingGears: values.ShiftingGears, TransportingWheel: values.TransportingWheel,
-          TillingBlades: values.TillingBlades, ContLoad20: values.ContLoad20, ContLoad40: values.ContLoad40,
+          TillingBlades: values.TillingBlades, ContLoad20: values.ContLoad20, ContLoad40: values.ContLoad40, NetPower: values.NetPower, DisplacementBore: values.DisplacementBore,
+          EngineType: values.EngineType, Weight: values.Weight
           })
       })
 
@@ -212,34 +215,35 @@ const AddEngine = () => {
     }
     options={[
       { value: 'Diesel Engine', label: 'Diesel Engine' },
-          { value: 'Twin-Cylinder Diesel Engine', label: 'Twin-Cylinder Diesel Engine' },
-          { value: 'Open Type Diesel Generator', label: 'Open Type Diesel Generator' },
-          { value: 'Silent Diesel Generator', label: 'Silent Diesel Generator' },
-          { value: 'Twin-Cylinder Diesel Generator', label: 'Twin-Cylinder Diesel Generator' },
-          { value: 'Diesel Water Pump', label: 'Diesel Water Pump' },
-          { value: 'Diesel High Pressure Pump', label: 'Diesel High Pressure Pump' },
-          { value: 'Diesel Iron Pump', label: 'Diesel Iron Pump' },
-          { value: 'Gasoline Engine', label: 'Gasoline Engine' },
-          { value: 'Gasoline Twin-Cylinder Engine', label: 'Gasoline Twin-Cylinder Engine' },
-          { value: 'Gasoline Twin-Vertical Engine', label: 'Gasoline Twin-Vertical Engine' },
-          { value: 'Open Type Gasoline Generator', label: 'Open Type Gasoline Generator' },
-          { value: 'Silent Gasoline Generator', label: 'Silent Gasoline Generator' },
-          { value: 'Twin-Cylinder Gasoline Generator', label: 'Twin-Cylinder Gasoline Generator' },
-          { value: 'Liquified Petroleum Gas & LPT Generator', label: 'Liquified Petroleum Gas & LPT Generator' },
-          { value: 'Portable Gasoline Generator', label: 'Portable Gasoline Generator' },
-          { value: 'Gasoline Water Pump', label: 'Gasoline Water Pump' },
-          { value: 'Gasoline High Pressure Pump', label: 'Gasoline High Pressure Pump' },
-          { value: 'Gasoline Iron Pump', label: 'Gasoline Iron Pump' },
-          { value: 'Gasoline Trash Pump', label: 'Gasoline Trash Pump' },
-          { value: 'Inverter Generator', label: 'Inverter Generator' },
-          { value: 'Diesel Welding Generator', label: 'Diesel Welding Generator' },
-          { value: 'Gasoline Welding Generator', label: 'Gasoline Welding Generator' },
-          { value: 'Tillers', label: 'Tillers' },
-          ]}
-          value={engineType}
-          onChange={(value) => setEngineType(value)}
-        />
+      { value: 'Twin-Cylinder Diesel Engine', label: 'Twin-Cylinder Diesel Engine' },
+      { value: 'Open Type Diesel Generator', label: 'Open Type Diesel Generator' },
+      { value: 'Silent Diesel Generator', label: 'Silent Diesel Generator' },
+      { value: 'Twin-Cylinder Diesel Generator', label: 'Twin-Cylinder Diesel Generator' },
+      { value: 'Diesel Water Pump', label: 'Diesel Water Pump' },
+      { value: 'Diesel High Pressure Pump', label: 'Diesel High Pressure Pump' },
+      { value: 'Diesel Iron Pump', label: 'Diesel Iron Pump' },
+      { value: 'Gasoline Engine', label: 'Gasoline Engine' },
+      { value: 'Gasoline Twin-Cylinder Engine', label: 'Gasoline Twin-Cylinder Engine' },
+      { value: 'Gasoline Twin-Vertical Engine', label: 'Gasoline Twin-Vertical Engine' },
+      { value: 'Open Type Gasoline Generator', label: 'Open Type Gasoline Generator' },
+      { value: 'Silent Gasoline Generator', label: 'Silent Gasoline Generator' },
+      { value: 'Twin-Cylinder Gasoline Generator', label: 'Twin-Cylinder Gasoline Generator' },
+      { value: 'Liquified Petroleum Gas & LPT Generator', label: 'Liquified Petroleum Gas & LPT Generator' },
+      { value: 'Portable Gasoline Generator', label: 'Portable Gasoline Generator' },
+      { value: 'Gasoline Water Pump', label: 'Gasoline Water Pump' },
+      { value: 'Gasoline High Pressure Pump', label: 'Gasoline High Pressure Pump' },
+      { value: 'Gasoline Iron Pump', label: 'Gasoline Iron Pump' },
+      { value: 'Gasoline Trash Pump', label: 'Gasoline Trash Pump' },
+      { value: 'Inverter Generator', label: 'Inverter Generator' },
+      { value: 'Diesel Welding Generator', label: 'Diesel Welding Generator' },
+      { value: 'Gasoline Welding Generator', label: 'Gasoline Welding Generator' },
+      { value: 'Tillers', label: 'Tillers' },
+      ]}
+      value={engineType}
+      onChange={(value) => setEngineType(value)}
+    />
     </Form.Item>
+
     <Form.Item
       label="Quantity"
       name="quantity"
@@ -247,6 +251,7 @@ const AddEngine = () => {
     >
       <InputNumber />
     </Form.Item>
+
     <Form.Item
       label="Price"
       name="price"
@@ -264,6 +269,8 @@ const AddEngine = () => {
       <Input />
     </Form.Item>
 
+      {/* { engineType === 'Diesel Engine' ? <DieselEngine /> : engineType === 'Twin-Cylinder Diesel Engine' ? <DieselEngine /> : null} */}
+      <DieselWaterPump />
     <Form.Item
       name="picture"
       label="Engine Image"
@@ -276,11 +283,13 @@ const AddEngine = () => {
         <Button icon={<UploadOutlined />}>Click to upload</Button>
       </Upload>
     </Form.Item>
+
     <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
       <EngineButton>
         Add Engine
       </EngineButton>
     </Form.Item>
+
   </Form>
   </ConfigProvider>
   </>

@@ -66,6 +66,10 @@ const engineSchema = z.object({
   TillingBlades: z.string().optional(),
   ContLoad20: z.string().optional(),
   ContLoad40: z.string().optional(),
+  NetPower: z.string().optional(),
+  DisplacementBore: z.string().optional(),
+  EngineType: z.string().optional(),
+  Weight: z.string().optional(),
 });
 
 export async function POST(req: Request) {

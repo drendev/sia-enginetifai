@@ -62,6 +62,7 @@ model Specification {
   engineName        String  @unique
   BorexStroke       String?
   Displacement      String?
+  DislacementBore   String?
   EngineSpeed       String?
   RatedOutput       String?
   MaxOutPut         String?
@@ -70,6 +71,7 @@ model Specification {
   FuelConsumption   String?
   Dimension         String?
   NetWeight         String?
+  NetPower          String?
   PackageDimension  String?
   GrossWeight       String?
   LoadingQty        String?
@@ -80,6 +82,7 @@ model Specification {
   Frequency         String?
   PowerFactor       String?
   EngineModel       String?
+  EngineType        String?
   DCOutput          String?
   Voltage           String?
   Inlet             String?
@@ -107,6 +110,7 @@ model Specification {
   EngineRatedPower  String?
   TillingWidth      String?
   TransmissionMode  String?
+  Weight            String?
   PackingSize       String?
   TillingDepth      String?
   ShiftingGears     String?
