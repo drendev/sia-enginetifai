@@ -22,10 +22,12 @@ const config: Config = {
         "bgcard": "url('/bg-card.png')",
         "deliverybg": "url('/delivery.svg')",
         "aibg": "url('/ai.svg')",
+        "search": "url('/search.png')",
         },
         backgroundSize: {
           "16": "12rem",
           "14": "10rem",
+          "8": "8rem",
         },
       colors: {
         "red-primary": "#BB4747",

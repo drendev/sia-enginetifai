@@ -2,10 +2,6 @@
 
 import React from "react";
 import { useEffect, useRef, useState } from "react";
-import Link from "next/link";
-import { PoweroffOutlined } from "@ant-design/icons";
-import { signOut } from "next-auth/react";
-import { useRouter } from "next/navigation";
 
 type User = {
   username?: string;
