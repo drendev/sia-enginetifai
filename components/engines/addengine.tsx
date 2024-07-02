@@ -11,6 +11,26 @@ import { UploadOutlined } from '@ant-design/icons';
 import EngineButton from '../ui/index/button';
 import { DieselEngine } from './specification/engines/dieselengine';
 import { DieselWaterPump } from './specification/pumps/dieselwaterpump';
+import Grid from '../ui/engineforms/FormGrid';
+import { TwinCylinderDiesel } from './specification/engines/twincylinderdieselengine';
+import { DieselGenerator } from './specification/generators/dieselgenerator';
+import { TwinCylinderDieselGenerator } from './specification/generators/twincylinderdieselgenerator';
+import { DieselHighPump } from './specification/pumps/dieselhighpump';
+import { DieselIronPump } from './specification/pumps/dieselironpump';
+import { GasolineEngine } from './specification/engines/gasolineengine';
+import { GasolineVertical } from './specification/engines/gasolinevertical';
+import { GasolineGenerator } from './specification/generators/gasolinegenerator';
+import { SilentGasolineGenerator } from './specification/generators/silentgasolinegenerator';
+import { TwinCylinderGasolineGenerator } from './specification/generators/twincylindergasolinegenerator';
+import { LiquifiedAndLptGenerator } from './specification/generators/liquifiedandlptgenerator';
+import { PortableGasolineGenerator } from './specification/generators/portablegasolinegenerator';
+import { GasolineWaterPump } from './specification/pumps/gasolinewaterpump';
+import { GasolineHighPump } from './specification/pumps/gasolinehighpump';
+import { GasolineIronPump } from './specification/pumps/gasolineironpump';
+import { DieselAndGasolineTrashPump } from './specification/pumps/dieselandgasolinetrashpump';
+import { InverterGenerator } from './specification/generators/invertergenerator';
+import { DieselWeldingGenerator } from './specification/generators/dieselweldinggenerator';
+import { Tillers } from './specification/tillers/tillers';
 
 const FormSchema = z
 .object({
@@ -163,6 +183,7 @@ const AddEngine = () => {
         setValue('picture', file.name);
         return false; // Prevent auto upload
       };
+      
   return (  
     <>
     <ConfigProvider
@@ -173,12 +194,12 @@ const AddEngine = () => {
         },
       }}>        
     <Form
-    labelCol={{ span: 8 }}
     wrapperCol={{ span: 16 }}
-    style={{ maxWidth: 600 }}
+    className='flex flex-col md:flex-row max-w-screen-xl mx-auto gap-4 px-2'
     onFinish={onSubmit}
     autoComplete="off"
   >
+    <Grid>
     <Form.Item    
       label="Engine Name"
       name="engineName"
@@ -207,7 +228,7 @@ const AddEngine = () => {
     >
       <Select
     showSearch
-    style={{ width: 200 }}
+    style={{ width: 300 }}
     placeholder="Search to Select"
     optionFilterProp="label"
     filterSort={(optionA, optionB) =>
@@ -269,8 +290,6 @@ const AddEngine = () => {
       <Input />
     </Form.Item>
 
-      {/* { engineType === 'Diesel Engine' ? <DieselEngine /> : engineType === 'Twin-Cylinder Diesel Engine' ? <DieselEngine /> : null} */}
-      <DieselWaterPump />
     <Form.Item
       name="picture"
       label="Engine Image"
@@ -283,13 +302,38 @@ const AddEngine = () => {
         <Button icon={<UploadOutlined />}>Click to upload</Button>
       </Upload>
     </Form.Item>
+    </Grid>
+    <Grid>
+    { engineType === 'Diesel Engine' ? <DieselEngine /> :
+     engineType === 'Twin-Cylinder Diesel Engine' ? <TwinCylinderDiesel /> :
+     engineType === 'Open Type Diesel Generator' ? <DieselGenerator /> :
+     engineType === 'Silent Diesel Generator' ? <DieselGenerator /> :
+     engineType === 'Twin-Cylinder Diesel Generator' ? <TwinCylinderDieselGenerator /> :
+     engineType === 'Diesel Water Pump' ? <DieselWaterPump /> :
+     engineType === 'Diesel High Pressure Pump' ? <DieselHighPump /> :
+     engineType === 'Diesel Iron Pump' ? <DieselIronPump /> :
+     engineType === 'Gasoline Engine' ? <GasolineEngine /> :
+     engineType === 'Gasoline Twin-Cylinder Engine' ? <GasolineEngine /> :
+     engineType === 'Gasoline Twin-Vertical Engine' ? <GasolineVertical /> :
+     engineType === 'Open Type Gasoline Generator' ? <GasolineGenerator /> :
+     engineType === 'Silent Gasoline Generator' ? <SilentGasolineGenerator /> :
+     engineType === 'Twin-Cylinder Gasoline Generator' ? <TwinCylinderGasolineGenerator /> :
+     engineType === 'Liquified Petroleum Gas & LPT Generator' ? <LiquifiedAndLptGenerator /> :
+     engineType === 'Portable Gasoline Generator' ? <PortableGasolineGenerator /> :
+     engineType === 'Gasoline Water Pump' ? <GasolineWaterPump /> :
+     engineType === 'Gasoline High Pressure Pump' ? <GasolineHighPump /> :
+     engineType === 'Gasoline Iron Pump' ? <GasolineIronPump /> :
+     engineType === 'Gasoline Trash Pump' ? <DieselAndGasolineTrashPump /> :
+     engineType === 'Inverter Generator' ? <InverterGenerator /> :
+     engineType === 'Diesel Welding Generator' ? <DieselWeldingGenerator /> :
+     engineType === 'Gasoline Welding Generator' ? <DieselWeldingGenerator /> :
+     engineType === 'Tillers' ? <Tillers />
+     : null}
 
-    <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
-      <EngineButton>
+    <EngineButton>
         Add Engine
-      </EngineButton>
-    </Form.Item>
-
+    </EngineButton>
+    </Grid> 
   </Form>
   </ConfigProvider>
   </>
