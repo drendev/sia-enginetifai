@@ -35,7 +35,7 @@ const App: React.FC = () => {
         return () => clearInterval(interval);
     }, []);
 
-    console.log(users)
+    console.log(users) 
 
     return (
         <div className="mt-16">
