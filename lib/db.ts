@@ -1,11 +1,17 @@
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient } from '@prisma/client';
 
-const globalForPrisma = global as unknown as {
-    prisma: PrismaClient | undefined;
-}
+// Declare a global variable for Prisma
+const globalForPrisma = global as typeof global & {
+  prisma?: PrismaClient;
+};
 
+// Instantiate Prisma client or use the existing global instance
 export const prisma = globalForPrisma.prisma ?? new PrismaClient();
 
-if (process.env.NODE_ENV !== 'production') globalForPrisma.prisma = prisma;
+// Assign Prisma client to the global variable in non-production environments
+if (process.env.NODE_ENV !== 'production') {
+  globalForPrisma.prisma = prisma;
+}
 
+// Export the Prisma client instance
 export const db = prisma;
