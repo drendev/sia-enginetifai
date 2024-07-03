@@ -62,9 +62,9 @@ export async function POST() {
         const profit = profitToday._sum.totalPrice;
         const averageWeeklyTransactions = (totalQuantity / 7).toFixed(2);
         const engineLowStockCount = engineStock;
-
+        
         return NextResponse.json({today, profit, averageWeeklyTransactions, engineLowStockCount, enginesTotal});
-
+        
     } catch (error) {
         console.error("Error fetching transaction count:", error);
         return NextResponse.json({ error: 'Internal Server Error' });
