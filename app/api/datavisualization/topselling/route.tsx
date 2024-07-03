@@ -34,5 +34,7 @@ export async function POST() {
     } catch (error) {
         console.error("Error fetching engine price:", error);
         return NextResponse.json({ error: 'Internal Server Error' });
+    } finally {
+        await db.$disconnect();
     }
 }
