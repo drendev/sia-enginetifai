@@ -1,60 +1,68 @@
 "use client";
 
-import React from "react";
-import { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
-type User = {
+
+interface User {
   username?: string;
   email?: string;
   password?: string;
   role?: string;
 };
 
+
+
+
 export function StaffDisplay() {
   const [users, setUsers] = useState<User[]>([]);
 
+  const [dropdownOpen, setDropdownOpen] = useState<{ [key: number]: boolean }>({});
+
   const getUsers = async () => {
     try {
-      const res = await fetch("/api/testapi", {
+      const res = await fetch("/api/staff", {
         method: "POST",
       });
       const data = await res.json();
-      setUsers(data);
+      const specificUsers = data.users;
+      setUsers(specificUsers);
     } catch (error) {
       console.error("Error fetching users:", error);
     }
   };
 
-  getUsers();
-
-  const [dropdownOpen, setDropdownOpen] = useState(false);
-  const trigger = useRef<any>(null);
-  const dropdown = useRef<any>(null);
+  useEffect(() => {
+    getUsers();
+  }, []);
 
   useEffect(() => {
     const clickHandler = ({ target }: MouseEvent) => {
-      if (!dropdown.current) return;
-      if (
-        !dropdownOpen ||
-        dropdown.current.contains(target) ||
-        trigger.current.contains(target)
-      )
-        return;
-      setDropdownOpen(false);
+      if (Object.values(dropdownOpen).every(isOpen => !isOpen)) return;
+
+      Object.keys(dropdownOpen).forEach(index => {
+        const dropdown = dropdownRefs.current[parseInt(index)];
+        const trigger = triggerRefs.current[parseInt(index)];
+
+        if (
+          dropdown &&
+          trigger &&
+          !dropdown.contains(target as Node) &&
+          !trigger.contains(target as Node)
+        ) {
+          setDropdownOpen(prev => ({ ...prev, [index]: false }));
+        }
+      });
     };
     document.addEventListener("click", clickHandler);
     return () => document.removeEventListener("click", clickHandler);
-  });
+  }, [dropdownOpen]);
 
-  // Keyboard shit
-  useEffect(() => {
-    const keyHandler = ({ keyCode }: KeyboardEvent) => {
-      if (!dropdownOpen || keyCode !== 27) return;
-      setDropdownOpen(false);
-    };
-    document.addEventListener("keydown", keyHandler);
-    return () => document.removeEventListener("keydown", keyHandler);
-  });
+  const dropdownRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const triggerRefs = useRef<(HTMLButtonElement | null)[]>([]);
+
+  const toggleDropdown = (index: number) => {
+    setDropdownOpen(prev => ({ ...prev, [index]: !prev[index] }));
+  };
 
   return (
     <>
@@ -65,8 +73,8 @@ export function StaffDisplay() {
         >
           <div className="flex justify-end px-4 pt-4">
             <button
-              ref={trigger}
-              onClick={() => setDropdownOpen(!dropdownOpen)}
+              ref={el => (triggerRefs.current[index] = el)}
+              onClick={() => toggleDropdown(index)}
               className="flex items-center gap-2 md:gap-4 hover:opacity-60 active:opacity-85"
             >
               <span className="sr-only">Open dropdown</span>
@@ -82,11 +90,11 @@ export function StaffDisplay() {
             </button>
             {/* Dropdown menu */}
             <div
-              ref={dropdown}
-              onFocus={() => setDropdownOpen(true)}
-              onBlur={() => setDropdownOpen(false)}
+              ref={el => (dropdownRefs.current[index] = el)}
+              onFocus={() => setDropdownOpen(prev => ({ ...prev, [index]: true }))}
+              onBlur={() => setDropdownOpen(prev => ({ ...prev, [index]: false }))}
               className={`absolute flex mt-5 flex-col rounded-xl border border-stroke bg-white shadow-md dark:border-slate-700 z-[1000] dark:bg-slate-900 ${
-                dropdownOpen === true ? "block" : "hidden"
+                dropdownOpen[index] ? "block" : "hidden"
               }`}
             >
               <ul className="py-2">
