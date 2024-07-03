@@ -1,9 +1,35 @@
+"use client";
+
 import EmployeeDashboard from "@/components/dashboard/main/employee";
 import { StaffDisplay } from "@/components/staff/StaffDisplay";
 import { db } from "@/lib/db";
+import { useEffect, useState } from "react";
+import Link from "next/link";
 
 
-export default async function Employees() {
+
+export default function Employees() {
+
+  const [usersTotal, setUsersTotal] = useState<number | null>(null);
+  
+
+  const getUsers = async () => {
+    try {
+      const res = await fetch("/api/staff", {
+        method: "POST",
+      });
+      const data = await res.json();
+      const specificUsers: number = data.usersTotal;
+      setUsersTotal(specificUsers);
+      console.log(specificUsers)
+    } catch (error) {
+      console.error("Error fetching users:", error);
+    }
+  };
+
+  useEffect(() => {
+    getUsers();
+  }, []);
 
   return (
     <>
@@ -47,7 +73,7 @@ export default async function Employees() {
         </form>
 
         <div className="flex">
-          <div className="mt-3 flex-grow">32 Employees</div>
+          <div className="mt-3 flex-grow">{usersTotal} {usersTotal === 1 ? 'Staff' : 'Staffs'}</div>
           <button className="text-white bg-gray-700 hover:bg-gray-800 focus:ring-4 focus:outline-none focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center me-2 dark:bg-gray-600 dark:hover:bg-gray-700 dark:focus:ring-gray-800">
             <svg
               className="w-3.5 h-3.5 me-2"
@@ -64,7 +90,7 @@ export default async function Employees() {
             </svg>
             Filter
           </button>
-          <button className="text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center me-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800">
+          <Link href="./create-user" className="text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center me-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800">
             <svg
               className="w-3.5 h-3.5 me-2"
               width="56"
@@ -79,12 +105,11 @@ export default async function Employees() {
               />
             </svg>
             Add Employee
-          </button>
+          </Link>
         </div>
         
         <div className="grid grid-cols-1 justify-center gap-x-8 gap-y-4 mt- 5 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-5">
           <StaffDisplay />
-   
         </div>
       </div>
     </>

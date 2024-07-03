@@ -3,7 +3,7 @@ import { NextResponse } from 'next/server';
 
 export async function POST() {
     try {
-        const enginePrice = await db.user.findMany({
+        const users = await db.user.findMany({
             select: {
                 id: true,
                 username: true,
@@ -13,7 +13,10 @@ export async function POST() {
             }
         });
 
-        return NextResponse.json(enginePrice);
+        const usersTotal = await db.user.count();
+
+
+        return NextResponse.json({users, usersTotal});
     } catch (error) {
         console.error("Error fetching engine price:", error);
         return NextResponse.json({ error: 'Internal Server Error' });

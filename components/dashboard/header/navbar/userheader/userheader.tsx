@@ -63,16 +63,8 @@ export default function UserHeader({children}: any) {
                     </li>
                     <li>
                         <Link className="flex items-center gap-3 text-sm font-medium duration-300 ease-in-out text-red-primary hover:opacity-60 active:opacity-90 lg:text-sm" href="/upload-picture">
-                            Change Profile Picture
+                            Profile
                         </Link>
-                    </li>
-                    <li>
-                    <Link
-                        href="#"
-                        className="flex items-center gap-3 text-sm font-medium duration-300 ease-in-out text-red-primary hover:opacity-60 active:opacity-90 lg:text-sm"
-                        >
-                        Settings
-                    </Link>
                     </li>
                     <li>
                     <Link

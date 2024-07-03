@@ -24,8 +24,9 @@ export function StaffDisplay() {
         method: "POST",
       });
       const data = await res.json();
-      const specificUsers = data.users;
+      const specificUsers = data.users
       setUsers(specificUsers);
+      console.log(specificUsers)
     } catch (error) {
       console.error("Error fetching users:", error);
     }
@@ -63,6 +64,8 @@ export function StaffDisplay() {
   const toggleDropdown = (index: number) => {
     setDropdownOpen(prev => ({ ...prev, [index]: !prev[index] }));
   };
+
+
 
   return (
     <>
@@ -107,20 +110,11 @@ export function StaffDisplay() {
                   </a>
                 </li>
                 <li>
-                  <a
-                    href="#"
-                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
-                  >
-                    Export Data
-                  </a>
-                </li>
-                <li>
-                  <a
-                    href="#"
+                  <button
                     className="block px-4 py-2 text-sm text-red-600 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
                   >
                     Delete
-                  </a>
+                  </button>
                 </li>
               </ul>
             </div>
