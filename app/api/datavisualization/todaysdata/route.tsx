@@ -68,7 +68,5 @@ export async function POST() {
     } catch (error) {
         console.error("Error fetching transaction count:", error);
         return NextResponse.json({ error: 'Internal Server Error' });
-    } finally {
-        await db.$disconnect();
     }
 }

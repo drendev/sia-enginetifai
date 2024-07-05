@@ -113,7 +113,5 @@ export async function POST(req: Request) {
       { message: 'Something went wrong.' },
       { status: 500 }
     );
-  } finally {
-    await db.$disconnect();
   }
 }

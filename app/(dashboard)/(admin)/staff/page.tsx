@@ -21,14 +21,14 @@ export default function Employees() {
       const data = await res.json();
       const specificUsers: number = data.usersTotal;
       setUsersTotal(specificUsers);
-      console.log(specificUsers)
+      console.log(specificUsers);
     } catch (error) {
       console.error("Error fetching users:", error);
     }
   };
 
   useEffect(() => {
-    getUsers();
+    
   }, []);
 
   return (

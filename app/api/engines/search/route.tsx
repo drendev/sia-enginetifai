@@ -6,20 +6,19 @@ import { NextResponse } from 'next/server';
 export async function POST(req: Request) {
     try {
         const url = new URL(req.url);
-        const engineId = url.searchParams.get('engineId');
+        const engineName = url.searchParams.get('engineName') ?? '';
 
-        const engineIdNumber = Number(engineId);
-
-        const getEngineSpecification = await db.engine.findUnique({
+        const checkEngine = await db.engine.findUnique({
             where: {
-                id: engineIdNumber,
+                engineName: engineName,
             },
             select: {
-                specification: true,
+                engineName: true,
+                quantity: true,
             }
         });
 
-        return NextResponse.json(getEngineSpecification);
+        return NextResponse.json(checkEngine);
     } catch (error) {
         console.error("Error fetching engine price:", error);
         return NextResponse.json({ error: 'Internal Server Error' });
