@@ -84,9 +84,13 @@ export function EngineList() {
                     />
 
                     <Link href="/engines/AddEngines" className='flex w-48'>
-                        <EngineButton>
-                            Add Engine <PlusOutlined />
-                        </EngineButton>
+                    <Button
+                        type="primary" 
+                        htmlType="submit"
+                        className='flex bg-red-primary hover:bg-red-primary font-bold rounded-full w-72 text-md h-auto py-2 px-7 tracking-wider border-red-800 border-2 border-b-4 active:border-b-2'
+                        >
+                        Add Engine <PlusOutlined />
+                    </Button>
                     </Link>
                 </div>
                 <div className='flex justify-start gap-2 mb-4'>

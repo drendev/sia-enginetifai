@@ -1,11 +1,12 @@
 "use client";
 
 import EngineButton from "@/components/ui/index/button";
-import { PlusOutlined, SearchOutlined } from "@ant-design/icons";
-import { Input, ConfigProvider, Badge } from "antd";
+import { CameraOutlined } from "@ant-design/icons";
+import { Input, ConfigProvider, Badge, Button } from "antd";
 import { EngineList } from "./enginelist";
 import { RecentEngineAdded } from "./recentadded";
 import { RecentEngineTransaction } from "./recenttransaction";
+import Link from "next/link";
 
 export function EnginePage(){
     return(
@@ -26,7 +27,17 @@ export function EnginePage(){
                              
                             <div className="flex flex-col w-full h-52 rounded-2xl shadow-xl bg-red-primary bg-search bg-right-bottom bg-contain bg-no-repeat px-7 py-5 gap-2">
                             <h1 className="text-red-100 text-4xl font-sans font-extrabold"> Engines </h1>
-                                
+                            <div className="mt-20 md:mt-14">
+                            <Link href={'imagerecogbeta'}>
+                            <Button
+                            type="primary" 
+                            htmlType="submit"
+                            className='flex bg-red-primary hover:bg-red-primary font-bold rounded-full md:w-72 text-md h-auto py-2 px-7 tracking-wider border-red-800 border-2 border-b-4 active:border-b-2'
+                            >
+                            Engine Recognition <CameraOutlined />
+                            </Button>
+                            </Link>
+                            </div>
                             </div>
                             <EngineList />
                         </div>
