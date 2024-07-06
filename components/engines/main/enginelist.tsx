@@ -126,7 +126,7 @@ export function EngineList() {
                 
                     {currentEngines.length > 0 ? currentEngines.map(engine => (
                         engine.quantity < 15 ? (
-                            <div className="grid grid-cols-1 gap-x-8 gap-y-4 md:grid-cols-2 xl:grid-cols-4 2xl:grid-cols-5 mb-4 items-center justify-center">
+                            <div className="grid grid-cols-2 gap-x-8 gap-y-4 md:grid-cols-2 xl:grid-cols-4 2xl:grid-cols-5 mb-4 items-center justify-center">
                                 <div className='hover:-translate-y-1 transition-all cursor-pointer hover:shadow-md hover:rounded-xl'>
                                     <Badge.Ribbon key={engine.id} text={'Low Stocks'} color="#BB4747" placement='start' className="opacity-80 p-1">
                                         <Link href={`/engines/${engine.id}`}>
