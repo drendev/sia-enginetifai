@@ -29,12 +29,11 @@ export function EnginePage(){
                                 
                             </div>
                             <EngineList />
-                            <EngineList />
                         </div>
                         
                     </div>
-                    <div className="flex flex-col md:flex-none w-full md:w-2/6 space-y-4 p-6 md:p-0 gap-4 no-s">
-                        <div className="sticky top-24 mt-6">
+                    <div className="flex flex-col md:flex-none w-full md:w-2/6 space-y-4 p-6 md:p-0 gap-4">
+                        <div className="relative md:fixed pt-6 h-[calc(100vh-96px)] overflow-y-auto scrollbar scrollbar-thumb-red-primary scrollbar-track-transparent">
                         <RecentEngineAdded />
                         <RecentEngineTransaction />
                         </div>

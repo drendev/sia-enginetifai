@@ -33,7 +33,7 @@ export function RecentEngineAdded() {
     const sortedData = [...engine].sort((a, b) => new Date(b.engineAdded).getTime() - new Date(a.engineAdded).getTime());
 
     return (
-        <div className="w-full h-48 bg-white shadow-md rounded-xl p-4">
+        <div className="w-full md:w-[29rem] 2xl:w-full h-48 bg-white shadow-md rounded-xl p-4">
             <h3 className="text-red-900 font-bold text-lg font-sans"> Recently Added </h3>
             <div className="grid grid-cols-3 gap-2 md:gap-4">
                 {sortedData.map((engine) => (
