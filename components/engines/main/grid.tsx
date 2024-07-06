@@ -4,6 +4,8 @@ import EngineButton from "@/components/ui/index/button";
 import { PlusOutlined, SearchOutlined } from "@ant-design/icons";
 import { Input, ConfigProvider, Badge } from "antd";
 import { EngineList } from "./enginelist";
+import { RecentEngineAdded } from "./recentadded";
+import { RecentEngineTransaction } from "./recenttransaction";
 
 export function EnginePage(){
     return(
@@ -27,17 +29,15 @@ export function EnginePage(){
                                 
                             </div>
                             <EngineList />
+                            <EngineList />
                         </div>
                         
                     </div>
-                    <div className="flex-col md:flex-none w-full md:w-2/6 space-y-4 p-6 md:p-0 ">
-                    <div className="sticky top-24 mt-6">
-                    <div className="w-full h-48 bg-white shadow-md rounded-xl"> 
-
-                    </div>
-
-                    Recent Engine Transaction   
-                    </div>
+                    <div className="flex flex-col md:flex-none w-full md:w-2/6 space-y-4 p-6 md:p-0 gap-4 no-s">
+                        <div className="sticky top-24 mt-6">
+                        <RecentEngineAdded />
+                        <RecentEngineTransaction />
+                        </div>
                     </div>
                 </div>
             </div>
