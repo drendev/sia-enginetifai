@@ -1,5 +1,3 @@
-"use client";
-
 import React, { useState, useEffect } from 'react';
 import { Input, ConfigProvider, Badge, Pagination, Empty, Select, Button } from 'antd';
 import { SearchOutlined, PlusOutlined } from '@ant-design/icons';
@@ -36,10 +34,13 @@ export function EngineList() {
             });
             const data = await res.json();
             setEngineData(data);
+
+            // Reset pagination to page 1 when data changes due to search
+            setCurrentPage(1);
         };
 
         fetchEngineData();
-    }, []);
+    }, [search, selectedEngineType, selectedStock]); // Include search, selectedEngineType, and selectedStock in dependencies
 
     const handlePageChange = (page: number) => {
         setCurrentPage(page);
@@ -113,38 +114,57 @@ export function EngineList() {
                         onChange={(value) => setSelectedEngineType(value)}
                         value={selectedEngineType}
                     />
+                    
                     <Select
                         placeholder="Engine Stock"
                         options={createOptions(['High Stock', 'Low Stock'])}
                         onChange={(value) => setSelectedStock(value)}
                         value={selectedStock}
                     />
-                    <Button onClick={clearFilters}>
+                    <div className='hidden md:block'>
+                    <Button
+                    className='flex bg-red-primary hover:bg-red-primary font-semibold rounded-lg w-28 text-md h-auto py-2 px-5 tracking-wider border-red-800 border-2 border-b-4 active:border-b-2'
+                    type='primary'
+                    onClick={clearFilters}>
                         Clear Filters
                     </Button>
-                </div>
-                <div className="grid grid-cols-1 gap-x-8 gap-y-4 md:grid-cols-2 xl:grid-cols-4 2xl:grid-cols-5 mb-4 items-center justify-center">
-                    {currentEngines.length > 0 ? currentEngines.map(engine => (
-                        engine.quantity < 15 ? (
-                            <div key={engine.id} className='hover:-translate-y-1 transition-all cursor-pointer hover:shadow-md hover:rounded-xl'>
-                                <Badge.Ribbon key={engine.id} text={'Low Stocks'} color="#BB4747" placement='start' className="opacity-80 p-1">
-                                    <Link key={engine.id} href={`/engines/${engine.id}`}>
-                                        <div className="flex bg-white bg-top bg-8 bg-no-repeat w-full h-44 rounded-xl shadow-md" style={{ backgroundImage: `url(${engine.picture})` }}>
-                                            <div className="self-end w-full h-12 bg-red-primary/15 rounded-b-xl">
-                                                <h3 className="text-gray-800 text-center"> <span className="font-bold font-sans">{engine.engineName}</span></h3>
-                                                <h3 className="text-gray-800 text-center"> <span className="font-semibold font-sans text-sm">Available:</span> <span className='text-red-primary'>{engine.quantity}</span></h3>
+                    </div>
+                    </div>
+                    <div className='block md:hidden'>
+                    <Button
+                    className='flex bg-red-primary hover:bg-red-primary font-semibold rounded-lg w-28 text-md h-auto py-2 px-5 tracking-wider border-red-800 border-2 border-b-4 active:border-b-2'
+                    type='primary'
+                    onClick={clearFilters}>
+                        Clear Filters
+                    </Button>
+                    </div>
+                    <div className="grid grid-cols-2 gap-x-8 gap-y-4 md:grid-cols-2 xl:grid-cols-4 2xl:grid-cols-5 mb-4">
+                        {currentEngines.length > 0 ? currentEngines.map(engine => (
+                            engine.quantity < 15 ? (
+                                <div key={engine.id} className='hover:-translate-y-1 transition-all cursor-pointer hover:shadow-md hover:rounded-xl'>
+                                    <Badge.Ribbon key={engine.id} text={'Low Stocks'} color="#BB4747" placement='start' className="opacity-80 p-1">
+                                        <Link key={engine.id} href={`/engines/${engine.id}`}>
+                                            <div className="flex bg-white bg-top bg-8 bg-no-repeat w-full h-44 rounded-xl shadow-md" style={{ backgroundImage: `url(${engine.picture})` }}>
+                                                <div className="self-end w-full h-12 bg-red-primary/15 rounded-b-xl">
+                                                    <h3 className="text-gray-800 text-center"> <span className="font-bold font-sans">{engine.engineName}</span></h3>
+                                                    <h3 className="text-gray-800 text-center"> <span className="font-semibold font-sans text-sm">Available:</span> <span className='text-red-primary'>{engine.quantity}</span></h3>
+                                                </div>
                                             </div>
-                                        </div>
-                                    </Link>
-                                </Badge.Ribbon>
-                            </div>
-                        ) : (
+                                        </Link>
+                                    </Badge.Ribbon>
+                                </div>
+                            ) : (
                                 <div key={engine.id} className="bg-white w-full h-44 rounded-xl shadow-md p-6">
                                     Engine: {engine.engineName}
                                 </div>
-                        )
-                    )) : <div className='flex justify-center items-center text-center relative mt-0 h-full md:h-72'> <Empty className='text-center' description="No engine found" /> </div>}
+                            )
+                        )) : (
+                            <div className="flex justify-center items-center col-span-full h-full md:h-72">
+                                <Empty className="text-center" description="No engine found" />
+                            </div>
+                        )}
                     </div>
+
                 {filteredEngines.length > 0 && (
                     <div className="text-center">
                         <Pagination

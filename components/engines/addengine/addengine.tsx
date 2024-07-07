@@ -6,31 +6,32 @@ import { useSession } from "next-auth/react";
 import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Button, Form, Input, InputNumber, Upload, ConfigProvider, Select } from 'antd';
+import { Button, Form, Input, InputNumber, Upload, ConfigProvider, Select, Col, Row } from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
-import EngineButton from '../ui/index/button';
-import { DieselEngine } from './specification/engines/dieselengine';
-import { DieselWaterPump } from './specification/pumps/dieselwaterpump';
-import Grid from '../ui/engineforms/FormGrid';
-import { TwinCylinderDiesel } from './specification/engines/twincylinderdieselengine';
-import { DieselGenerator } from './specification/generators/dieselgenerator';
-import { TwinCylinderDieselGenerator } from './specification/generators/twincylinderdieselgenerator';
-import { DieselHighPump } from './specification/pumps/dieselhighpump';
-import { DieselIronPump } from './specification/pumps/dieselironpump';
-import { GasolineEngine } from './specification/engines/gasolineengine';
-import { GasolineVertical } from './specification/engines/gasolinevertical';
-import { GasolineGenerator } from './specification/generators/gasolinegenerator';
-import { SilentGasolineGenerator } from './specification/generators/silentgasolinegenerator';
-import { TwinCylinderGasolineGenerator } from './specification/generators/twincylindergasolinegenerator';
-import { LiquifiedAndLptGenerator } from './specification/generators/liquifiedandlptgenerator';
-import { PortableGasolineGenerator } from './specification/generators/portablegasolinegenerator';
-import { GasolineWaterPump } from './specification/pumps/gasolinewaterpump';
-import { GasolineHighPump } from './specification/pumps/gasolinehighpump';
-import { GasolineIronPump } from './specification/pumps/gasolineironpump';
-import { DieselAndGasolineTrashPump } from './specification/pumps/dieselandgasolinetrashpump';
-import { InverterGenerator } from './specification/generators/invertergenerator';
-import { DieselWeldingGenerator } from './specification/generators/dieselweldinggenerator';
-import { Tillers } from './specification/tillers/tillers';
+import EngineButton from '../../ui/index/button';
+import { DieselEngine } from '../specification/engines/dieselengine';
+import { DieselWaterPump } from '../specification/pumps/dieselwaterpump';
+import Grid from '../../ui/engineforms/FormGrid';
+import { TwinCylinderDiesel } from '../specification/engines/twincylinderdieselengine';
+import { DieselGenerator } from '../specification/generators/dieselgenerator';
+import { TwinCylinderDieselGenerator } from '../specification/generators/twincylinderdieselgenerator';
+import { DieselHighPump } from '../specification/pumps/dieselhighpump';
+import { DieselIronPump } from '../specification/pumps/dieselironpump';
+import { GasolineEngine } from '../specification/engines/gasolineengine';
+import { GasolineVertical } from '../specification/engines/gasolinevertical';
+import { GasolineGenerator } from '../specification/generators/gasolinegenerator';
+import { SilentGasolineGenerator } from '../specification/generators/silentgasolinegenerator';
+import { TwinCylinderGasolineGenerator } from '../specification/generators/twincylindergasolinegenerator';
+import { LiquifiedAndLptGenerator } from '../specification/generators/liquifiedandlptgenerator';
+import { PortableGasolineGenerator } from '../specification/generators/portablegasolinegenerator';
+import { GasolineWaterPump } from '../specification/pumps/gasolinewaterpump';
+import { GasolineHighPump } from '../specification/pumps/gasolinehighpump';
+import { GasolineIronPump } from '../specification/pumps/gasolineironpump';
+import { DieselAndGasolineTrashPump } from '../specification/pumps/dieselandgasolinetrashpump';
+import { InverterGenerator } from '../specification/generators/invertergenerator';
+import { DieselWeldingGenerator } from '../specification/generators/dieselweldinggenerator';
+import { Tillers } from '../specification/tillers/tillers';
+import { NoSpecification } from '../specification/nospecification';
 
 const FormSchema = z
 .object({
@@ -64,7 +65,7 @@ interface Engine {
 }
 
 
-const AddEngine = () => {
+const AddEngineForm = () => {
     const { data: session } = useSession();
     const router = useRouter();
     const [file, setFile] = useState<File | undefined>();
@@ -194,12 +195,16 @@ const AddEngine = () => {
         },
       }}>        
     <Form
+    labelCol={{ span: 4 }}
     wrapperCol={{ span: 16 }}
     className='flex flex-col md:flex-row max-w-screen-xl mx-auto gap-4 px-2'
     onFinish={onSubmit}
     autoComplete="off"
+    requiredMark={false}
+    labelAlign='left'
   >
     <Grid>
+    <h3 className='text-red-900 font-bold text-lg font-sans pb-8'> Engine Information</h3>
     <Form.Item    
       label="Engine Name"
       name="engineName"
@@ -304,6 +309,7 @@ const AddEngine = () => {
     </Form.Item>
     </Grid>
     <Grid>
+    <h3 className='text-red-900 font-bold text-lg font-sans pb-8'> Specifications</h3>
     { engineType === 'Diesel Engine' ? <DieselEngine /> :
      engineType === 'Twin-Cylinder Diesel Engine' ? <TwinCylinderDiesel /> :
      engineType === 'Open Type Diesel Generator' ? <DieselGenerator /> :
@@ -328,15 +334,16 @@ const AddEngine = () => {
      engineType === 'Diesel Welding Generator' ? <DieselWeldingGenerator /> :
      engineType === 'Gasoline Welding Generator' ? <DieselWeldingGenerator /> :
      engineType === 'Tillers' ? <Tillers />
-     : null }
-
+     : <NoSpecification /> }
+    <div className='flex justify-center items-center'>
     <EngineButton>
         Add Engine
     </EngineButton>
+    </div>
     </Grid> 
   </Form>
   </ConfigProvider>
   </>
   )
     }
-  export default AddEngine;
+  export default AddEngineForm;

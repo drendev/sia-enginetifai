@@ -1,4 +1,4 @@
-import { Form, Input } from 'antd';
+import { Form, Input, Row, Col } from 'antd';
 
 const formItems = [
     { label: "Voltage (V)", name: "Voltage" },
@@ -25,16 +25,22 @@ const formItems = [
 export function SilentGasolineGenerator() {
     return (
         <>
+        <Row gutter={[12, 12]}>
             {formItems.map(item => (
+                <Col xs={10} sm={12} md={6} key={item.name}>
                 <Form.Item
                     key={item.name}
-                    label={item.label}
+                    wrapperCol={{ span: 24 }}
                     name={item.name}
                     rules={[{ required: true, message: 'Required Specification' }]}
                 >
-                    <Input />
+                    <Input
+                    placeholder={item.label}
+                    />
                 </Form.Item>
+                </Col>
             ))}
+        </Row>
         </>
     );
 }
