@@ -123,31 +123,28 @@ export function EngineList() {
                         Clear Filters
                     </Button>
                 </div>
-                
+                <div className="grid grid-cols-1 gap-x-8 gap-y-4 md:grid-cols-2 xl:grid-cols-4 2xl:grid-cols-5 mb-4 items-center justify-center">
                     {currentEngines.length > 0 ? currentEngines.map(engine => (
                         engine.quantity < 15 ? (
-                            <div key={engine.id} className="grid grid-cols-2 gap-x-8 gap-y-4 md:grid-cols-2 xl:grid-cols-4 2xl:grid-cols-5 mb-4 items-center justify-center">
-                                <div className='hover:-translate-y-1 transition-all cursor-pointer hover:shadow-md hover:rounded-xl'>
-                                    <Badge.Ribbon key={engine.id} text={'Low Stocks'} color="#BB4747" placement='start' className="opacity-80 p-1">
-                                        <Link key={engine.id} href={`/engines/${engine.id}`}>
-                                            <div className="flex bg-white bg-top bg-8 bg-no-repeat w-full h-44 rounded-xl shadow-md" style={{ backgroundImage: `url(${engine.picture})` }}>
-                                                <div className="self-end w-full h-12 bg-red-primary/15 rounded-b-xl">
-                                                    <h3 className="text-gray-800 text-center"> <span className="font-bold font-sans">{engine.engineName}</span></h3>
-                                                    <h3 className="text-gray-800 text-center"> <span className="font-semibold font-sans text-sm">Available:</span> <span className='text-red-primary'>{engine.quantity}</span></h3>
-                                                </div>
+                            <div className='hover:-translate-y-1 transition-all cursor-pointer hover:shadow-md hover:rounded-xl'>
+                                <Badge.Ribbon key={engine.id} text={'Low Stocks'} color="#BB4747" placement='start' className="opacity-80 p-1">
+                                    <Link key={engine.id} href={`/engines/${engine.id}`}>
+                                        <div className="flex bg-white bg-top bg-8 bg-no-repeat w-full h-44 rounded-xl shadow-md" style={{ backgroundImage: `url(${engine.picture})` }}>
+                                            <div className="self-end w-full h-12 bg-red-primary/15 rounded-b-xl">
+                                                <h3 className="text-gray-800 text-center"> <span className="font-bold font-sans">{engine.engineName}</span></h3>
+                                                <h3 className="text-gray-800 text-center"> <span className="font-semibold font-sans text-sm">Available:</span> <span className='text-red-primary'>{engine.quantity}</span></h3>
                                             </div>
-                                        </Link>
-                                    </Badge.Ribbon>
-                                </div>
+                                        </div>
+                                    </Link>
+                                </Badge.Ribbon>
                             </div>
                         ) : (
-                            <div key={engine.id} className="grid grid-cols-1 gap-x-8 gap-y-4 md:grid-cols-2 xl:grid-cols-4 2xl:grid-cols-5 mb-4 items-center justify-center">
                                 <div key={engine.id} className="bg-white w-full h-44 rounded-xl shadow-md p-6">
                                     Engine: {engine.engineName}
                                 </div>
-                            </div>
                         )
                     )) : <div className='flex justify-center items-center text-center relative mt-0 h-full md:h-72'> <Empty className='text-center' description="No engine found" /> </div>}
+                    </div>
                 {filteredEngines.length > 0 && (
                     <div className="text-center">
                         <Pagination
