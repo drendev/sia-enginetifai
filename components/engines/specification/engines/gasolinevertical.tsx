@@ -1,4 +1,4 @@
-import {Form, Input} from 'antd';
+import {Form, Input, Row, Col} from 'antd';
 
 const formItems = [
     { label: "Displacement(cc) (BorexStroke)(mm)", name: "DisplacementBore" },
@@ -17,16 +17,22 @@ const formItems = [
 export function GasolineVertical() {
     return(
         <>
+        <Row gutter={[12, 12]}>
             {formItems.map(item => (
+                <Col xs={10} sm={12} md={8} key={item.name}>
                 <Form.Item
                     key={item.name}
-                    label={item.label}
+                    wrapperCol={{ span: 24 }}
                     name={item.name}
                     rules={[{ required: true, message: 'Required Specification' }]}
                 >
-                    <Input />
+                    <Input
+                    placeholder={item.label}
+                    />
                 </Form.Item>
+                </Col>
             ))}
+        </Row>
         </>
     )
 }

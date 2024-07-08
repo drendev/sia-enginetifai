@@ -1,8 +1,11 @@
 "use client";
 
-import EngineButton from "@/components/ui/index/button";
-import { PlusOutlined, SearchOutlined } from "@ant-design/icons";
-import { Input, ConfigProvider, Badge } from "antd";
+import { CameraOutlined } from "@ant-design/icons";
+import { Input, ConfigProvider, Badge, Button } from "antd";
+import { EngineList } from "./enginelist";
+import { RecentEngineAdded } from "./recentadded";
+import { RecentEngineTransaction } from "./recenttransaction";
+import Link from "next/link";
 
 export function EnginePage(){
     return(
@@ -23,55 +26,27 @@ export function EnginePage(){
                              
                             <div className="flex flex-col w-full h-52 rounded-2xl shadow-xl bg-red-primary bg-search bg-right-bottom bg-contain bg-no-repeat px-7 py-5 gap-2">
                             <h1 className="text-red-100 text-4xl font-sans font-extrabold"> Engines </h1>
-                                
-                            </div>
-                            
-                            <div className="flex justify-between gap-3">
-                                
-                                <Input 
-                                className="shadow-inner font-sans font-semibold rounded-full"
-                                size="large"
-                                placeholder="Search Engine" 
-                                prefix={<SearchOutlined />} />
-                                
-                            
-                            <div className="flex w-48">
-                                <EngineButton>
-                                    Add Engine <PlusOutlined />
-                                </EngineButton>
+                            <div className="mt-20 md:mt-14">
+                            <Link href={'imagerecogbeta'}>
+                            <Button
+                            type="primary" 
+                            htmlType="submit"
+                            className='flex bg-red-primary hover:bg-red-primary font-bold rounded-full md:w-72 text-md h-auto py-2 px-7 tracking-wider border-red-800 border-2 border-b-4 active:border-b-2'
+                            >
+                            Engine Recognition <CameraOutlined />
+                            </Button>
+                            </Link>
                             </div>
                             </div>
-                            
-                            <div className="grid grid-cols-1 justify-center gap-x-8 gap-y-4 md:grid-cols-2 xl:grid-cols-4 2xl:grid-cols-5">
-                            <Badge.Ribbon key={1} text={'Low Stocks'} color="#BB4747" placement='start' className="opacity-80 p-1">
-                            <div className="flex bg-white bg-[url('https://res.cloudinary.com/hnqdnvduj/image/upload/v1718955675/engines/qbtt4pzmoknfcouxlcud.jpg')]  bg-top bg-8 bg-no-repeat w-full h-44 rounded-xl shadow-md">
-                                <div className="self-end w-full h-12 bg-red-primary/15 rounded-b-xl">
-                                    <h3 className="text-gray-800 text-center"> Engine: <span className="font-semibold font-sans">LT763274</span></h3>
-                                    <h3 className="text-gray-800 text-center"> Available: <span className="font-semibold font-sans">23</span></h3>
-                                </div>
-                            </div>
-                            </Badge.Ribbon>
-                            <div className="bg-white w-full h-44 rounded-xl shadow-md p-6">
-                                Engine 1
-                            </div>
-                            <div className="bg-white w-full h-44 rounded-xl shadow-md p-6">
-                                Engine 1
-                            </div>
-                            <div className="bg-white w-full h-44 rounded-xl shadow-md p-6">
-                                Engine 1
-                            </div>
-                            <div className="bg-white w-full h-44 rounded-xl shadow-md p-6">
-                                Engine 1
-                            </div>
-                            <div className="bg-white w-full h-44 rounded-xl shadow-md p-6">
-                                Engine 1
-                            </div>
-                            </div>
+                            <EngineList />
                         </div>
                         
                     </div>
-                    <div className="flex flex-col md:flex-none w-full md:w-2/6 space-y-4 p-6 md:p-0">
-
+                    <div className="flex flex-col md:flex-none w-full md:w-2/6 space-y-4 p-6 md:p-0 gap-4">
+                        <div className="relative md:fixed pt-6 md:h-[calc(100vh-96px)] scrollbar-none md:overflow-y-auto md:scrollbar md:scrollbar-thumb-red-primary md:scrollbar-track-transparent">
+                        <RecentEngineAdded />
+                        <RecentEngineTransaction />
+                        </div>
                     </div>
                 </div>
             </div>

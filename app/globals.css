@@ -384,3 +384,7 @@ body,
   color: white;
   transform: rotateY(180deg);
 }
+
+.group:hover .transform {
+  transform: scale(1.05);
+}

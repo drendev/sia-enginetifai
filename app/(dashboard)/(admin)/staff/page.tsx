@@ -5,13 +5,17 @@ import { StaffDisplay } from "@/components/staff/StaffDisplay";
 import { db } from "@/lib/db";
 import { useEffect, useState } from "react";
 import Link from "next/link";
-
-
+import { Pagination } from "antd";
 
 export default function Employees() {
-
   const [usersTotal, setUsersTotal] = useState<number | null>(null);
-  
+  const [currentPage, setCurrentPage] = useState(1);
+  const pageAlign = "center";
+  const pageSize = 8;
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+  };
 
   const getUsers = async () => {
     try {
@@ -21,15 +25,13 @@ export default function Employees() {
       const data = await res.json();
       const specificUsers: number = data.usersTotal;
       setUsersTotal(specificUsers);
-      console.log(specificUsers)
+      console.log(specificUsers);
     } catch (error) {
       console.error("Error fetching users:", error);
     }
   };
 
-  useEffect(() => {
-    getUsers();
-  }, []);
+  useEffect(() => {}, []);
 
   return (
     <>
@@ -73,7 +75,9 @@ export default function Employees() {
         </form>
 
         <div className="flex">
-          <div className="mt-3 flex-grow">{usersTotal} {usersTotal === 1 ? 'Staff' : 'Staffs'}</div>
+          <div className="mt-3 flex-grow">
+            {usersTotal} {usersTotal === 1 ? "Staff" : "Staffs"}
+          </div>
           <button className="text-white bg-gray-700 hover:bg-gray-800 focus:ring-4 focus:outline-none focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center me-2 dark:bg-gray-600 dark:hover:bg-gray-700 dark:focus:ring-gray-800">
             <svg
               className="w-3.5 h-3.5 me-2"
@@ -90,7 +94,10 @@ export default function Employees() {
             </svg>
             Filter
           </button>
-          <Link href="./create-user" className="text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center me-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800">
+          <Link
+            href="./create-user"
+            className="text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center me-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800"
+          >
             <svg
               className="w-3.5 h-3.5 me-2"
               width="56"
@@ -107,9 +114,16 @@ export default function Employees() {
             Add Employee
           </Link>
         </div>
-        
+
         <div className="grid grid-cols-1 justify-center gap-x-8 gap-y-4 mt- 5 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-5">
           <StaffDisplay />
+        </div>
+        <div className="text-center mt-3 mb-3 pb-5">
+          <Pagination
+            current={currentPage}
+            pageSize={pageSize}
+            onChange={handlePageChange}
+          />
         </div>
       </div>
     </>
