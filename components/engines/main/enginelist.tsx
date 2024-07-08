@@ -145,7 +145,7 @@ export function EngineList() {
                                     <Badge.Ribbon key={engine.id} text={'Low Stocks'} color="#BB4747" placement='start' className="opacity-80 p-1">
                                         <Link key={engine.id} href={`/engines/${engine.id}`}>
                                             <div className="flex bg-white bg-top bg-8 bg-no-repeat w-full h-44 rounded-xl shadow-md" style={{ backgroundImage: `url(${engine.picture})` }}>
-                                                <div className="self-end w-full h-12 bg-red-primary/15 rounded-b-xl">
+        <div className="self-end w-full h-12 bg-red-primary/15 rounded-b-xl">
                                                     <h3 className="text-gray-800 text-center"> <span className="font-bold font-sans">{engine.engineName}</span></h3>
                                                     <h3 className="text-gray-800 text-center"> <span className="font-semibold font-sans text-sm">Available:</span> <span className='text-red-primary'>{engine.quantity}</span></h3>
                                                 </div>
