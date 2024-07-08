@@ -7,6 +7,7 @@ import TransactionHistoryModal from "./TransactionHistoryModal"; // Import your 
 import MapboxComponent from "./MapboxComponent";
 import DeliveryTracking from "./DeliveryTracking";
 import { PackageInformationCard, TransactionHistoryCard } from "./TransactionHistory";
+import { PlusOutlined } from "@ant-design/icons";
 
 const generateTransactionNumber = (): string => {
   const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
@@ -130,28 +131,26 @@ const MapComponent: React.FC = () => {
       <div className="flex flex-col md:w-[40rem] w-full">
 
         {/* Adding New Package Card */}
-        <div className="dark:bg-gray-900 bg-red-200 rounded-lg p-4 shadow-md mb-2 w-full bg-no-repeat" style={{ backgroundImage: `url("./bg-red.png")` }}>
-          <div className="flex items-center justify-between ">
+        <div className="dark:bg-gray-900 bg-red-200 rounded-lg p-6 shadow-md mb-2 w-full bg-no-repeat bg-cover" style={{ backgroundImage: `url("./bg-red.png")` }}>
+        <div className="flex items-center justify-between p-2 ">
             <div>
-              <p className="text-base font-semibold text-white dark:text-white p-1">
+              <p className="text-red-100 text-4xl font-sans font-extrabold pb-2">
                 Add New Package
               </p>
-              <h1 className="text-sm text-white dark:text-white pl-1">
+              <h1 className="text-sm text-white dark:text-white pl-1 pb-3">
                 Fill out the form to create new package
               </h1>
             </div>
-            <img src="/undraw_delivery.svg" alt="" className="h-28 w-44" />
           </div>
           <div className="flex items-center mb-2">
             <button
-              className="flex items-center p-2 bg-black text-white rounded-lg font-semibold"
+              className="flex bg-red-primary hover:bg-red-primary text-white font-bold rounded-full md:w-30 text-md h-auto py-2 px-7 tracking-wider border-red-800 border-2 border-b-4 active:border-b-2"
               onClick={handleAddButtonClick}
-            >
-              <FaArrowRight className="mr-2" />
-              Add
+            > New Package <PlusOutlined className="pl-2 pt-1" />
             </button>
           </div>
         </div>
+
 
         {/* Package Information Card */}
         <PackageInformationCard packages={packages} />
@@ -160,6 +159,7 @@ const MapComponent: React.FC = () => {
         <TransactionHistoryCard
           transactionHistory={transactionHistory}
           setPackages={setPackages}
+          onSeeMore={() => setShowTransactionHistoryModal(true)} // Set showModal state to true
         />
         
       </div>
@@ -234,16 +234,16 @@ const MapComponent: React.FC = () => {
 
       {/* Transaction History Modal */}
       {showTransactionHistoryModal && (
-        <TransactionHistoryModal
-          isOpen={showTransactionHistoryModal}
-          onClose={() => setShowTransactionHistoryModal(false)}
-          transactionHistory={filteredAndSortedHistory}
-          sortOrder={sortOrder}
-          onSortOrderChange={(order) => setSortOrder(order)}
-          engineFilter={engineFilter}
-          onEngineFilterChange={(engine) => setEngineFilter(engine)}
-        />
-      )}
+          <TransactionHistoryModal
+            isOpen={showTransactionHistoryModal}
+            onClose={() => setShowTransactionHistoryModal(false)}
+            transactionHistory={filteredAndSortedHistory}
+            sortOrder={sortOrder}
+            onSortOrderChange={(order) => setSortOrder(order)}
+            engineFilter={engineFilter}
+            onEngineFilterChange={(engine) => setEngineFilter(engine)}
+          />
+        )}
 
     </div>
   );

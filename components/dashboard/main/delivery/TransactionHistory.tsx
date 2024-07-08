@@ -1,15 +1,25 @@
 "use client"
-
 import React from "react";
 import { FaUser, FaEnvelope } from "react-icons/fa";
+import TransactionHistoryModal from "./TransactionHistoryModal"; 
 
 interface PackageProps {
   packages: any; // Define your type for packages
 }
 
+interface Transaction {
+  trackingNumber: string;
+  date: string;
+  engineName: string;
+  place: string;
+  quantity: number;
+  driverName: string;
+}
+
 interface TransactionHistoryProps {
-  transactionHistory: any[]; // Define your type for transactionHistory
+  transactionHistory: Transaction[];
   setPackages: React.Dispatch<React.SetStateAction<any>>;
+  onSeeMore: () => void; // New prop for opening modal
 }
 
 export const PackageInformationCard: React.FC<PackageProps> = ({ packages }) => (
@@ -62,6 +72,7 @@ export const PackageInformationCard: React.FC<PackageProps> = ({ packages }) => 
 export const TransactionHistoryCard: React.FC<TransactionHistoryProps> = ({
   transactionHistory,
   setPackages,
+  onSeeMore, // Receive the prop
 }) => (
   <div className="dark:bg-gray-900 bg-white rounded-lg p-4 shadow-md mb-4 w-full h-100">
     <div className="flex items-center justify-between mb-4">
@@ -75,7 +86,7 @@ export const TransactionHistoryCard: React.FC<TransactionHistoryProps> = ({
       </div>
       <button
         className="px-4 py-2 bg-red-700 text-white rounded-lg"
-        onClick={() => setShowTransactionHistoryModal(true)}
+        onClick={onSeeMore} // Trigger the modal opening
       >
         See more
       </button>
@@ -84,7 +95,7 @@ export const TransactionHistoryCard: React.FC<TransactionHistoryProps> = ({
 
     {/* Displaying Recent Transactions */}
     <div className="max-h-60 overflow-y-auto">
-      {transactionHistory.map((transaction, index) => (
+      {transactionHistory.slice(0, 3).map((transaction, index) => (
         <div
           key={index}
           className="mb-4 cursor-pointer"
@@ -130,7 +141,6 @@ export const TransactionHistoryCard: React.FC<TransactionHistoryProps> = ({
     </div>
   </div>
 );
-function setShowTransactionHistoryModal(arg0: boolean): void {
-  throw new Error("Function not implemented.");
-}
+
+export default TransactionHistoryCard;
 
