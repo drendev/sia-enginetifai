@@ -98,7 +98,7 @@ export default function Employees() {
     <>
       <div className="pt-20 pl-10 pr-10 ">
         <Input
-          className="h-16 text-sm font-medium w-full mb-5 shadow-inner font-sans font-semibold rounded-full text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-red-500 focus:border-red-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+          className="h-16 w-full mb-5 shadow-inner font-sans font-semibold rounded-full text-sm text-gray-900 border border-gray-300 bg-gray-50 focus:ring-red-500 focus:border-red-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
           size="large"
           placeholder="Search Staff"
           prefix={<SearchOutlined />}

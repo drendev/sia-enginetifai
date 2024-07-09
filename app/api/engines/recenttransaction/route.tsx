@@ -11,7 +11,7 @@ export async function POST() {
             select: {
                 id: true,
                 engineName: true,
-                updatedAt: true,
+                createAt: true,
                 picture: true 
             }
         });
@@ -19,7 +19,7 @@ export async function POST() {
         const response = recentEngines.map(engine => ({
             engineId: engine.id,
             engineName: engine.engineName,
-            engineAdded: engine.updatedAt,
+            engineAdded: engine.createAt,
             engineImage: engine.picture
         }));
 

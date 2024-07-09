@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { db } from '@/lib/db';
 import { z } from 'zod';
+import moment from 'moment-timezone';
 
 // Define schema
 const engineSchema = z.object({
@@ -73,6 +74,13 @@ const engineSchema = z.object({
 });
 
 export async function POST(req: Request) {
+
+  // format timezone
+  const utcDate = new Date();
+    const timeZone = 'Asia/Manila';
+
+    const dateToday = moment.tz(utcDate, timeZone).format('YYYY-MM-DDTHH:mm:ss.SSS[Z]');
+
   try {
     const body = await req.json();
     const parsedBody = engineSchema.parse(body);
@@ -97,6 +105,7 @@ export async function POST(req: Request) {
         quantity,
         picture,
         description,
+        createAt: dateToday,
         specification: {
           create: specificationFields,
         },

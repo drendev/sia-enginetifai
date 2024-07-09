@@ -69,20 +69,22 @@ export function RecentEngineTransaction() {
                     <div className="divide-y">
                         {transaction.map((item) => (
                             <Link key={item.engineId} href={'test'}>
-                            <div key={item.engineId} className="flex hover:bg-red-primary/5">
-                                
-                                <div className="p-4 flex-1">{item.engineName.join(', ')}</div>
-                                <div className="p-4 flex-1">
-                                    <Badge status={item.delivery ? "success" : "processing"} text={item.delivery ? "Delivery" : "Store"} className='text-xs'/>
+                                <div key={item.engineId} className="flex hover:bg-red-primary/5">
+                                    <div className="p-4 flex-1">
+                                        {item.engineName.length > 1 
+                                            ? `${item.engineName[0]} +${item.engineName.length - 1}`
+                                            : item.engineName[0]}
+                                    </div>
+                                    <div className="p-4 flex-1">
+                                        <Badge status={item.delivery ? "success" : "processing"} text={item.delivery ? "Delivery" : "Store"} className='text-xs'/>
+                                    </div>
+                                    <div className="p-4 flex-1">{formatTransactionTime(item.createAt)}</div>
+                                    <div className="p-4 flex-1">
+                                        <Avatar.Group>
+                                            <Avatar src={`${item.user}`} style={{ backgroundColor: '#fde3cf' }}>A</Avatar>
+                                        </Avatar.Group>
+                                    </div>
                                 </div>
-                                <div className="p-4 flex-1">{formatTransactionTime(item.createAt)}</div>
-                                <div className="p-4 flex-1">
-                                    <Avatar.Group>
-                                        <Avatar src={`${item.user}`} style={{ backgroundColor: '#fde3cf' }}>A</Avatar>
-                                    </Avatar.Group>
-                                </div>
-                                
-                            </div>
                             </Link>
                         ))}
                     </div>

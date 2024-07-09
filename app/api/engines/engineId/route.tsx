@@ -21,8 +21,7 @@ export async function POST(req: Request) {
                 description: true,
                 quantity: true,
                 picture: true,
-                userAdded: true,
-
+                userName: true,
             }
         });
 

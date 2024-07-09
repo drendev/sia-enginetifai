@@ -1,21 +1,33 @@
 "use client";
 
 import Link from "next/link";
-import { Button, ConfigProvider, Image, Form, Modal } from "antd";
+import { Button, ConfigProvider, Image, Form, Modal, Row, Col, Card } from "antd";
 import { useEffect, useState, createContext } from "react";
 import { useRouter } from "next/navigation";
-import { CameraOutlined } from "@ant-design/icons";
+import moment from 'moment-timezone';
 
 const ReachableContext = createContext<string | null>(null);
-const UnreachableContext = createContext<string | null>(null);
 
 interface Engine {
-  userAdded: string;
+  userName: string;
   engineName: string;
   engineType: string;
   price: number;
   quantity: string;
   picture: string;
+  description: string;
+}
+
+interface Transaction {
+  id: number;
+  quantity: number;
+  totalPrice: number;
+  createAt: string;
+}
+
+interface EngineSpecification {
+  [key: string]: string | undefined;  // Generalizing the property values as string or undefined
+  // Define specific properties if necessary
 }
 
 export default function EnginePageGrid({
@@ -26,8 +38,11 @@ export default function EnginePageGrid({
   const router = useRouter();
   const [modal, contextHolder] = Modal.useModal();
   const [engineData, setEngineData] = useState<Engine | null>(null);
+  const [engineSpecification, setEngineSpecification] = useState<EngineSpecification | null>(null);
+  const [transactionData, setTransactionData] = useState<Transaction[]>([]);
   const [isDeleted, setIsDeleted] = useState(false);
 
+  /* Fetch Engine data */
   useEffect(() => {
     if (isDeleted) return;
 
@@ -41,8 +56,98 @@ export default function EnginePageGrid({
     fetchEngineData();
   }, [params.engineId, isDeleted]);
 
+  /* Fetch Transaction data */
+  useEffect(() => {
+
+    const fetchTransactionData = async () => {
+      const res = await fetch(`/api/engines/enginepagetransac?engineId=${params.engineId}`, {
+        method: 'POST',
+      });
+      const data = (await res.json()) as Transaction[];
+      setTransactionData(data);
+    };
+    fetchTransactionData();
+  }, [params.engineId]);
+
+  /* Fetch Specification Data */
+  useEffect(() => {
+
+    const fetchEngineSpecification = async () => {
+      const res = await fetch(`/api/engines/specification?engineId=${params.engineId}`, {
+        method: 'POST',
+      });
+      const data = await res.json();
+      setEngineSpecification(data);
+    };
+    fetchEngineSpecification();
+  }, [params.engineId]);
+
+  useEffect(() => {
+
+    const fetchTransactionData = async () => {
+      const res = await fetch(`/api/engines/enginepagetransac?engineId=${params.engineId}`, {
+        method: 'POST',
+      });
+      const data = (await res.json()) as Transaction[];
+      setTransactionData(data);
+    };
+    fetchTransactionData();
+  }, [params.engineId]);  useEffect(() => {
+
+    const fetchTransactionData = async () => {
+      const res = await fetch(`/api/engines/enginepagetransac?engineId=${params.engineId}`, {
+        method: 'POST',
+      });
+      const data = (await res.json()) as Transaction[];
+      setTransactionData(data);
+    };
+    fetchTransactionData();
+  }, [params.engineId]);
+  const sortedData = [...transactionData].sort((a, b) => new Date(b.createAt).getTime() - new Date(a.createAt).getTime());
+
+  /* format time and date */
+  const utcDate = new Date();
+  const timeZone = 'Asia/Manila';
+  const dateToday = moment.tz(utcDate, timeZone).format('YYYY-MM-DDTHH:mm:ss.SSS[Z]');
+
+  const formatTransactionTime = (dateTime: string) => {
+    const now = moment.tz(dateToday, timeZone);  // Use dateToday instead of the current moment
+    const transactionTime = moment.tz(dateTime, timeZone);
+    const diffMinutes = now.diff(transactionTime, 'minutes');
+    const diffHours = now.diff(transactionTime, 'hours');
+    const diffDays = now.diff(transactionTime, 'days');
+
+    if (diffMinutes < 1) {
+        return 'just now';
+    } else if (diffMinutes < 60) {
+        return `${diffMinutes} minute${diffMinutes > 1 ? 's' : ''} ago`;
+    } else if (diffHours < 24) {
+        return `${diffHours} hour${diffHours > 1 ? 's' : ''} ago`;
+    } else {
+        return `${diffDays} day${diffDays > 1 ? 's' : ''} ago`;
+    }
+  };
+
+const renderSpecifications = (specifications: EngineSpecification | null) => {
+  if (!specifications) return null;
+  return (
+    <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+      {Object.entries(specifications).map(([key, value]) => {
+        if (value) {
+          return (
+            <div key={key} className="p-2">
+              <span className="font-semibold">{key}:</span> <span className="text-red-950 font-sans font-bold">{value}</span>
+            </div>
+          );
+        }
+        return null;
+      })}
+    </div>
+  );
+};
   const handleOnSubmit = async () => {
     const response = await fetch('/api/engines/delete', {
+      method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
@@ -114,7 +219,7 @@ export default function EnginePageGrid({
                         alt="AI"
                         width={170}
                         height={170}
-                        className="self-center"
+                        className="self-center rounded-xl"
                       />
                     </div>
                   </div>
@@ -148,17 +253,69 @@ export default function EnginePageGrid({
                       </ReachableContext.Provider>
                     </Form>
                   </div>
-                  <div className="w-full 2xl:w-full h-80 bg-white shadow-md rounded-xl p-4">
+
+                  {/* Specification */}
+                  <div className="w-full 2xl:w-full h-full md:h-80 bg-white shadow-md rounded-xl p-4">
                     <div className="text-red-900 text-2xl font-sans font-extrabold space-y-2">
                       Specifications
                     </div>
-                    <h3>Test Specs</h3>
+                    {engineSpecification && renderSpecifications(engineSpecification)}
                   </div>
                 </div>
               </div>
               <div className="flex flex-col md:flex-none w-full md:w-2/6 space-y-4 p-6 md:p-0 gap-4">
                 <div className="relative md:fixed pt-6 md:h-[calc(100vh-96px)] scrollbar-none md:overflow-y-auto md:scrollbar md:scrollbar-thumb-red-primary md:scrollbar-track-transparent">
+                
+                {/* Description */}
+                <div className="w-full md:w-[29rem] h-64 bg-white shadow-md rounded-xl p-4 flex flex-col">
+                  <div className="text-red-900 text-2xl font-sans font-extrabold space-y-2">
+                    Description
+                  </div>
+                  <p className="break-words py-4 flex-1">
+                    {engineData?.description}
+                  </p>
+                  <h3 className="text-wrap py-4 text-red-900 font-sans font-semibold ">
+                    Added by: {engineData?.userName}
+                  </h3>
+                </div>
+
+                {/* Recent Transaction */}
+                <div className="text-2xl font-bold font-sans mb-7 my-5">
+                <span className="bg-fireworks bg-no-repeat bg-right-bottom bg-contain pb-4 text-red-900"> Recently Transacted </span>
+                </div>
+                <div className="text-md">
+                <div className="w-full">
+                    <div className="bg-red-primary/15 flex font-bold">
+                        <div className="text-left p-4 flex-1">Quantity</div>
+                        <div className="text-left p-4 flex-1">Total Sales</div>
+                        <div className="text-left p-4 flex-1">Time</div>
+                    </div>
+                    <div className="divide-y">
                       
+                    {sortedData.length > 0 ? (
+                      <div className="divide-y">
+                        {sortedData.map((item, index) => (
+                          <div key={index} className="flex hover:bg-red-primary/5">
+                            <div className="p-4 flex-1">
+                              {item.quantity}
+                            </div>
+                            <div className="p-4 flex-1">
+                              {item.totalPrice}
+                            </div>
+                            <div className="p-4 flex-1">
+                              {formatTransactionTime(item.createAt)}
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    ) : (
+                      <div className="text-center p-4">
+                        No transactions found
+                      </div>
+                    )}
+                    </div>
+                </div>
+            </div>
                 </div>
               </div>
             </div>

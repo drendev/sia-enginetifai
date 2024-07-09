@@ -18,8 +18,12 @@ export async function POST(req: Request) {
                 specification: true,
             }
         });
-
-        return NextResponse.json(getEngineSpecification);
+        if (getEngineSpecification && getEngineSpecification.specification) {
+            const { id, engineName, engineId, ...specWithoutIds } = getEngineSpecification.specification;
+            return NextResponse.json(specWithoutIds);
+        }
+        
+        return NextResponse.json(getEngineSpecification?.specification);
     } catch (error) {
         console.error("Error fetching engine price:", error);
         return NextResponse.json({ error: 'Internal Server Error' });
