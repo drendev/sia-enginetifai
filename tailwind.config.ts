@@ -23,6 +23,7 @@ const config: Config = {
         "deliverybg": "url('/delivery.svg')",
         "aibg": "url('/ai.svg')",
         "search": "url('/search.png')",
+        "enginebackground": "url('/enginebackground.png')",
         },
         backgroundSize: {
           "16": "12rem",

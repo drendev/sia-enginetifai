@@ -30,11 +30,14 @@ export function RecentEngineTransaction() {
         fetchEngineData();
     }, []);
 
+    const utcDate = new Date();
     const timeZone = 'Asia/Manila';
 
+    const dateToday = moment.tz(utcDate, timeZone).format('YYYY-MM-DDTHH:mm:ss.SSS[Z]');
+
     const formatTransactionTime = (dateTime: string) => {
-        const now = moment();
-        const transactionTime = moment(dateTime);
+        const now = moment.tz(dateToday, timeZone);  // Use dateToday instead of the current moment
+        const transactionTime = moment.tz(dateTime, timeZone);
         const diffMinutes = now.diff(transactionTime, 'minutes');
         const diffHours = now.diff(transactionTime, 'hours');
         const diffDays = now.diff(transactionTime, 'days');
@@ -44,12 +47,12 @@ export function RecentEngineTransaction() {
         } else if (diffMinutes < 60) {
             return `${diffMinutes} minute${diffMinutes > 1 ? 's' : ''} ago`;
         } else if (diffHours < 24) {
-            return `${diffHours} hr${diffHours > 1 ? 's' : ''} ago`;
+            return `${diffHours} hour${diffHours > 1 ? 's' : ''} ago`;
         } else {
             return `${diffDays} day${diffDays > 1 ? 's' : ''} ago`;
         }
     };
-
+    
     return (
         <>
             <div className="text-2xl font-bold font-sans mb-7 my-5">
