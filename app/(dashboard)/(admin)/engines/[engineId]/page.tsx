@@ -41,7 +41,7 @@ export default function EnginePageGrid({
   const [engineSpecification, setEngineSpecification] = useState<EngineSpecification | null>(null);
   const [transactionData, setTransactionData] = useState<Transaction[]>([]);
   const [isDeleted, setIsDeleted] = useState(false);
-
+  const [showAddForm, setShowAddForm] = useState(false);
   /* Fetch Engine data */
   useEffect(() => {
     if (isDeleted) return;
@@ -127,7 +127,7 @@ export default function EnginePageGrid({
         return `${diffDays} day${diffDays > 1 ? 's' : ''} ago`;
     }
   };
-
+// Render each specification
 const renderSpecifications = (specifications: EngineSpecification | null) => {
   if (!specifications) return null;
   return (
@@ -144,6 +144,11 @@ const renderSpecifications = (specifications: EngineSpecification | null) => {
       })}
     </div>
   );
+};
+
+const handleAddButtonClick = () => {
+
+  setShowAddForm(true); 
 };
   const handleOnSubmit = async () => {
     const response = await fetch('/api/engines/delete', {
@@ -225,11 +230,20 @@ const renderSpecifications = (specifications: EngineSpecification | null) => {
                   </div>
                   <div className="flex justify-end gap-6 mt-4">
                     <Button
+                      onClick={handleAddButtonClick}
                       type="primary"
                       htmlType="submit"
                       className="bg-red-primary hover:bg-red-primary h-auto font-bold rounded-full w-auto text-md py-2 px-7 tracking-wider border-red-800 border-2 border-b-4 active:border-b-2"
                     >
                       Edit Engine
+                    </Button>
+                    <Button
+                      onClick={handleAddButtonClick}
+                      type="primary"
+                      htmlType="submit"
+                      className="bg-red-primary hover:bg-red-primary h-auto font-bold rounded-full w-auto text-md py-2 px-7 tracking-wider border-red-800 border-2 border-b-4 active:border-b-2"
+                    >
+                      Edit Specification
                     </Button>
                     <Form
                       onFinish={async () => {
@@ -316,6 +330,63 @@ const renderSpecifications = (specifications: EngineSpecification | null) => {
                     </div>
                 </div>
             </div>
+            {showAddForm && (
+              <div className="fixed inset-0 flex items-center justify-center z-50 bg-gray-900 bg-opacity-50">
+                <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg w-[60rem]">
+                  <h2 className="text-lg font-semibold mb-4">Edit Engine : {engineData?.engineName} </h2>
+                  <form>
+                    <div className="mb-4">
+                      <label className="block mb-1">Engine Name</label>
+                      <select
+                      
+                        className="p-2 border border-gray-300 dark:border-gray-700 rounded-lg dark:bg-gray-900 dark:text-white focus:outline-none w-full"
+                        required
+                      >
+                        <option value="">Select Engine</option>
+                        <option value="Engine ABC">Engine ABC</option>
+                        <option value="Engine XYZ">Engine XYZ</option>
+                        <option value="Engine 123">Engine 123</option>
+                      </select>
+                    </div>
+                    <div className="mb-4">
+                      <label className="block mb-1">Quantity</label>
+                      <input
+                        type="number"
+                        placeholder="Quantity"
+                        
+                        className="p-2 border border-gray-300 dark:border-gray-700 rounded-lg dark:bg-gray-900 dark:text-white focus:outline-none w-full"
+                        required
+                      />
+                    </div>
+                    <div className="mb-4">
+                      <label className="block mb-1">Place</label>
+                      <input
+                        type="text"
+                        placeholder="Place"
+                        
+                        className="p-2 border border-gray-300 dark:border-gray-700 rounded-lg dark:bg-gray-900 dark:text-white focus:outline-none w-full"
+                        required
+                      />
+                    </div>
+                    <div className="flex justify-end">
+                      <button
+                        type="button"
+                        className="px-4 py-2 bg-gray-500 text-white rounded-lg mr-2"
+                        onClick={() => setShowAddForm(false)}
+                      >
+                        Cancel
+                      </button>
+                      <button
+                        type="submit"
+                        className="px-4 py-2 bg-red-primary text-white rounded-lg"
+                      >
+                        Submit
+                      </button>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            )}
                 </div>
               </div>
             </div>
