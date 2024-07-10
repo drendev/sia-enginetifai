@@ -5,6 +5,7 @@ import { useState } from 'react';
 interface Label {
   Name: string;
   Confidence: number;
+  
 }
 
 export default function UploadImage() {
@@ -21,7 +22,6 @@ export default function UploadImage() {
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-
     if (!selectedFile) return;
 
     setLoading(true);
@@ -45,7 +45,7 @@ export default function UploadImage() {
         }
 
         const data = await response.json();
-        setLabels(data.Labels);
+        setLabels(data.CustomLabels || []); // Ensure we handle custom labels properly
       } catch (err: any) {
         setError(err.message);
       } finally {
@@ -56,6 +56,7 @@ export default function UploadImage() {
     reader.readAsDataURL(selectedFile);
   };
 
+  console.log(labels)
   return (
     <div className='mt-16'>
       <form onSubmit={handleSubmit}>
