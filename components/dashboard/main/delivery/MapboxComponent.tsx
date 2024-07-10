@@ -52,7 +52,7 @@ useEffect(() => {
 
     map.on("style.load", () => {
         map.loadImage(
-        "https://res.cloudinary.com/hnqdnvduj/image/upload/v1716195724/profile-pictures/llwdpvszpresxczvxp5b.jpg",
+        "https://res.cloudinary.com/hnqdnvduj/image/upload/v1720300857/profile-pictures/xqwugharfggl4sgeqj7f.jpg",
         (error, image) => {
             if (error) throw error;
 
