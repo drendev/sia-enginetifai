@@ -2,14 +2,14 @@
 
 import { useState } from 'react';
 
-interface TextDetection {
-  DetectedText: string;
+interface Label {
+  Name: string;
   Confidence: number;
 }
 
 export default function UploadImage() {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
-  const [textDetections, setTextDetections] = useState<TextDetection[]>([]);
+  const [labels, setLabels] = useState<Label[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -41,11 +41,11 @@ export default function UploadImage() {
         });
 
         if (!response.ok) {
-          throw new Error('Error fetching text detection data');
+          throw new Error('Error fetching image recognition data');
         }
 
         const data = await response.json();
-        setTextDetections(data.TextDetections);
+        setLabels(data.Labels);
       } catch (err: any) {
         setError(err.message);
       } finally {
@@ -70,13 +70,13 @@ export default function UploadImage() {
         </button>
       </form>
       {error && <p className="error">{error}</p>}
-      {textDetections.length > 0 && (
+      {labels.length > 0 && (
         <div>
-          <h3>Detected Text:</h3>
+          <h3>Detected Labels:</h3>
           <ul>
-            {textDetections.map((detection, index) => (
+            {labels.map((label, index) => (
               <li key={index}>
-                {detection.DetectedText}
+                {label.Name} ({label.Confidence.toFixed(2)}%)
               </li>
             ))}
           </ul>

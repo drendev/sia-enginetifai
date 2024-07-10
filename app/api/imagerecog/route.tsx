@@ -12,10 +12,12 @@ export async function POST(req: Request) {
     const params = {
       Image: {
         Bytes: buffer,
-      }
+      },
+      MaxLabels: 10,
+      MinConfidence: 70,
     };
 
-      const data = await rekognition.detectText(params).promise();
+      const data = await rekognition.detectLabels(params).promise();
       return NextResponse.json(data);
 
     } catch (error: any) {
