@@ -8,6 +8,7 @@ import { RecentEngineTransaction } from "./recenttransaction";
 import Link from "next/link";
 
 export function EnginePage(){
+    
     return(
         <>
             <ConfigProvider
@@ -19,6 +20,7 @@ export function EnginePage(){
                 colorBorder: '#BB4747'
                 },
             }}>
+            
             <div className="h-full flex-col flex md:px-10">
                 <div className="flex flex-col sm:flex-row md:gap-2">
                     <div className="flex-col md:flex-grow p-6">

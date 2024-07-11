@@ -44,8 +44,10 @@ export default function EnginePageGrid({
   const [isDeleted, setIsDeleted] = useState(false);
   const [showEditEngineForm, setShowEditEngineForm] = useState(false);
   const [showEditSpecificationForm, setShowEditSpecificationForm] = useState(false);
+  const [showAddStockForm, setShowAddStockForm] = useState(false);
   const [editEngineForm] = Form.useForm();
   const [editSpecificationForm] = Form.useForm();
+  const [addStockForm] = Form.useForm();
   const [fileList, setFileList] = useState<any[]>([]);
 
   /* Fetch Engine data */
@@ -120,7 +122,7 @@ export default function EnginePageGrid({
           if (value) {
             return (
               <div key={key} className="p-2">
-                <span className="font-semibold">{key}:</span> <span className="text-red-950 font-sans font-bold">{value}</span>
+                <span className="font-semibold">{key}:</span> <span className="text-red-950 dark:text-red-primary font-sans font-bold">{value}</span>
               </div>
             );
           }
@@ -151,6 +153,10 @@ export default function EnginePageGrid({
       );
       editSpecificationForm.setFieldsValue(initialValues);
     }
+  };
+
+  const handleAddStockButtonClick = () => {
+    setShowAddStockForm(true);
   };
 
   const handleEditEngineSubmit = async (values: any) => {
@@ -188,6 +194,26 @@ export default function EnginePageGrid({
       setShowEditSpecificationForm(false);
       const updatedData = await response.json();
       setEngineSpecification(updatedData);
+    } else {
+      console.log('Something went wrong.');
+    }
+  };
+
+  const handleAddStockSubmit = async (values: any) => {
+    const response = await fetch(`/api/engines/addstock?engineId=${params.engineId}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        quantity: values.quantity,
+      })
+    });
+
+    if (response.ok) {
+      setShowAddStockForm(false);
+      const updatedData = await response.json();
+      setEngineData(updatedData);
     } else {
       console.log('Something went wrong.');
     }
@@ -231,7 +257,7 @@ export default function EnginePageGrid({
   return (
     <>
       <div className="h-full bg-red-primary/5 pt-10 pb-10 md:pb-0 md:pt-16">
-          <ConfigProvider
+        <ConfigProvider
           theme={{
             token: {
               colorPrimary: '#BB4747',
@@ -244,18 +270,26 @@ export default function EnginePageGrid({
                 <div className="flex flex-col gap-4">
                   <div className="flex flex-row items-center justify-between w-full h-52 rounded-2xl shadow-xl bg-enginebackground bg-right-bottom bg-contain bg-no-repeat bg-red-primary px-7 py-5 gap-2">
                     <div className="flex flex-col gap-2">
-                      <h1 className="text-red-100 text-4xl font-sans font-extrabold">
+                      <h1 className="text-red-100 text-2xl md:text-4xl font-sans font-extrabold">
                         {engineData?.engineName}
                       </h1>
-                      <h1 className="text-red-100 text-xl font-sans font-extrabold">
+                      <h1 className="text-red-100 text-md md:text-xl font-sans font-extrabold">
                         Type: {engineData?.engineType}
                       </h1>
-                      <h1 className="text-red-100 text-md font-sans font-semibold">
+                      <h1 className="text-red-100 text-sm md:text-md font-sans font-semibold">
                         Available stocks: {engineData?.quantity}
                       </h1>
-                      <h1 className="text-red-100 text-md font-sans font-semibold">
+                      <h1 className="text-red-100 text-sm md:text-md font-sans font-semibold">
                         Price: {engineData?.price}
                       </h1>
+                      <Button
+                        onClick={handleAddStockButtonClick}
+                        type="primary"
+                        htmlType="submit"
+                        className="bg-red-primary hover:bg-red-primary h-auto font-bold rounded-full w-auto text-md py-2 px-7 tracking-wider border-red-800 border-2 border-b-4 active:border-b-2"
+                      >
+                        Add Stock
+                      </Button>
                     </div>
                     <div className="pr-6">
                       <Image
@@ -267,7 +301,7 @@ export default function EnginePageGrid({
                       />
                     </div>
                   </div>
-                  <div className="flex justify-end gap-6 mt-4">
+                  <div className="grid grid-cols-2 md:flex justify-end gap-6 mt-4">
                     <Button
                       onClick={handleEditEngineButtonClick}
                       type="primary"
@@ -308,7 +342,7 @@ export default function EnginePageGrid({
                   </div>
 
                   {/* Specification */}
-                  <div className="w-full 2xl:w-full h-full md:h-[21rem] bg-white shadow-md rounded-xl p-4">
+                  <div className="w-full 2xl:w-full h-full md:h-[21rem] bg-white dark:bg-slate-900 shadow-md rounded-xl p-4">
                     <div className="text-red-900 text-2xl font-sans font-extrabold space-y-2">
                       Specifications
                     </div>
@@ -320,7 +354,7 @@ export default function EnginePageGrid({
                 <div className="relative md:fixed pt-6 md:h-[calc(100vh-96px)] scrollbar-none md:overflow-y-auto md:scrollbar md:scrollbar-thumb-red-primary md:scrollbar-track-transparent">
 
                   {/* Description */}
-                  <div className="w-full md:w-[29rem] h-64 bg-white shadow-md rounded-xl p-4 flex flex-col">
+                  <div className="w-full md:w-[29rem] h-64 bg-white dark:bg-slate-900 shadow-md rounded-xl p-4 flex flex-col">
                     <div className="text-red-900 text-2xl font-sans font-extrabold space-y-2">
                       Description
                     </div>
@@ -375,7 +409,7 @@ export default function EnginePageGrid({
                         <Form autoComplete="off" form={editEngineForm} onFinish={handleEditEngineSubmit}>
                           <div className="grid grid-cols-2 md:grid-cols-2 gap-3">
                             <div className="mb-4">
-                              <label className="block mb-1 font-sans font-semibold">Engine Name</label>
+                              <label className="text-slate-50 dark:text-slate-200 block mb-1 font-sans font-semibold">Engine Name</label>
                               <Form.Item className="mb-0" name="engineName" rules={[{ required: true, message: 'Please enter engine name' }]}>
                                 <Input
                                   placeholder="Engine Name"
@@ -385,11 +419,11 @@ export default function EnginePageGrid({
                               </Form.Item>
                             </div>
                             <div className="mb-4">
-                              <label className="block mb-1 font-sans font-semibold">Engine Type</label>
+                              <label className="text-slate-50 dark:text-slate-200 block mb-1 font-sans font-semibold">Engine Type</label>
                               <Form.Item className="mb-0" name="engineType" rules={[{ required: true, message: 'Please enter engine type' }]}>
                               <Select
+                              
                               showSearch
-                              style={{ width: 300 }}
                               placeholder="Search to Select"
                               optionFilterProp="label"
                               filterSort={(optionA, optionB) =>
@@ -425,7 +459,7 @@ export default function EnginePageGrid({
                               </Form.Item>
                             </div>
                             <div className="mb-4">
-                              <label className="block mb-1 font-sans font-semibold">Price</label>
+                              <label className="text-slate-50 dark:text-slate-200 block mb-1 font-sans font-semibold">Price</label>
                               <Form.Item className="mb-0" name="price" rules={[{ required: true, message: 'Please enter price' }]}>
                                 <Input
                                   type="number"
@@ -436,7 +470,7 @@ export default function EnginePageGrid({
                               </Form.Item>
                             </div>
                             <div className="mb-4">
-                              <label className="block mb-1 font-sans font-semibold">Description</label>
+                              <label className="text-slate-50 dark:text-slate-200 block mb-1 font-sans font-semibold">Description</label>
                               <Form.Item className="mb-0" name="description" rules={[{ required: true, message: 'Please enter description' }]}>
                                 <Input.TextArea
                                   placeholder="Description"
@@ -473,7 +507,7 @@ export default function EnginePageGrid({
                           <div className="grid grid-cols-3 md:grid-cols-4 gap-3">
                             {engineSpecification && Object.keys(engineSpecification).filter(key => engineSpecification[key]).map((key) => (
                               <div className="mb-4" key={key}>
-                                <label className="block mb-1 font-sans font-semibold">{key}</label>
+                                <label className="text-slate-50 dark:text-slate-200 block mb-1 font-sans font-semibold">{key}</label>
                                 <Form.Item className="mb-0" name={key} rules={[{ required: true, message: `Please enter ${key}` }]}>
                                   <Input
                                     placeholder={key}
@@ -497,6 +531,42 @@ export default function EnginePageGrid({
                               className="px-4 py-2 bg-red-primary text-white rounded-lg hover:bg-red-primary/80"
                             >
                               Edit
+                            </button>
+                          </div>
+                        </Form>
+                      </div>
+                    </div>
+                  )}
+                  {showAddStockForm && (
+                    <div className="fixed inset-0 flex items-center justify-center z-50 bg-gray-900 bg-opacity-50 overflow-scroll md:overflow-auto">
+                      <div className="bg-white dark:bg-slate-900 p-6 rounded-lg mt-10 md:mt-16 shadow-lg w-72 max-w-4xl">
+                        <h2 className="text-lg font-semibold mb-4">Add Stock for {engineData?.engineName}</h2>
+                        <Form autoComplete="off" form={addStockForm} onFinish={handleAddStockSubmit}>
+                          <div className="mb-4">
+                            <label className="text-slate-50 dark:text-slate-200 block mb-1 font-sans font-semibold">Quantity</label>
+                            <Form.Item className="mb-0" name="quantity" rules={[{ required: true, message: 'Please enter quantity' }]}>
+                              <Input
+                                type="number"
+                                placeholder="Quantity"
+                                min={1}
+                                className="p-2 border border-gray-300 dark:border-gray-700 rounded-lg dark:bg-gray-900 dark:text-white focus:outline-none w-full"
+                                required
+                              />
+                            </Form.Item>
+                          </div>
+                          <div className="flex justify-end">
+                            <button
+                              type="button"
+                              className="px-4 py-2 bg-gray-500 text-white rounded-lg mr-2"
+                              onClick={() => setShowAddStockForm(false)}
+                            >
+                              Cancel
+                            </button>
+                            <button
+                              type="submit"
+                              className="px-4 py-2 bg-red-primary text-white rounded-lg hover:bg-red-primary/80"
+                            >
+                              Add Stock
                             </button>
                           </div>
                         </Form>

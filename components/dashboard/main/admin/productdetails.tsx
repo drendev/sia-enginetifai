@@ -5,6 +5,7 @@ import React from "react";
 import { useEffect, useState } from "react";
 import { EngineStorage } from "./enginestorage";
 import { EngineTypesChart } from "./enginetypes";
+import { Skeleton } from 'antd';
 
 interface TopSellingDetails {
     engineId: number,
@@ -16,6 +17,14 @@ interface TopSellingDetails {
 export function ProductDetails() {
     // State to store the data
     const [engine, setEngine] = useState<TopSellingDetails[]>([]);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        // Simulate a data fetch
+        setTimeout(() => {
+            setLoading(false);
+        }, 1000); // Adjust the timeout duration as needed
+    }, []);
 
     // fetch the data from the api
     useEffect(() => {
@@ -37,11 +46,11 @@ export function ProductDetails() {
     // Display the data
     const engineDetails = sortedData.map((engine) => (
         <Link key={engine.engineId} href={`/engines/${engine.engineId}`}>
-            <div className="border border-gray-200 p-1 rounded-lg flex flex-col items-center
+            <div className="border border-gray-200 dark:border-slate-700 p-1 rounded-lg flex flex-col items-center
             hover:-translate-y-1 transition-all cursor-pointer hover:shadow-md w-full">   
                 <img src={`${engine.engineImage}`} alt="" className="w-20 h-20 md:w-20 md:h-20 mb-2"/>
-                <h4 className="text-sm font-semibold">{engine.engineName}</h4>
-                <p className="text-sm text-gray-400">{engine.engineSold} sold</p>
+                <h4 className="text-sm text-slate-900 dark:text-slate-200 font-semibold">{engine.engineName}</h4>
+                <p className="text-sm text-gray-400 dark:text-slate-300">{engine.engineSold} sold</p>
             </div>
         </Link>
     ))
@@ -53,13 +62,16 @@ export function ProductDetails() {
         </h1>
         <div className="flex flex-col md:grid md:grid-cols-5 gap-5 md:my-5">
             <div className="col-span-1 md:col-span-3 space-y-2 md:space-y-5">
-                <div className="bg-white shadow-md md:h-52 rounded-xl p-4 space-y-3">
+                <div className="bg-white dark:bg-slate-900 shadow-md md:h-52 rounded-xl p-4 space-y-3">
+                <Skeleton loading={loading} active>
                     <h3 className="text-red-900 font-bold text-lg font-sans"> Top Selling Engines </h3>
                         <div className="grid grid-cols-3 gap-2 md:gap-4">
                             {engineDetails}
                         </div>
+                </Skeleton>
                 </div>
-                <div className="bg-white flex shadow-md h-auto md:h-44 w-full rounded-xl p-4 space-y-2">
+                <div className="bg-white dark:bg-slate-900 flex shadow-md h-auto md:h-44 w-full rounded-xl p-4 space-y-2">
+                <Skeleton loading={loading} active>
                     <div className="flex flex-col md:flex-row md:justify-between gap-2 md:gap-4 w-full">
                         <div className="w-full md:w-1/2">
                             <h3 className="text-red-900 font-bold text-lg font-sans">Engine Types</h3>
@@ -72,10 +84,13 @@ export function ProductDetails() {
                             </div>
                         </div>
                     </div>
+                </Skeleton>
                 </div>
             </div>
-            <div className="h-full bg-white shadow-md col-span-2 rounded-xl p-6">              
+            <div className="h-auto bg-white dark:bg-slate-900 shadow-md col-span-2 rounded-xl p-6">
+            <Skeleton loading={loading} active>          
                 <EngineStorage />
+            </Skeleton>
             </div>
         </div>
         </>

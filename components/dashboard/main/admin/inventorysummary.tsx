@@ -20,7 +20,7 @@ export function InventorySummary() {
                     </h3>
                     <h3 className="text-red-100 text-lg">{dateToday}</h3>
                 </div>
-                <div className="flip-card-back p-7 rounded-2xl">
+                <div className="flip-card-back dark:bg-slate-900 p-7 rounded-2xl">
                     <h3 className="text-white text-3xl font-sans font-extrabold">Inventory status</h3>
                 </div>
             </div>

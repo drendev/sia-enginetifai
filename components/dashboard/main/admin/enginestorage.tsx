@@ -93,7 +93,7 @@ export function EngineStorage() {
 
     return(
         <>             
-            <div className="border-b border-gray-200 flex items-center justify-center mb-3">
+            <div className="border-b border-gray-200 dark:border-slate-700 flex items-center justify-center mb-3">
                 <h4 className="text-md font-bold font-sans text-lg pb-3 text-red-900"> Engine Storage </h4>
             </div>
             <div className="p-1 flex flex-col items-center justify-center space-y-2">

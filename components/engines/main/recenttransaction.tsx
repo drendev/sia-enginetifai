@@ -1,6 +1,6 @@
 "use client";
 
-import { Badge, Avatar } from 'antd';
+import { Badge, Avatar, Skeleton } from 'antd';
 import { useEffect, useState } from 'react';
 import moment from 'moment-timezone';
 import 'moment/locale/en-gb';
@@ -17,6 +17,14 @@ interface RecentTransaction {
 
 export function RecentEngineTransaction() {
     const [transaction, setTransaction] = useState<RecentTransaction[]>([]);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        // Simulate a data fetch
+        setTimeout(() => {
+            setLoading(false);
+        }, 1000); // Adjust the timeout duration as needed
+    }, []);
     
     useEffect(() => {
         const fetchEngineData = async () => {
@@ -55,9 +63,11 @@ export function RecentEngineTransaction() {
     
     return (
         <>
+            
             <div className="text-2xl font-bold font-sans mb-7 my-5">
                 <span className="bg-fireworks bg-no-repeat bg-right-bottom bg-contain pb-4 text-red-900"> Recently Transacted </span>
             </div>
+            <Skeleton className='pt-10' loading={loading} active>
             <div className="text-md">
                 <div className="w-full">
                     <div className="bg-red-primary/15 flex font-bold">
@@ -90,6 +100,7 @@ export function RecentEngineTransaction() {
                     </div>
                 </div>
             </div>
+            </Skeleton>
         </>
     );
 }
