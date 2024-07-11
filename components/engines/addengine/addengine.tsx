@@ -275,7 +275,8 @@ const AddEngineForm = () => {
       name="quantity"
       rules={[{ required: true, message: 'Please input Engine Quantity' }]}
     >
-      <InputNumber />
+      <InputNumber 
+      />
     </Form.Item>
 
     <Form.Item

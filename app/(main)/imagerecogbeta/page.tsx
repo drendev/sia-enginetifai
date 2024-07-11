@@ -73,7 +73,7 @@ export default function UploadImage() {
       {error && <p className="error">{error}</p>}
       {labels.length > 0 && (
         <div>
-          <h3>Detected Labels:</h3>
+          <h3>Detected Engine Type:</h3>
           <ul>
             {labels.map((label, index) => (
               <li key={index}>
