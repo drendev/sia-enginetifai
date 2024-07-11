@@ -7,7 +7,7 @@ import moment from 'moment-timezone';
 const engineSchema = z.object({
   userName: z.string().min(5, 'Username Max Limit.').max(30),
   engineName: z.string().min(5, 'Engine Max Limit.').max(30),
-  engineType: z.string().min(10, 'Engine Type is required').max(100),
+  engineType: z.string().min(1, 'Engine Type is required').max(100),
   price: z.number().min(1, 'Price is required').max(10000),
   quantity: z.number().min(1, 'Quantity is required').max(100),
   picture: z.any(),

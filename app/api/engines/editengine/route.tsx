@@ -5,7 +5,7 @@ import { z } from 'zod';
 
 const engineSchema = z.object({
     engineName: z.string().min(5, 'Engine Max Limit.').max(30),
-    engineType: z.string().min(10, 'Engine Type is required').max(100),
+    engineType: z.string().min(1, 'Engine Type is required').max(100),
     price: z.number().min(1, 'Price is required').max(10000),
     picture: z.any(),
     description: z.string().min(5, 'Description is required').max(250),
