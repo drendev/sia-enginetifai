@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Button, ConfigProvider, Image, Form, Modal, Row, Col, Card, Input, Upload } from "antd";
+import { Button, ConfigProvider, Image, Form, Modal, Row, Col, Card, Input, Upload, Select } from "antd";
 import { UploadOutlined } from '@ant-design/icons';
 import { useEffect, useState, createContext } from "react";
 import { useRouter } from "next/navigation";
@@ -231,17 +231,13 @@ export default function EnginePageGrid({
   return (
     <>
       <div className="h-full bg-red-primary/5 pt-10 pb-10 md:pb-0 md:pt-16">
-        <ConfigProvider
+          <ConfigProvider
           theme={{
             token: {
               colorPrimary: '#BB4747',
               colorLink: '#BB4747',
-              colorText: '#BB4747',
-              colorBorder: '#BB4747',
-              colorPrimaryBg: '#BB4747',
             },
-          }}
-        >
+          }}>  
           <div className="h-full flex-col flex md:px-10">
             <div className="flex flex-col sm:flex-row md:gap-2">
               <div className="flex-col md:flex-grow p-6">
@@ -376,7 +372,7 @@ export default function EnginePageGrid({
                     <div className="fixed inset-0 flex items-center justify-center z-50 bg-gray-900 bg-opacity-50 overflow-scroll md:overflow-auto">
                       <div className="bg-white dark:bg-gray-800 p-6 rounded-lg mt-16 shadow-lg w-full max-w-4xl">
                         <h2 className="text-lg font-semibold mb-4">Edit Engine : {engineData?.engineName} </h2>
-                        <Form form={editEngineForm} onFinish={handleEditEngineSubmit}>
+                        <Form autoComplete="off" form={editEngineForm} onFinish={handleEditEngineSubmit}>
                           <div className="grid grid-cols-2 md:grid-cols-2 gap-3">
                             <div className="mb-4">
                               <label className="block mb-1 font-sans font-semibold">Engine Name</label>
@@ -391,11 +387,41 @@ export default function EnginePageGrid({
                             <div className="mb-4">
                               <label className="block mb-1 font-sans font-semibold">Engine Type</label>
                               <Form.Item className="mb-0" name="engineType" rules={[{ required: true, message: 'Please enter engine type' }]}>
-                                <Input
-                                  placeholder="Engine Type"
-                                  className="p-2 border border-gray-300 dark:border-gray-700 rounded-lg dark:bg-gray-900 dark:text-white focus:outline-none w-full"
-                                  required
-                                />
+                              <Select
+                              showSearch
+                              style={{ width: 300 }}
+                              placeholder="Search to Select"
+                              optionFilterProp="label"
+                              filterSort={(optionA, optionB) =>
+                                (optionA?.label ?? '').toLowerCase().localeCompare((optionB?.label ?? '').toLowerCase())
+                              }
+                              options={[
+                                { value: 'Diesel Engine', label: 'Diesel Engine' },
+                                { value: 'Twin-Cylinder Diesel Engine', label: 'Twin-Cylinder Diesel Engine' },
+                                { value: 'Open Type Diesel Generator', label: 'Open Type Diesel Generator' },
+                                { value: 'Silent Diesel Generator', label: 'Silent Diesel Generator' },
+                                { value: 'Twin-Cylinder Diesel Generator', label: 'Twin-Cylinder Diesel Generator' },
+                                { value: 'Diesel Water Pump', label: 'Diesel Water Pump' },
+                                { value: 'Diesel High Pressure Pump', label: 'Diesel High Pressure Pump' },
+                                { value: 'Diesel Iron Pump', label: 'Diesel Iron Pump' },
+                                { value: 'Gasoline Engine', label: 'Gasoline Engine' },
+                                { value: 'Gasoline Twin-Cylinder Engine', label: 'Gasoline Twin-Cylinder Engine' },
+                                { value: 'Gasoline Twin-Vertical Engine', label: 'Gasoline Twin-Vertical Engine' },
+                                { value: 'Open Type Gasoline Generator', label: 'Open Type Gasoline Generator' },
+                                { value: 'Silent Gasoline Generator', label: 'Silent Gasoline Generator' },
+                                { value: 'Twin-Cylinder Gasoline Generator', label: 'Twin-Cylinder Gasoline Generator' },
+                                { value: 'Liquified Petroleum Gas & LPT Generator', label: 'Liquified Petroleum Gas & LPT Generator' },
+                                { value: 'Portable Gasoline Generator', label: 'Portable Gasoline Generator' },
+                                { value: 'Gasoline Water Pump', label: 'Gasoline Water Pump' },
+                                { value: 'Gasoline High Pressure Pump', label: 'Gasoline High Pressure Pump' },
+                                { value: 'Gasoline Iron Pump', label: 'Gasoline Iron Pump' },
+                                { value: 'Gasoline Trash Pump', label: 'Gasoline Trash Pump' },
+                                { value: 'Inverter Generator', label: 'Inverter Generator' },
+                                { value: 'Diesel Welding Generator', label: 'Diesel Welding Generator' },
+                                { value: 'Gasoline Welding Generator', label: 'Gasoline Welding Generator' },
+                                { value: 'Tillers', label: 'Tillers' },
+                                ]}
+                              />
                               </Form.Item>
                             </div>
                             <div className="mb-4">
@@ -441,10 +467,10 @@ export default function EnginePageGrid({
                   )}
                   {showEditSpecificationForm && (
                     <div className="fixed inset-0 flex items-center justify-center z-50 bg-gray-900 bg-opacity-50 overflow-scroll md:overflow-auto">
-                      <div className="bg-white dark:bg-gray-800 p-6 rounded-lg mt-16 shadow-lg w-full max-w-4xl">
+                      <div className="bg-white dark:bg-gray-800 p-6 rounded-lg mt-10 md:mt-16 shadow-lg w-full max-w-4xl">
                         <h2 className="text-lg font-semibold mb-4">Edit Specifications</h2>
-                        <Form form={editSpecificationForm} onFinish={handleEditSpecificationSubmit}>
-                          <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                        <Form autoComplete="off" form={editSpecificationForm} onFinish={handleEditSpecificationSubmit}>
+                          <div className="grid grid-cols-3 md:grid-cols-4 gap-3">
                             {engineSpecification && Object.keys(engineSpecification).filter(key => engineSpecification[key]).map((key) => (
                               <div className="mb-4" key={key}>
                                 <label className="block mb-1 font-sans font-semibold">{key}</label>
@@ -468,9 +494,9 @@ export default function EnginePageGrid({
                             </button>
                             <button
                               type="submit"
-                              className="px-4 py-2 bg-red-primary text-white rounded-lg"
+                              className="px-4 py-2 bg-red-primary text-white rounded-lg hover:bg-red-primary/80"
                             >
-                              Submit
+                              Edit
                             </button>
                           </div>
                         </Form>
