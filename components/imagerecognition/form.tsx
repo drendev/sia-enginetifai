@@ -2,7 +2,7 @@
 
 import { UploadOutlined } from '@ant-design/icons';
 import React, { useCallback, useState } from 'react';
-import { useDropzone } from 'react-dropzone';
+import { useDropzone, Accept } from 'react-dropzone';
 import { Button, ConfigProvider } from 'antd';
 
 interface UploadProps {
@@ -23,7 +23,14 @@ const Upload: React.FC<UploadProps> = ({ onFileSelect }) => {
     reader.readAsDataURL(file);
   }, [onFileSelect]);
 
-  const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
+  const accept: Accept = {
+    'image/*': []
+  };
+
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({
+    onDrop,
+    accept
+  });
 
   return (
     <>
