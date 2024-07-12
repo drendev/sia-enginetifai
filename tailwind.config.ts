@@ -24,6 +24,7 @@ const config: Config = {
         "aibg": "url('/ai.svg')",
         "search": "url('/search.png')",
         "enginebackground": "url('/enginebackground.png')",
+        "imagerecog": "url('/imagerecog.png')",
         },
         backgroundSize: {
           "16": "12rem",

@@ -256,7 +256,7 @@ export default function EnginePageGrid({
 
   return (
     <>
-      <div className="h-full bg-red-primary/5 pt-10 pb-10 md:pb-0 md:pt-16">
+      <div className="pt-10 pb-10 md:pb-0 md:pt-16">
         <ConfigProvider
           theme={{
             token: {
@@ -492,7 +492,7 @@ export default function EnginePageGrid({
                               type="submit"
                               className="px-4 py-2 bg-red-primary text-white rounded-lg"
                             >
-                              Submit
+                              Edit Engine
                             </button>
                           </div>
                         </Form>
@@ -530,7 +530,7 @@ export default function EnginePageGrid({
                               type="submit"
                               className="px-4 py-2 bg-red-primary text-white rounded-lg hover:bg-red-primary/80"
                             >
-                              Edit
+                              Edit Specification
                             </button>
                           </div>
                         </Form>

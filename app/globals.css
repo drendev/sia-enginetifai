@@ -13,6 +13,10 @@ body,
   @apply bg-slate-800;
 }
 
+body {
+  @apply bg-red-primary/5
+}
+
 .loaderRectangle {
   display: flex;
   justify-content: center;

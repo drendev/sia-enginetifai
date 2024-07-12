@@ -4,9 +4,8 @@ export default function AddTrans(){
 
     return (
         <>
-        <div className="min-h-full py-16">
-            <h1>Transactions</h1>
-            <AddTransaction />
+        <div className="bg-red-primary/5 pt-10 pb-10 md:pb-0 md:pt-16 h-full">
+            
         </div>
         </>
     );

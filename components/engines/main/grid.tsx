@@ -21,7 +21,7 @@ export function EnginePage(){
                 },
             }}>
             
-            <div className="h-full flex-col flex md:px-10">
+            <div className="flex-col flex md:px-10">
                 <div className="flex flex-col sm:flex-row md:gap-2">
                     <div className="flex-col md:flex-grow p-6">
                         <div className="flex flex-col gap-4">
@@ -29,7 +29,7 @@ export function EnginePage(){
                             <div className="flex flex-col w-full h-52 rounded-2xl shadow-xl bg-red-primary bg-search bg-right-bottom bg-contain bg-no-repeat px-7 py-5 gap-2">
                             <h1 className="text-red-100 text-4xl font-sans font-extrabold"> Engines </h1>
                             <div className="mt-20 md:mt-14">
-                            <Link href={'imagerecogbeta'}>
+                            <Link href={'/engines/imagerecog'}>
                             <Button
                             type="primary" 
                             htmlType="submit"

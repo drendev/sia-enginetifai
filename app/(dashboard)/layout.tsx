@@ -14,8 +14,8 @@ export default async function RootLayout({
   if(!isAdmin) redirect("/");
 
   return (
-    <>
-      {children}
-    </>
+    <div className="">
+        {children}
+    </div>
   );
 }

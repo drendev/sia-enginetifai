@@ -1,11 +1,12 @@
 "use client";
 
 import { useState } from 'react';
+import Upload from '@/components/imagerecognition/form';
+import { Button } from 'antd';
 
 interface Label {
   Name: string;
   Confidence: number;
-  
 }
 
 export default function UploadImage() {
@@ -14,10 +15,8 @@ export default function UploadImage() {
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
 
-  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (event.target.files && event.target.files.length > 0) {
-      setSelectedFile(event.target.files[0]);
-    }
+  const handleFileSelect = (file: File) => {
+    setSelectedFile(file);
   };
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -56,19 +55,22 @@ export default function UploadImage() {
     reader.readAsDataURL(selectedFile);
   };
 
-  console.log(labels)
+  console.log(labels);
+
   return (
     <div className='mt-16'>
       <form onSubmit={handleSubmit}>
-        <input
-          type="file"
-          accept="image/*"
-          onChange={handleFileChange}
-          aria-label="Upload an image"
-        />
-        <button type="submit" disabled={!selectedFile || loading}>
-          {loading ? 'Uploading...' : 'Upload'}
-        </button>
+        <Upload onFileSelect={handleFileSelect} />
+        <div className='p-6'>
+          <Button
+            type="primary" 
+            htmlType="submit"
+            className='flex bg-red-primary hover:bg-red-primary font-bold rounded-full w-full text-md h-auto py-2 px-7 tracking-wider border-red-800 border-2 border-b-4 active:border-b-2'
+            disabled={!selectedFile || loading}
+          >
+            {loading ? 'Uploading...' : 'Process Image'}
+          </Button>
+        </div>
       </form>
       {error && <p className="error">{error}</p>}
       {labels.length > 0 && (
