@@ -51,7 +51,7 @@ const Upload: React.FC<UploadProps> = ({ onFileSelect }) => {
             isDragActive ? 'border-red-primary/60' : 'border-red-primary'
           }`}
         >
-          <input {...getInputProps()} />
+          <input {...getInputProps()} capture="environment" />
           {selectedImage ? (
             <>
               <img src={selectedImage} alt="Selected" className="max-w-full h-36 mx-auto" />
