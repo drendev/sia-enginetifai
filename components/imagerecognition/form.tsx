@@ -29,7 +29,8 @@ const Upload: React.FC<UploadProps> = ({ onFileSelect }) => {
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
-    accept
+    accept,
+    maxFiles: 1,
   });
 
   return (

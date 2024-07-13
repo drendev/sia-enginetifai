@@ -155,10 +155,18 @@ export function EngineList() {
                                 <div key={engine.id} className='hover:-translate-y-1 transition-all cursor-pointer hover:shadow-md hover:rounded-xl'>
                                     <Badge.Ribbon key={engine.id} text={'Low Stocks'} color="#BB4747" placement='start' className="opacity-80 p-1">
                                         <Link key={engine.id} href={`/engines/${engine.id}`}>
-                                            <div className="flex bg-white dark:bg-slate-900 bg-top bg-8 bg-no-repeat w-full h-44 rounded-xl shadow-md" style={{ backgroundImage: `url(${engine.picture})` }}>
-                                                <div className="self-end w-full h-12 bg-red-primary/15 rounded-b-xl">
-                                                    <h3 className="text-gray-800 dark:text-slate-300 text-center"> <span className="font-bold font-sans text-sm">{engine.engineName}</span></h3>
-                                                    <h3 className="text-gray-800 dark:text-slate-300 text-center"> <span className="font-semibold font-sans text-sm">Available:</span> <span className='text-red-primary'>{engine.quantity}</span></h3>
+                                            <div className="flex flex-col bg-white dark:bg-slate-900 rounded-xl shadow-md overflow-hidden h-44">
+                                                <div className="w-full h-32">
+                                                    <img src={engine.picture} alt={engine.engineName} className="object-cover w-full h-full"/>
+                                                </div>
+                                                <div className="flex-1 pb-2 bg-slate-50 dark:bg-slate-900">
+                                                    <h3 className="text-gray-800 dark:text-slate-300 text-center">
+                                                        <span className="font-bold font-sans text-sm">{engine.engineName}</span>
+                                                    </h3>
+                                                    <h3 className="text-gray-800 dark:text-slate-300 text-center">
+                                                        <span className="font-semibold font-sans text-sm">Available:</span> 
+                                                        <span className='text-red-primary'>{engine.quantity}</span>
+                                                    </h3>
                                                 </div>
                                             </div>
                                         </Link>
@@ -166,14 +174,22 @@ export function EngineList() {
                                 </div>
                             ) : (
                                 <div key={engine.id} className='hover:-translate-y-1 transition-all cursor-pointer hover:shadow-md hover:rounded-xl'>
-                                    <Link key={engine.id} href={`/engines/${engine.id}`}>
-                                        <div className="flex bg-white dark:bg-slate-900 bg-top bg-8 bg-no-repeat w-full h-44 rounded-xl shadow-md" style={{ backgroundImage: `url(${engine.picture})` }}>
-                                            <div className="self-end w-full h-12 bg-red-primary/15 rounded-b-xl">
-                                                <h3 className="text-gray-800 dark:text-slate-300 text-center"> <span className="font-bold font-sans text-sm">{engine.engineName}</span></h3>
-                                                <h3 className="text-gray-800 dark:text-slate-300 text-center"> <span className="font-semibold font-sans text-sm">Available:</span> <span className='text-red-primary text-sm'>{engine.quantity}</span></h3>
+                                        <Link key={engine.id} href={`/engines/${engine.id}`}>
+                                            <div className="flex flex-col bg-white dark:bg-slate-900 rounded-xl shadow-md overflow-hidden h-44">
+                                                <div className="w-full h-32">
+                                                    <img src={engine.picture} alt={engine.engineName} className="object-cover w-full h-full"/>
+                                                </div>
+                                                <div className="flex-1 pb-2 bg-slate-50 dark:bg-slate-900">
+                                                    <h3 className="text-gray-800 dark:text-slate-300 text-center">
+                                                        <span className="font-bold font-sans text-sm">{engine.engineName}</span>
+                                                    </h3>
+                                                    <h3 className="text-gray-800 dark:text-slate-300 text-center">
+                                                        <span className="font-semibold font-sans text-sm">Available:</span> 
+                                                        <span className='text-red-primary'>{engine.quantity}</span>
+                                                    </h3>
+                                                </div>
                                             </div>
-                                        </div>
-                                    </Link>
+                                        </Link>
                                 </div>
                             )
                         )) : (

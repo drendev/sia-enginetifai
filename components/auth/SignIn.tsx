@@ -1,6 +1,7 @@
 'use client';
 
-import { Button, Form, Input, ConfigProvider, notification } from 'antd';
+import { Button, Form, Input, ConfigProvider, notification, Spin } from 'antd';
+import { LoadingOutlined } from '@ant-design/icons';
 import { useState } from 'react';
 import { z } from 'zod';
 import { useRouter } from 'next/navigation';
@@ -18,62 +19,47 @@ import { signIn } from 'next-auth/react';
   
   const SignInForm = () => {
     const router = useRouter();
-    const [loadings, setLoadings] = useState<boolean[]>([]);  
-    
-    const enterLoading = (index: number) => {
-      setLoadings((prevLoadings) => {
-        const newLoadings = [...prevLoadings];
-        newLoadings[index] = true;
-        return newLoadings;
-      });
-  
-      setTimeout(() => {
-        setLoadings((prevLoadings) => {
-          const newLoadings = [...prevLoadings];
-          newLoadings[index] = false;
-          return newLoadings;
-        });
-      }, 7000);
-    };
+    const [loading, setLoading] = useState<boolean>(false);
 
   const [api, contextHolder] = notification.useNotification();
 
   const openNotificationWithIcon = (type: NotificationType) => {
     api[type]({
       message: 'Log in Credentials Error',
-      duration: 3,
+      showProgress: true,
+      pauseOnHover: true,
       description:
         'Invalid username or password. Please try again.',
     });
   };
 
   const onSubmit = async (values: z.infer<typeof FormSchema>) => {
+    setLoading(true);
     const signInData = await signIn('credentials', {
       username: values.username,
       password: values.password,
       redirect: false,
     })
     if(signInData?.error) {
-      setLoadings([false]);
       openNotificationWithIcon('error');
+      setLoading(false);
     } else {
-      setLoadings([true]);
       router.refresh();
     }
   };
 
   return (
     <>
-    {contextHolder}
+      <ConfigProvider
+      theme={{
+        token: {
+          colorPrimary: '#BB4747',
+          colorLink: '#BB4747',
+        },
+      }}>
+      {contextHolder}
       <div className="flex flex-col relative pa justify-center mt-5 lg:mt-0 md:mt-0 lg:ml-40 h-69 bg-white rounded-2xl border-solid border-opacity-75 border-1 border-[#ababab] border-r-6 border-b-6 rounded-r-2xl rounded-b-xl">
-        <div className="flex flex-col w-80 lg:w-80 lg:h-80 p-5 m-auto text-center">
-          <ConfigProvider
-            theme={{
-              token: {
-                colorPrimary: '#BB4747',
-                colorLink: '#BB4747',
-              },
-            }}>
+        <div className="flex flex-col w-80 lg:w-80 lg:h-80 p-5 m-auto text-center"> 
             <h1 className="text-2xl font-extrabold text-red-primary mb-5">SIGN IN</h1>
             <Form
               className="justify-center"
@@ -107,10 +93,8 @@ import { signIn } from 'next-auth/react';
                   type="primary"
                   htmlType="submit"
                   className="bg-red-primary hover:bg-red-primary font-bold rounded-full text-md w-full h-auto py-2 px-7 tracking-wider border-red-800 border-2 border-b-4 active:border-b-2"
-                  loading={loadings[2]}
-                  onClick={() => enterLoading(2)}
                 >
-                  Log in
+                  {loading ? <Spin indicator={<LoadingOutlined className="text-white" spin />} /> : 'Log in'}
                 </Button>
               </Form.Item>
               <Form.Item>
@@ -119,10 +103,10 @@ import { signIn } from 'next-auth/react';
                 </a>
               </Form.Item>
             </Form>
-          </ConfigProvider>
+          
         </div>
       </div>
-
+      </ConfigProvider>
     </>
   );
 }

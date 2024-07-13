@@ -48,7 +48,7 @@ export function ProductDetails() {
         <Link key={engine.engineId} href={`/engines/${engine.engineId}`}>
             <div className="border border-gray-200 dark:border-slate-700 p-1 rounded-lg flex flex-col items-center
             hover:-translate-y-1 transition-all cursor-pointer hover:shadow-md w-full">   
-                <img src={`${engine.engineImage}`} alt="" className="w-20 h-20 md:w-20 md:h-20 mb-2"/>
+                <img src={`${engine.engineImage}`} alt="" className="w-20 h-20 md:w-20 md:h-20 mb-2 rounded-lg"/>
                 <h4 className="text-sm text-slate-900 dark:text-slate-200 font-semibold">{engine.engineName}</h4>
                 <p className="text-sm text-gray-400 dark:text-slate-300">{engine.engineSold} sold</p>
             </div>

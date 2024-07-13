@@ -73,7 +73,7 @@ export function RecentEngineAdded() {
                         className="border border-gray-200 dark:border-slate-700 p-1 rounded-lg flex flex-col items-center
                         hover:-translate-y-1 transition-all cursor-pointer hover:shadow-md w-full"
                     >
-                        <img src={engine.engineImage} alt={engine.engineName} className="w-20 h-20 md:w-20 md:h-20 mb-2" />
+                        <img src={engine.engineImage} alt={engine.engineName} className="w-20 h-20 md:w-20 md:h-20 mb-2 rounded-lg" />
                         <h4 className="text-sm font-semibold">{engine.engineName}</h4>
                         <p className="text-sm text-gray-400">
                             {formatTransactionTime(engine.engineAdded)}

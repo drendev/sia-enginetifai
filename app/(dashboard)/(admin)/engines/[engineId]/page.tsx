@@ -1,8 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { Button, ConfigProvider, Image, Form, Modal, Row, Col, Card, Input, Upload, Select } from "antd";
-import { UploadOutlined } from '@ant-design/icons';
+import { Button, ConfigProvider, Image, Form, Modal, Input, Upload, Select, Spin } from "antd";
+import { LoadingOutlined } from '@ant-design/icons';
 import { useEffect, useState, createContext } from "react";
 import { useRouter } from "next/navigation";
 import moment from 'moment-timezone';
@@ -49,6 +49,7 @@ export default function EnginePageGrid({
   const [editSpecificationForm] = Form.useForm();
   const [addStockForm] = Form.useForm();
   const [fileList, setFileList] = useState<any[]>([]);
+  const [loading, setLoading] = useState<boolean>(false);
 
   /* Fetch Engine data */
   useEffect(() => {
@@ -160,6 +161,7 @@ export default function EnginePageGrid({
   };
 
   const handleEditEngineSubmit = async (values: any) => {
+    setLoading(true);
     const response = await fetch(`/api/engines/editengine?engineId=${params.engineId}`, {
       method: 'POST',
       headers: {
@@ -174,15 +176,18 @@ export default function EnginePageGrid({
     });
 
     if (response.ok) {
+      setLoading(false);
       setShowEditEngineForm(false);
       const updatedData = await response.json();
       setEngineData(updatedData);
     } else {
+      setLoading(false);
       console.log('Something went wrong.');
     }
   };
 
   const handleEditSpecificationSubmit = async (values: any) => {
+    setLoading(true);
     const response = await fetch(`/api/engines/editspecification?engineId=${params.engineId}`, {
       method: 'POST',
       headers: {
@@ -191,15 +196,19 @@ export default function EnginePageGrid({
       body: JSON.stringify(values)
     });
     if (response.ok) {
+      setLoading(false);
       setShowEditSpecificationForm(false);
       const updatedData = await response.json();
       setEngineSpecification(updatedData);
     } else {
+      setLoading(false);
       console.log('Something went wrong.');
+      setLoading(false);
     }
   };
 
   const handleAddStockSubmit = async (values: any) => {
+    setLoading(true);
     const response = await fetch(`/api/engines/addstock?engineId=${params.engineId}`, {
       method: 'POST',
       headers: {
@@ -211,10 +220,12 @@ export default function EnginePageGrid({
     });
 
     if (response.ok) {
+      setLoading(false);
       setShowAddStockForm(false);
       const updatedData = await response.json();
       setEngineData(updatedData);
     } else {
+      setLoading(false);
       console.log('Something went wrong.');
     }
   };
@@ -234,6 +245,7 @@ export default function EnginePageGrid({
       setIsDeleted(true);
       router.push('/engines');
     } else {
+      setLoading(false);
       console.log('Something went wrong.');
     }
   };
@@ -492,7 +504,7 @@ export default function EnginePageGrid({
                               type="submit"
                               className="px-4 py-2 bg-red-primary text-white rounded-lg"
                             >
-                              Edit Engine
+                              {loading ? <Spin indicator={<LoadingOutlined className="text-white" spin />} /> : 'Edit Engine'}
                             </button>
                           </div>
                         </Form>
@@ -530,7 +542,7 @@ export default function EnginePageGrid({
                               type="submit"
                               className="px-4 py-2 bg-red-primary text-white rounded-lg hover:bg-red-primary/80"
                             >
-                              Edit Specification
+                              {loading ? <Spin indicator={<LoadingOutlined className="text-white" spin />} /> : 'Edit Specification'}
                             </button>
                           </div>
                         </Form>
@@ -566,7 +578,7 @@ export default function EnginePageGrid({
                               type="submit"
                               className="px-4 py-2 bg-red-primary text-white rounded-lg hover:bg-red-primary/80"
                             >
-                              Add Stock
+                              {loading ? <Spin indicator={<LoadingOutlined className="text-white" spin />} /> : 'Add Stock'}
                             </button>
                           </div>
                         </Form>

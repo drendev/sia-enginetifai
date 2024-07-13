@@ -6,8 +6,8 @@ import { useSession } from "next-auth/react";
 import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Button, Form, Input, InputNumber, Upload, ConfigProvider, Select, Col, Row } from 'antd';
-import { UploadOutlined } from '@ant-design/icons';
+import { Button, Form, Input, InputNumber, Upload, ConfigProvider, Select, Spin, notification, Col, Row } from 'antd';
+import { UploadOutlined, LoadingOutlined } from '@ant-design/icons';
 import EngineButton from '../../ui/index/button';
 import { DieselEngine } from '../specification/engines/dieselengine';
 import { DieselWaterPump } from '../specification/pumps/dieselwaterpump';
@@ -64,6 +64,7 @@ interface Engine {
   engineName: string
 }
 
+type NotificationType = 'error';
 
 const AddEngineForm = () => {
     const { data: session } = useSession();
@@ -72,11 +73,22 @@ const AddEngineForm = () => {
     const [engineName, setEngineName] = useState<string | undefined>(undefined)
     const [engine, setEngine] = useState<Engine | undefined>(undefined)
     const [engineType, setEngineType] = useState(null);
+    const [loading, setLoading] = useState<boolean>(false);
+    const [api, contextHolder] = notification.useNotification();
 
     const uploadPreset = process.env.NEXT_PUBLIC_ENGINE_PRESET;
     const apiKey = process.env.NEXT_PUBLIC_CLOUDINARY_API;
     const user = session?.user.username;
 
+    const openNotificationWithIcon = (type: NotificationType) => {
+      api[type]({
+        message: 'Something went wrong',
+        description:
+          'Please check the form and try again.',
+        showProgress: true,
+        pauseOnHover: true,
+      });
+    };
 
     // Check Engine List
     useEffect(() => {
@@ -117,7 +129,8 @@ const AddEngineForm = () => {
     });
 
     const onSubmit = async (values: z.infer<typeof FormSchema>) => {
-      
+
+      setLoading(true);
       if (typeof file === "undefined") return;
       if (values.engineName === engine?.engineName) return;
 
@@ -167,7 +180,8 @@ const AddEngineForm = () => {
           router.push('/')
       }
       else {
-          console.log('Something went wrong.');
+          openNotificationWithIcon('error');
+          setLoading(false);
       }
 
       };
@@ -193,7 +207,8 @@ const AddEngineForm = () => {
           colorPrimary: '#BB4747',
           colorLink: '#BB4747',
         },
-      }}>        
+      }}>
+    {contextHolder}
     <Form
     labelCol={{ span: 4 }}
     wrapperCol={{ span: 16 }}
@@ -338,7 +353,7 @@ const AddEngineForm = () => {
      : <NoSpecification /> }
     <div className='flex justify-center items-center'>
     <EngineButton>
-        Add Engine
+    {loading ? <Spin indicator={<LoadingOutlined className="text-white" spin />} /> : 'Add Engine'}
     </EngineButton>
     </div>
     </Grid> 
