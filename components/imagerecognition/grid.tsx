@@ -64,6 +64,8 @@ export function ImageRecognitionPage() {
                 if (!data.CustomLabels || data.CustomLabels.length === 0) {
                     openNotificationWithIcon('error');
                 }
+
+                return data;
             } catch (err: any) {
                 openNotificationWithIcon('error');
             } finally {
