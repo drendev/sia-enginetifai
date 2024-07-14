@@ -183,7 +183,7 @@ export function ImageRecognitionPage() {
                                     loading={loading} />
                                 </div>
 
-                                <div className="px-5 py-3">
+                                <div className="flex px-5 py-3">
                                 <div className='text-red-900 font-sans font-bold text-xl pb-2'>
                                 Recent Transactions 
                                 </div>
