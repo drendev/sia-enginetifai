@@ -6,6 +6,8 @@ import { useState } from 'react';
 import type { ProgressProps } from 'antd';
 import Link from 'next/link';
 import EngineTypeFeature from "./enginefeature";
+import EngineModels from "./enginemodels";
+import RecentTransactions from "./recenttransactions";
 
 interface Label {
     Name: string;
@@ -173,8 +175,23 @@ export function ImageRecognitionPage() {
                         </div>
 
                         <div className="flex flex-col md:flex-none w-full md:w-2/6 space-y-4 p-6 md:p-0 gap-4">
-                            <div className="relative md:fixed pt-6 md:h-[calc(100vh-96px)] scrollbar-none md:overflow-y-auto md:scrollbar md:scrollbar-thumb-red-primary md:scrollbar-track-transparent">
+                            <div className="relative md:fixed pt-0 md:pt-6 md:h-[calc(100vh-96px)] scrollbar-none md:overflow-y-auto md:scrollbar md:scrollbar-thumb-red-primary md:scrollbar-track-transparent">
+                                <div className="bg-white dark:bg-slate-900 shadow-md h-auto md:h-[19rem] w-full md:w-[29rem] rounded-xl p-4">
+                                    <h1 className='text-red-900 font-sans font-bold text-xl pb-2'> Engine Models </h1>
+                                    <EngineModels 
+                                    engineType={labels[0]?.Name} 
+                                    loading={loading} />
+                                </div>
 
+                                <div className="px-5 py-3">
+                                <div className='text-red-900 font-sans font-bold text-xl pb-2'>
+                                Recent Transactions 
+                                </div>
+                                    <RecentTransactions 
+                                    engineType={labels[0]?.Name}
+                                    loading={loading} 
+                                    />
+                                </div>
                             </div>
                         </div>
                     </div>

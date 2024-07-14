@@ -23,7 +23,7 @@ export async function POST(req: Request) {
                         totalPrice: true,
                         createAt: true,
                     },
-                    take: 4,
+                take: 4,
                 }
             }
         });
