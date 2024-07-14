@@ -69,10 +69,10 @@ const EngineModels: React.FC<EngineTypeModelProps> = ({ engineType, loading }) =
                     <>
                     <Skeleton loading={loading} active>
                         <div className="grid grid-cols-3 gap-2 md:gap-4">
-                            {paginatedEngines.map((engine) => (
-                                
-                                    <Link href={`/engines/${engine.engineId}`}>
+                            {paginatedEngines.map((engine, index) => (
+                                    <Link key={index} href={`/engines/${engine.engineId}`}>
                                         <div
+                                            key={index}
                                             className="border border-gray-200 dark:border-slate-700 p-1 rounded-lg flex flex-col items-center hover:-translate-y-1 transition-all cursor-pointer hover:shadow-md w-full"
                                         >
                                             <img src={engine.engineImage} alt={engine.engineName} className="w-20 h-20 md:w-20 md:h-20 mb-2 rounded-lg" />
@@ -82,7 +82,6 @@ const EngineModels: React.FC<EngineTypeModelProps> = ({ engineType, loading }) =
                                             </p>
                                         </div>
                                     </Link>
-                                
                             ))}
                         </div>
                         <div className="text-center mt-4">
