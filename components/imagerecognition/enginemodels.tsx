@@ -24,8 +24,9 @@ const EngineModels: React.FC<EngineTypeModelProps> = ({ engineType, loading }) =
 
     useEffect(() => {
         const fetchEngineData = async () => {
-            const res = await fetch(`/api/enginetypes/engines?engineType=${engineType}`, {
-                method: 'POST'
+            const res = await fetch('/api/enginetypes/engines', {
+                method: 'POST',
+                body: JSON.stringify({ engineType }),
             });
             const data = (await res.json()) as EngineModels[];
             setEngine(data);

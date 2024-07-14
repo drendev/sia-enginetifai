@@ -26,7 +26,8 @@ const RecentTransactions: React.FC<EngineTypeTransactionProps> = ({ engineType, 
     useEffect(() => {
         const fetchEngineData = async () => {
             const res = await fetch(`/api/enginetypes/recenttransaction?engineType=${engineType}`, {
-                method: 'POST'
+                method: 'POST',
+                body: JSON.stringify({ engineType }),
             });
             const data = (await res.json()) as EngineTypeTransaction[];
             setTransactions(data);

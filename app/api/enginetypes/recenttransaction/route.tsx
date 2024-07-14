@@ -1,10 +1,15 @@
 import { NextResponse } from 'next/server';
 import { db } from '@/lib/db';
+import { z } from 'zod';
+
+const engineSchema = z.object({
+    engineType: z.string().min(1, 'Quantity is required').max(1000),
+});
 
 export async function POST(req: Request) {
     try {
-        const url = new URL(req.url);
-        const engineType = url.searchParams.get('engineType');
+        const body = await req.json();
+        const { engineType } = engineSchema.parse(body);
 
         if (!engineType) {
             return NextResponse.json({ message: "Engine type is required." }, { status: 400 });
