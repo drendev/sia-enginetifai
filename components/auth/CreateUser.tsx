@@ -61,7 +61,7 @@ const CreateUser = () => {
         })
     
         if(response.ok){
-            router.push('/')
+            router.push('/staff')
         }
         else {
             console.log('Something went wrong.');

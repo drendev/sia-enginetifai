@@ -1,11 +1,22 @@
 "use client";
 
-import EmployeeDashboard from "@/components/dashboard/main/employee";
-import { StaffDisplay } from "@/components/staff/StaffDisplay";
-import { db } from "@/lib/db";
 import { useEffect, useState, useRef } from "react";
-import Link from "next/link";
-import { Pagination, Empty, Input, Select } from "antd";
+import * as z from "zod";
+import { useRouter } from "next/navigation";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import type { RadioChangeEvent } from "antd";
+import {
+  Pagination,
+  Empty,
+  Input,
+  Select,
+  Modal,
+  Button,
+  Form,
+  Radio,
+  Skeleton
+} from "antd";
 import { SearchOutlined, PlusOutlined } from "@ant-design/icons";
 
 interface User {
@@ -15,25 +26,186 @@ interface User {
   role: string;
 }
 
-const createOptions = (values: string[]) => {
-    return values.map(value => ({ value, label: value }));
-};
+const FormSchema = z
+  .object({
+    username: z.string().min(1, "Username is required").max(100),
+    email: z.string().min(1, "Email is required").email("Invalid email"),
+    password: z
+      .string()
+      .min(1, "Password is required")
+      .min(8, "Password must have than 8 characters"),
+    confirmPassword: z.string().min(1, "Password confirmation is required"),
+    role: z.enum(["user", "admin"]).optional(),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    path: ["confirmPassword"],
+    message: "Password do not match",
+  });
 
 export default function Employees() {
+  const router = useRouter();
+
+  // Skeleton
+
+  const [skeleton, setSkeleton] = useState<boolean>(true)
+
+  useEffect(() => {
+    // Simulate a data fetch
+    setTimeout(() => {
+        setSkeleton(false);
+    }, 2000); // Adjust the timeout duration as needed
+}, []);
+
+  // Create User
+  const [value, setValue] = useState(1);
+
+  const onChange = (e: RadioChangeEvent) => {
+    console.log("radio checked", e.target.value);
+    setValue(e.target.value);
+  };
+
+  const form = useForm<z.infer<typeof FormSchema>>({
+    resolver: zodResolver(FormSchema),
+    defaultValues: {
+      username: "",
+      email: "",
+      password: "",
+      confirmPassword: "",
+    },
+  });
+  const onSubmit = async (values: z.infer<typeof FormSchema>) => {
+    setLoadings(true);
+    const response = await fetch("/api/user", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        username: values.username,
+        email: values.email,
+        password: values.password,
+        role: values.role,
+      }),
+    });
+
+    if (response.ok) {
+      setLoadings(false);
+      window.location.reload();
+
+    } else {
+      console.log("Something went wrong.");
+    }
+  };
+
+  // Delete User
+  const [isDeleted, setIsDeleted] = useState(false);
+
+  const handleOnSubmit = async () => {
+    const response = await fetch('/api/staffDelete', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        // userID: engineData?.userID,
+      }),
+    });
+
+    if (response.ok) {
+      setIsDeleted(true);
+      router.push('/engines');
+    } else {
+      console.log('Something went wrong.');
+    }
+  };
+
+  if (isDeleted) {
+    return null;
+  }
+
+  // Users Data
   const [users, setUsers] = useState<User[]>([]);
   const [usersTotal, setUsersTotal] = useState<number>();
-  const [currentPage, setCurrentPage] = useState(1);
-  const [search, setSearch] = useState("");
+
+  // Dropwdown
   const [dropdownOpen, setDropdownOpen] = useState<{ [key: number]: boolean }>(
     {}
   );
-  const [selectedRole, setSelectedRole] = useState<string | null>(null);
 
-  const pageSize = 6;
+  useEffect(() => {
+    const clickHandler = ({ target }: MouseEvent) => {
+      if (Object.values(dropdownOpen).every((isOpen) => !isOpen)) return;
+
+      Object.keys(dropdownOpen).forEach((index) => {
+        const dropdown = dropdownRefs.current[parseInt(index)];
+        const trigger = triggerRefs.current[parseInt(index)];
+
+        if (
+          dropdown &&
+          trigger &&
+          !dropdown.contains(target as Node) &&
+          !trigger.contains(target as Node)
+        ) {
+          setDropdownOpen((prev) => ({ ...prev, [index]: false }));
+        }
+      });
+    };
+    document.addEventListener("click", clickHandler);
+    return () => document.removeEventListener("click", clickHandler);
+  }, [dropdownOpen]);
+
+  const dropdownRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const triggerRefs = useRef<(HTMLButtonElement | null)[]>([]);
+
+  const toggleDropdown = (index: number) => {
+    setDropdownOpen((prev) => {
+      // Create a new object to track the updated state
+      const updatedState: { [key: number]: boolean } = {};
+  
+      // Close all other dropdowns
+      Object.keys(prev).forEach((key: string) => {
+        const numericKey: number = parseInt(key, 10); // Parse key to number
+        updatedState[numericKey] = false; // Set corresponding value to false
+      });;
+  
+      // Toggle the clicked dropdown
+      updatedState[index] = !prev[index];
+  
+      return updatedState;
+    });
+  };
+
+  // Loading
+  const [loadings, setLoadings] = useState<boolean>();
+
+  // Modals
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const showModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const handleOk = () => {
+    setIsModalOpen(false);
+  };
+
+  const handleCancel = () => {
+    setIsModalOpen(false);
+  };
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
   };
+
+  // Pagination, Search and Filter Options
+  const [currentPage, setCurrentPage] = useState(1);
+  const [selectedRole, setSelectedRole] = useState<string | null>(null);
+  const [search, setSearch] = useState("");
+  const pageSize = 6;
+  const roles: string[] = ["No Filter", "employee", "admin", "courier"];
+
+  const createOptions = (roles: string[]) =>
+    roles.map((role) => ({ label: role, value: role }));
 
   useEffect(() => {
     const getUsers = async () => {
@@ -65,40 +237,12 @@ export default function Employees() {
     currentPage * pageSize
   );
 
-  useEffect(() => {
-    const clickHandler = ({ target }: MouseEvent) => {
-      if (Object.values(dropdownOpen).every((isOpen) => !isOpen)) return;
-
-      Object.keys(dropdownOpen).forEach((index) => {
-        const dropdown = dropdownRefs.current[parseInt(index)];
-        const trigger = triggerRefs.current[parseInt(index)];
-
-        if (
-          dropdown &&
-          trigger &&
-          !dropdown.contains(target as Node) &&
-          !trigger.contains(target as Node)
-        ) {
-          setDropdownOpen((prev) => ({ ...prev, [index]: false }));
-        }
-      });
-    };
-    document.addEventListener("click", clickHandler);
-    return () => document.removeEventListener("click", clickHandler);
-  }, [dropdownOpen]);
-
-  const dropdownRefs = useRef<(HTMLDivElement | null)[]>([]);
-  const triggerRefs = useRef<(HTMLButtonElement | null)[]>([]);
-
-  const toggleDropdown = (index: number) => {
-    setDropdownOpen((prev) => ({ ...prev, [index]: !prev[index] }));
-  };
-
+  
   return (
     <>
       <div className="pt-20 pl-10 pr-10 ">
         <Input
-          className="h-16 w-full mb-5 shadow-inner font-sans font-semibold rounded-full text-sm text-gray-900 border border-gray-300 bg-gray-50 focus:ring-red-500 focus:border-red-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+          className="h-16 text-sm font-medium w-full mb-5 shadow-inner font-sans font-semibold rounded-full text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-red-500 focus:border-red-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
           size="large"
           placeholder="Search Staff"
           prefix={<SearchOutlined />}
@@ -107,32 +251,35 @@ export default function Employees() {
         />
         <div className="flex">
           <div className="mt-3 flex-grow">
-            {usersTotal} {usersTotal === 1 ? "Staff" : "Staffs"}
+            {filteredUsers.length}{" "}
+            {filteredUsers.length === 1 || filteredUsers.length === 0
+              ? "Staff"
+              : "Staffs"}
           </div>
-        
 
           <Select
             showSearch
             className="w-72 rounded-lg mr-4 h-10"
             placeholder="Staff Role"
             optionFilterProp="label"
-            filterSort={(optionA, optionB) =>
-              (optionA?.label ?? "")
+            filterSort={(optionA, optionB) => {
+              if (optionA.label === "No Filter") return -1;
+              if (optionB.label === "No Filter") return 1;
+              return (optionA?.label ?? "")
                 .toLowerCase()
-                .localeCompare((optionB?.label ?? "").toLowerCase())
+                .localeCompare((optionB?.label ?? "").toLowerCase());
+            }}
+            options={createOptions(roles)}
+            onChange={(value) =>
+              value === "No Filter"
+                ? setSelectedRole(null)
+                : setSelectedRole(value)
             }
-            options={createOptions([
-              "No Filter",
-              "employee",
-              "admin",
-              "courier"
-            ])}
-            onChange={(value) => value === "No Filter" ? setSelectedRole(null) : setSelectedRole(value)}
             value={selectedRole}
           />
 
-          <Link
-            href="./create-user"
+          <Button
+            onClick={showModal}
             className="text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center me-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800"
           >
             <svg
@@ -149,9 +296,85 @@ export default function Employees() {
               />
             </svg>
             Add Employee
-          </Link>
+          </Button>
+          <Modal
+            title="Add Staff"
+            open={isModalOpen}
+            onCancel={handleCancel}
+            footer={[
+            ]}
+          >
+            <Form
+              labelCol={{ span: 8 }}
+              wrapperCol={{ span: 16 }}
+              style={{ maxWidth: 600 }}
+              onFinish={onSubmit}
+              autoComplete="off"
+            >
+              <Form.Item
+                label="Username"
+                name="username"
+                rules={[
+                  { required: true, message: "Please input your username!" },
+                ]}
+              >
+                <Input />
+              </Form.Item>
+
+              <Form.Item
+                label="Role"
+                name="role"
+                rules={[
+                  { required: true, message: "Please input your username!" },
+                ]}
+              >
+                <Radio.Group onChange={onChange} value={value}>
+                  <Radio value={"admin"}>Admin</Radio>
+                  <Radio value={"employee"}>Employee</Radio>
+                  <Radio value={"courier"}>Courier</Radio>
+                </Radio.Group>
+              </Form.Item>
+
+              <Form.Item
+                label="Email"
+                name="email"
+                rules={[
+                  { required: true, message: "Please input your email!" },
+                ]}
+              >
+                <Input />
+              </Form.Item>
+
+              <Form.Item
+                label="Password"
+                name="password"
+                rules={[
+                  { required: true, message: "Please input your password!" },
+                ]}
+              >
+                <Input.Password />
+              </Form.Item>
+              <Form.Item
+                label="Confirm Password"
+                name="confirmPassword"
+                rules={[
+                  { required: true, message: "Please input your password!" },
+                ]}
+              >
+                <Input.Password />
+              </Form.Item>
+
+              <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
+              <Button type="primary" htmlType="submit" loading={loadings}>
+                Submit
+              </Button>
+              </Form.Item> 
+            </Form>
+          </Modal>
         </div>
 
+
+        <Skeleton loading={skeleton} active avatar paragraph={{ rows: 5 }}>
         <div className="grid grid-cols-1 justify-center gap-x-8 gap-y-4 mt- 5 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-5">
           {currentUsers.length > 0 ? (
             currentUsers.map((user, index) => (
@@ -281,7 +504,9 @@ export default function Employees() {
             onChange={handlePageChange}
           />
         </div>
+        </Skeleton>
       </div>
+
     </>
   );
 }
