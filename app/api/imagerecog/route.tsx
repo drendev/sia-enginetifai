@@ -8,6 +8,10 @@ export async function POST(req: Request) {
 
     const buffer = Buffer.from(imageBase64, 'base64');
 
+    if (!buffer) {
+      return NextResponse.json({ message: 'Image is required.' }, { status: 400 });
+    }
+    
     const params = {
       Image: {
         Bytes: buffer,
