@@ -20,28 +20,38 @@ const RecentTransactions: React.FC<EngineTypeTransactionProps> = ({ engineType, 
 
     const utcDate = new Date();
     const timeZone = 'Asia/Manila';
-
     const dateToday = moment.tz(utcDate, timeZone).format('YYYY-MM-DDTHH:mm:ss.SSS[Z]');
 
     useEffect(() => {
         const fetchEngineData = async () => {
-            const res = await fetch(`/api/enginetypes/recenttransaction?engineType=${engineType}`, {
-                method: 'POST',
-                body: JSON.stringify({ engineType }),
-            });
-            const data = (await res.json()) as EngineTypeTransaction[];
-            setTransactions(data);
+            if (engineType) {
+                try {
+                    const res = await fetch('/api/enginetypes/recenttransaction', {
+                        method: 'POST',
+                        body: JSON.stringify({ engineType }),
+                    });
+                    const data = (await res.json()) as EngineTypeTransaction[];
+                    if(res.ok){
+                        setTransactions(data);
+                    }
+                    else{
+                        console.error("Error fetching transactions:");
+                        setTransactions([]);
+                    }
+                } catch (error) {
+                    console.error("Error fetching transactions:", error);
+                    setTransactions([]);
+                }
+            } else {
+                setTransactions([]);
+            }
         };
 
-        if (engineType) {
-            fetchEngineData();
-        } else {
-            setTransactions([]);
-        }
-    }, [engineType, loading]);
-    
+        fetchEngineData();
+    }, [engineType]);
+
     const formatTransactionTime = (dateTime: string) => {
-        const now = moment.tz(dateToday, timeZone);  // Use dateToday instead of the current moment
+        const now = moment.tz(dateToday, timeZone);
         const transactionTime = moment.tz(dateTime, timeZone);
         const diffMinutes = now.diff(transactionTime, 'minutes');
         const diffHours = now.diff(transactionTime, 'hours');
@@ -72,11 +82,11 @@ const RecentTransactions: React.FC<EngineTypeTransactionProps> = ({ engineType, 
                         )}
                         <div className="divide-y">
                             {transactions.length === 0 ? (
-                                <div className="p-4 text-center text-red-950">No transactions found.</div>
+                                <div className="p-4 text-center block text-red-950">No transactions found.</div>
                             ) : (
                                 transactions.map((transaction) => (
                                     <Link key={transaction.transactionId} href={'test'}>
-                                        <div key={transaction.transactionId} className="flex hover:bg-red-primary/5">
+                                        <div className="flex hover:bg-red-primary/5">
                                             <div className="p-4 flex-1">
                                                 {transaction.quantity} pcs.
                                             </div>

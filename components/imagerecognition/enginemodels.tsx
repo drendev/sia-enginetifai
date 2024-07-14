@@ -29,8 +29,14 @@ const EngineModels: React.FC<EngineTypeModelProps> = ({ engineType, loading }) =
                 body: JSON.stringify({ engineType }),
             });
             const data = (await res.json()) as EngineModels[];
-            setEngine(data);
-            setCurrentPage(1);
+            
+            if(res.ok){
+                setEngine(data);
+                setCurrentPage(1);
+            } else {
+                console.error("Error fetching engine models:");
+                setEngine([]);
+            }
         };
 
         if (engineType) {
@@ -54,7 +60,7 @@ const EngineModels: React.FC<EngineTypeModelProps> = ({ engineType, loading }) =
 
     return (
         <>
-            {engineType && (
+            {engineType && paginatedEngines.length > 0 && (
                 <div className="mb-4">
                     <Input
                         placeholder="Search Model"

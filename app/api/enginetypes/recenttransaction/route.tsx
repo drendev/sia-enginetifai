@@ -10,16 +10,17 @@ export async function POST(req: Request) {
     try {
         const body = await req.json();
         const { engineType } = engineSchema.parse(body);
-
         if (!engineType) {
             return NextResponse.json({ message: "Engine type is required." }, { status: 400 });
         }
 
-        const engines = await db.engine.findMany({
+        const enginesWithTransactions = await db.engine.findMany({
             where: {
                 engineType: engineType
             },
             select: {
+                id: true,
+                engineType: true,
                 transactions: {
                     select: {
                         id: true,
@@ -32,22 +33,22 @@ export async function POST(req: Request) {
             }
         });
 
-        if (!engines || engines.length === 0) {
-            return NextResponse.json({ error: 'No engine found with the specified type' });
+        if (!enginesWithTransactions.length) {
+            return NextResponse.json({ message: "Engine type is required." }, { status: 400 })
         }
 
-        const response = engines.flatMap(engine => 
-            engine.transactions.map(transaction => ({
-                totalPrice: transaction.totalPrice,
-                transactionId: transaction.id,
-                transactionDate: transaction.createAt,
-                quantity: transaction.quantity
-            }))
-        );
+        const transactions = enginesWithTransactions.flatMap(engine => {
+            if (Array.isArray(engine.transactions)) {
+                return engine.transactions;
+            } else {
+                console.error(`Expected transactions to be an array, but got: ${typeof engine.transactions}`);
+                return [];
+            }
+        });
 
-        return NextResponse.json(response);
+        return NextResponse.json(transactions);
     } catch (error) {
-        console.error("Error fetching engines:", error);
+        console.error("Error fetching transactions:", error);
         return NextResponse.json({ message: "Something went wrong." }, { status: 500 });
     }
 }

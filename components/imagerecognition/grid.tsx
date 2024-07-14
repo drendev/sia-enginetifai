@@ -138,16 +138,15 @@ export function ImageRecognitionPage() {
                                                     <h1 className='text-red-900 font-sans font-bold text-xl pb-2'> Engine Information </h1>
                                                     {labels.length > 0 ? (
                                                         <div className="flex">
-                                                            {labels.map((label, index) => (
-                                                                <div className="flex" key={index}>
+                                                                <div className="flex">
                                                                     <div className="font-sans px-8">
                                                                         <h3 className="text-red-950 dark:text-slate-300 font-sans font-bold text-lg">Detected Engine Type</h3>
-                                                                        <span className="font-semibold text-xl text-red-primary/90">{label.Name}</span>
+                                                                        <span className="font-semibold text-xl text-red-primary/90">{labels[0].Name}</span>
                                                                     </div>
                                                                     <div className="label-confidence">
                                                                         <Tooltip color="#BB4747" title={`Confidence Percentage`}>
                                                                             <Progress
-                                                                                percent={parseFloat(label.Confidence.toFixed(2))}
+                                                                                percent={parseFloat(labels[0].Confidence.toFixed(2))}
                                                                                 type="circle"
                                                                                 status="active"
                                                                                 size={110}
@@ -156,7 +155,6 @@ export function ImageRecognitionPage() {
                                                                         </Tooltip>
                                                                     </div>
                                                                 </div>
-                                                            ))}
                                                         </div>
                                                     ) : (
                                                         <div className="text-center font-sans px-8 text-red-950 dark:text-slate-400 text-md">
@@ -185,13 +183,13 @@ export function ImageRecognitionPage() {
                                     loading={loading} />
                                 </div>
 
-                                <div className="flex px-5 py-3">
+                                <div className="px-5 py-3">
                                 <div className='text-red-900 font-sans font-bold text-xl pb-2'>
                                 Recent Transactions 
                                 </div>
                                     <RecentTransactions 
                                     engineType={labels[0]?.Name}
-                                    loading={loading} 
+                                    loading={loading}
                                     />
                                 </div>
                             </div>
