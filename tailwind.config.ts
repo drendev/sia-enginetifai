@@ -25,6 +25,7 @@ const config: Config = {
         "search": "url('/search.png')",
         "enginebackground": "url('/enginebackground.png')",
         "imagerecog": "url('/imagerecog.png')",
+        "transactionmain": "url('/transactionbg.png')",
         },
         backgroundSize: {
           "16": "12rem",

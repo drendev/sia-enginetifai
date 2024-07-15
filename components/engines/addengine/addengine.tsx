@@ -288,7 +288,17 @@ const AddEngineForm = () => {
     <Form.Item
       label="Quantity"
       name="quantity"
-      rules={[{ required: true, message: 'Please input Engine Quantity' }]}
+      rules={[{ required: true, message: 'Please input Engine Quantity' },
+        () => ({
+          validator(_, value) {
+            if (value > 100) {
+              return Promise.reject('Maximum quantity to be added exceeded.');
+            }
+            return Promise.resolve();
+          },
+
+        })
+      ]}
     >
       <InputNumber 
       />
