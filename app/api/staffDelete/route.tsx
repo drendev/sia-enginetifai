@@ -8,6 +8,7 @@ export async function POST(req: Request) {
         const body = await req.json();
         const { userID } = body;
 
+
         const getUser = await db.user.delete({
             where: {
                 id: userID
@@ -16,7 +17,7 @@ export async function POST(req: Request) {
         
 
         if(!getUser) {
-            return NextResponse.json({ error: 'Engine not found' });
+            return NextResponse.json({ error: 'Staff not found' });
         }
 
         return NextResponse.json(getUser);

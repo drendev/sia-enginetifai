@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, createContext } from "react";
 import * as z from "zod";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
@@ -19,7 +19,10 @@ import {
 } from "antd";
 import { SearchOutlined, PlusOutlined } from "@ant-design/icons";
 
+const ReachableContext = createContext<string | null>(null);
+
 interface User {
+  id: string;
   username: string;
   email: string;
   password: string;
@@ -43,6 +46,27 @@ const FormSchema = z
   });
 
 export default function Employees() {
+
+  const [modal, contextHolder] = Modal.useModal();
+    // Users Data
+    const [users, setUsers] = useState<User[]>([]);
+    const [usersTotal, setUsersTotal] = useState<number>();
+
+  const config = {
+    title: `Delete Staff`,
+    content: (
+      <>
+        <ReachableContext.Consumer>
+          {(name) => `Are you sure you want to permanently delete this staff?`}
+        </ReachableContext.Consumer>
+        <br />
+      </>
+    ),
+  };
+
+
+
+
   const router = useRouter();
 
   // Skeleton
@@ -98,34 +122,28 @@ export default function Employees() {
   };
 
   // Delete User
-  const [isDeleted, setIsDeleted] = useState(false);
 
-  const handleOnSubmit = async () => {
+  const handleOnSubmit = async (index: number) => {
     const response = await fetch('/api/staffDelete', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        // userID: engineData?.userID,
+        userID: users[index].id,
       }),
     });
 
+    console.log(users[index].id)
+
     if (response.ok) {
-      setIsDeleted(true);
-      router.push('/engines');
+      window.location.reload();
     } else {
       console.log('Something went wrong.');
     }
   };
 
-  if (isDeleted) {
-    return null;
-  }
 
-  // Users Data
-  const [users, setUsers] = useState<User[]>([]);
-  const [usersTotal, setUsersTotal] = useState<number>();
 
   // Dropwdown
   const [dropdownOpen, setDropdownOpen] = useState<{ [key: number]: boolean }>(
@@ -207,6 +225,8 @@ export default function Employees() {
   const createOptions = (roles: string[]) =>
     roles.map((role) => ({ label: role, value: role }));
 
+  // Fetch Staff Info
+
   useEffect(() => {
     const getUsers = async () => {
       try {
@@ -214,15 +234,21 @@ export default function Employees() {
           method: "POST",
         });
         const data = await res.json();
-        setUsers(data.users);
+        const usersWithIndex = data.users.map((user: any, index: number) => ({
+          ...user,
+          index: index + 1,
+        }));
+
+        setUsers(usersWithIndex);
         setUsersTotal(data.usersTotal);
+        console.log(usersWithIndex);
       } catch (error) {
         console.error("Error fetching users:", error);
       }
     };
 
     getUsers();
-  }, [search]); // Include search, selectedEngineType, and selectedStock in dependencies
+  }, [search]);
 
   const filteredUsers = users.filter((user) => {
     const matchesSearch = user.username
@@ -385,7 +411,10 @@ export default function Employees() {
                 <div className="flex justify-end px-4 pt-4">
                   <button
                     ref={(el) => (triggerRefs.current[index] = el)}
-                    onClick={() => toggleDropdown(index)}
+                    onClick={() => {
+                      toggleDropdown(index);
+                      console.log({index})
+                    }}
                     className="flex items-center gap-2 md:gap-4 hover:opacity-60 active:opacity-85"
                   >
                     <span className="sr-only">Open dropdown</span>
@@ -422,9 +451,24 @@ export default function Employees() {
                         </a>
                       </li>
                       <li>
-                        <button className="block px-4 py-2 text-sm text-red-600 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">
+                        <Form
+                        onFinish={async () => {
+                          modal.confirm({
+                            ...config,
+                            onOk: async () => {
+                              await handleOnSubmit(index); // Ensure handleOnSubmit is awaited if it's async
+                            },
+                            okText: 'Confirm Delete',
+                            okType: 'danger',
+                          });
+                        }}>
+                          <ReachableContext.Provider value="Light">
+                        <Button htmlType="submit" className="block px-4 py-2 text-sm text-red-600 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">
                           Delete
-                        </button>
+                        </Button>
+                        {contextHolder}
+                        </ReachableContext.Provider>
+                        </Form>
                       </li>
                     </ul>
                   </div>
