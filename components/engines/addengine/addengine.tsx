@@ -229,6 +229,9 @@ const AddEngineForm = () => {
             if (value === engine?.engineName) {
               return Promise.reject('Engine already exist');
             }
+            else if(value.length < 5 && value.length > 1){
+              return Promise.reject('Minimum 5 characters required.');
+            }
             return Promise.resolve();
           },
 
@@ -315,7 +318,17 @@ const AddEngineForm = () => {
     <Form.Item
       label="Description"
       name="description"
-      rules={[{ required: true, message: 'Please input Description' }]}
+      rules={[{ required: true, message: 'Please input Description' },
+        () => ({
+          validator(_, value) {
+            if (value.length < 10) {
+              return Promise.reject('Minimum 10 characters required.');
+            }
+            return Promise.resolve();
+          },
+
+        })
+      ]}
     >
       
       <Input />
