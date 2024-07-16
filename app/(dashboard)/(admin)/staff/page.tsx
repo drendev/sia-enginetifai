@@ -48,12 +48,25 @@ const FormSchema = z
 export default function Employees() {
 
   const [modal, contextHolder] = Modal.useModal();
+  const [showDelModal, setShowDelModal] = useState(false);
     // Users Data
     const [users, setUsers] = useState<User[]>([]);
-    const [usersTotal, setUsersTotal] = useState<number>();
+    const [value, setValue] = useState(1);
+    const [skeleton, setSkeleton] = useState<boolean>(true)
+    const [dropdownOpen, setDropdownOpen] = useState<{ [key: number]: boolean }>(
+      {}
+    );
+    const [loadings, setLoadings] = useState<boolean>();
+    const [selectedUserId, setSelectedUserId] = useState<string | null>(null);
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [currentPage, setCurrentPage] = useState(1);
+    const [selectedRole, setSelectedRole] = useState<string | null>(null);
+    const [search, setSearch] = useState("");
+    const pageSize = 6;
+    const roles: string[] = ["No Filter", "employee", "admin", "courier"];
 
   const config = {
-    title: `Delete Staff`,
+    title: "Delete Staff",
     content: (
       <>
         <ReachableContext.Consumer>
@@ -64,15 +77,53 @@ export default function Employees() {
     ),
   };
 
+   // Pagination, Search and Filter Options
+   const createOptions = (roles: string[]) =>
+    roles.map((role) => ({ label: role, value: role }));
+  
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+  };
 
+    // Fetch Staff Info
 
+  useEffect(() => {
+    const getUsers = async () => {
+      try {
+        const res = await fetch("/api/staff", {
+          method: "POST",
+        });
+        const data = await res.json();
+        const usersWithIndex = data.users.map((user: any, index: number) => ({
+          ...user,
+          index: index + 1,
+        }));
 
-  const router = useRouter();
+        setUsers(usersWithIndex);
+        console.log(usersWithIndex);
+      } catch (error) {
+        console.error("Error fetching users:", error);
+      }
+    };
+
+    getUsers();
+  }, [search]);
+
+  const filteredUsers = users.filter((user) => {
+    const matchesSearch = user.username
+      .toLowerCase()
+      .includes(search.toLowerCase());
+    const matchesUserRole = selectedRole ? user.role === selectedRole : true;
+    return matchesSearch && matchesUserRole;
+  });
+
+  const currentUsers = filteredUsers.slice(
+    (currentPage - 1) * pageSize,
+    currentPage * pageSize
+  );
+
 
   // Skeleton
-
-  const [skeleton, setSkeleton] = useState<boolean>(true)
-
   useEffect(() => {
     // Simulate a data fetch
     setTimeout(() => {
@@ -81,8 +132,6 @@ export default function Employees() {
 }, []);
 
   // Create User
-  const [value, setValue] = useState(1);
-
   const onChange = (e: RadioChangeEvent) => {
     console.log("radio checked", e.target.value);
     setValue(e.target.value);
@@ -121,35 +170,57 @@ export default function Employees() {
     }
   };
 
+
   // Delete User
 
-  const handleOnSubmit = async (index: number) => {
-    const response = await fetch('/api/staffDelete', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        userID: users[index].id,
-      }),
-    });
+  const [confirmLoading, setConfirmLoading] = useState(false);
+  useEffect(() => {
+    if (showDelModal && selectedUserId) {
+      Modal.confirm({
+        ...config,
 
-    console.log(users[index].id)
-
-    if (response.ok) {
-      window.location.reload();
-    } else {
-      console.log('Something went wrong.');
+        onOk: async () => {
+          setConfirmLoading(true);
+          await handleOnSubmit();
+          setConfirmLoading(false);
+        },
+        okText: "Confirm Delete",
+        okType: "danger",
+      });
+      setShowDelModal(false); // reset the showModal state
     }
+  }, [showDelModal, selectedUserId, confirmLoading]);
+
+  const handleOnSubmit = async () => {
+    if (selectedUserId) {
+      const response = await fetch("/api/staffDelete", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          userID: selectedUserId,
+        }),
+      });
+
+      console.log(selectedUserId);
+
+      if (response.ok) {
+        window.location.reload();
+      } else {
+        console.log("Something went wrong.");
+      }
+    }
+  };
+
+  const showDeleteModal = (userId: string) => {
+    setSelectedUserId(userId);
+    setShowDelModal(true);
   };
 
 
 
-  // Dropwdown
-  const [dropdownOpen, setDropdownOpen] = useState<{ [key: number]: boolean }>(
-    {}
-  );
-
+  // Dropdown
   useEffect(() => {
     const clickHandler = ({ target }: MouseEvent) => {
       if (Object.values(dropdownOpen).every((isOpen) => !isOpen)) return;
@@ -193,11 +264,7 @@ export default function Employees() {
     });
   };
 
-  // Loading
-  const [loadings, setLoadings] = useState<boolean>();
-
   // Modals
-  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const showModal = () => {
     setIsModalOpen(true);
@@ -211,58 +278,8 @@ export default function Employees() {
     setIsModalOpen(false);
   };
 
-  const handlePageChange = (page: number) => {
-    setCurrentPage(page);
-  };
 
-  // Pagination, Search and Filter Options
-  const [currentPage, setCurrentPage] = useState(1);
-  const [selectedRole, setSelectedRole] = useState<string | null>(null);
-  const [search, setSearch] = useState("");
-  const pageSize = 6;
-  const roles: string[] = ["No Filter", "employee", "admin", "courier"];
-
-  const createOptions = (roles: string[]) =>
-    roles.map((role) => ({ label: role, value: role }));
-
-  // Fetch Staff Info
-
-  useEffect(() => {
-    const getUsers = async () => {
-      try {
-        const res = await fetch("/api/staff", {
-          method: "POST",
-        });
-        const data = await res.json();
-        const usersWithIndex = data.users.map((user: any, index: number) => ({
-          ...user,
-          index: index + 1,
-        }));
-
-        setUsers(usersWithIndex);
-        setUsersTotal(data.usersTotal);
-        console.log(usersWithIndex);
-      } catch (error) {
-        console.error("Error fetching users:", error);
-      }
-    };
-
-    getUsers();
-  }, [search]);
-
-  const filteredUsers = users.filter((user) => {
-    const matchesSearch = user.username
-      .toLowerCase()
-      .includes(search.toLowerCase());
-    const matchesUserRole = selectedRole ? user.role === selectedRole : true;
-    return matchesSearch && matchesUserRole;
-  });
-
-  const currentUsers = filteredUsers.slice(
-    (currentPage - 1) * pageSize,
-    currentPage * pageSize
-  );
-
+ 
   
   return (
     <>
@@ -340,8 +357,8 @@ export default function Employees() {
               <Form.Item
                 label="Username"
                 name="username"
-                rules={[
-                  { required: true, message: "Please input your username!" },
+                rules={[{ required: true, message: 'Please input Engine Name' }
+        
                 ]}
               >
                 <Input />
@@ -399,7 +416,7 @@ export default function Employees() {
           </Modal>
         </div>
 
-
+        {/* Staff Cards */}
         <Skeleton loading={skeleton} active avatar paragraph={{ rows: 5 }}>
         <div className="grid grid-cols-1 justify-center gap-x-8 gap-y-4 mt- 5 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-5">
           {currentUsers.length > 0 ? (
@@ -413,7 +430,8 @@ export default function Employees() {
                     ref={(el) => (triggerRefs.current[index] = el)}
                     onClick={() => {
                       toggleDropdown(index);
-                      console.log({index})
+                      console.log(currentUsers);
+                      console.log(index);
                     }}
                     className="flex items-center gap-2 md:gap-4 hover:opacity-60 active:opacity-85"
                   >
@@ -451,24 +469,13 @@ export default function Employees() {
                         </a>
                       </li>
                       <li>
-                        <Form
-                        onFinish={async () => {
-                          modal.confirm({
-                            ...config,
-                            onOk: async () => {
-                              await handleOnSubmit(index); // Ensure handleOnSubmit is awaited if it's async
-                            },
-                            okText: 'Confirm Delete',
-                            okType: 'danger',
-                          });
-                        }}>
-                          <ReachableContext.Provider value="Light">
-                        <Button htmlType="submit" className="block px-4 py-2 text-sm text-red-600 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">
-                          Delete
-                        </Button>
-                        {contextHolder}
-                        </ReachableContext.Provider>
-                        </Form>
+                          <button
+                            className="text-red-500 hover:text-red-700"
+                            onClick={() => {showDeleteModal(user.id)}}
+                          >
+                            Delete
+                          </button>
+                          
                       </li>
                     </ul>
                   </div>
@@ -548,6 +555,7 @@ export default function Employees() {
             onChange={handlePageChange}
           />
         </div>
+        {contextHolder}
         </Skeleton>
       </div>
 
