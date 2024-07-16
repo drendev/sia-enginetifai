@@ -20,7 +20,7 @@ export async function POST(req: Request) {
       Image: {
         Bytes: buffer,
       },
-      ProjectVersionArn: 'arn:aws:rekognition:us-east-1:381492280590:project/enginetifai/version/enginetifai.2024-07-12T01.49.25/1720720166713',
+      ProjectVersionArn: 'arn:aws:rekognition:us-east-1:381492280590:project/enginetifai/version/enginetifai.2024-07-14T04.35.07/1720902907646',
       MaxResults: 10,
       MinConfidence: 70,
     };

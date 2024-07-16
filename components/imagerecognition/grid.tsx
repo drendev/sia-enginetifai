@@ -131,7 +131,7 @@ export function ImageRecognitionPage() {
                                             </div>
                                         </form>
                                     </div>
-                                    <div className="flex-col md:flex-grow">
+                                    <div className="flex-col md:flex-grow"> 
                                         <div className="flex flex-col md:grid md:grid-cols-5 gap-5">
                                             <div className="col-span-1 md:col-span-5 md:space-y-5">
                                                 <div className="bg-white dark:bg-slate-900 shadow-md md:h-44 rounded-xl p-4 mb-4">
