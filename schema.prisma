@@ -131,7 +131,7 @@ model Transaction {
   totalPrice      Float
   paymentMethod   String
   delivery        Boolean
-  deliveryDate    DateTime
+  deliveryDate    String
   createAt        DateTime @default(now())
   updatedAt       DateTime @updatedAt
 
@@ -155,7 +155,7 @@ model Delivery {
   transactionId Int
   transactionBy String
   paymentMethod String
-  deliveryDate  DateTime
+  deliveryDate  String
   deliveryTime  String
   address       String
   city          String

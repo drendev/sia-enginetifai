@@ -9,12 +9,16 @@ body,
   @apply w-full;
 }
 
+html {
+  @apply h-full;
+}
+
 .dark {
   @apply bg-slate-800;
 }
 
-body {
-  @apply bg-red-primary/5
+.light {
+  @apply bg-red-primary/5;
 }
 
 .loaderRectangle {

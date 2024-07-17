@@ -1,6 +1,6 @@
 import { TransactionsMainPage } from "@/components/transaction/main/grid";
 
-export default function AddTrans(){
+export default function Transactions(){
 
     return (
         <>

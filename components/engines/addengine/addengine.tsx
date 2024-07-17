@@ -226,7 +226,10 @@ const AddEngineForm = () => {
       rules={[{ required: true, message: 'Please input Engine Name' },
         () => ({
           validator(_, value) {
-            if (value === engine?.engineName) {
+            if (!value) {
+              return Promise.resolve();
+            }
+            if (value === engine?.engineName || value === !undefined) {
               return Promise.reject('Engine already exist');
             }
             else if(value.length < 5 && value.length > 1){

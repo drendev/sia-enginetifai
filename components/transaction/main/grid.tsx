@@ -4,6 +4,9 @@ import { TransactionsOverview } from "./transactionsoverview"
 import { ComparativeAnalysis } from "./comparativeanalysis"
 import CalendarTransaction from "./calendar"
 import { MyTransactions } from "./mytransactions"
+import { TransactionsCard } from "./transactionscard"
+import { PlusOutlined } from "@ant-design/icons"
+import Link from "next/link"
 
 
 export function TransactionsMainPage() {
@@ -25,14 +28,17 @@ export function TransactionsMainPage() {
                             <div className="flex flex-col gap-4">
                                 <div className="flex flex-col w-full h-52 rounded-2xl shadow-xl bg-red-primary bg-transactionmain bg-right-bottom bg-contain bg-no-repeat px-7 py-5 gap-2">
                                 <h1 className="text-red-100 text-4xl font-sans font-extrabold"> Transactions </h1>
+                                
                                 <div className="mt-20 md:mt-14">
+                                <Link href={'/transactions/addtransactions'}>
                                     <Button
                                         type="primary"
                                         htmlType="submit"
                                         className='flex bg-red-primary hover:bg-red-primary font-bold rounded-full md:w-72 text-md h-auto py-2 px-7 tracking-wider border-red-800 border-2 border-b-4 active:border-b-2'
                                     >
-                                        Demand Forecasting
+                                        Add New Transaction <PlusOutlined />
                                     </Button>
+                                </Link>
                                 </div>
                                 </div>
 
@@ -55,6 +61,7 @@ export function TransactionsMainPage() {
                                         </div>
                                     </div>
                                 </div>
+                                    <TransactionsCard />
                             </div>
                         </div>
                     

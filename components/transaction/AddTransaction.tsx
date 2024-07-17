@@ -84,6 +84,7 @@ const AddTransaction = () => {
   });
 
   const onSubmit = async (values: z.infer<typeof FormSchema>) => {
+    const formattedDate = dayjs(values.deliveryDate).format('YYYY-MM-DD');
 
     const transactions = engineName.map((engineName, index) => ({
       engineName,
@@ -110,7 +111,7 @@ const AddTransaction = () => {
         engineNames: transactions.map((transaction) => transaction.engineName),
         quantity: transactions.map((transaction) => transaction.quantity),
         delivery: values.delivery,
-        deliveryDate: values.deliveryDate,
+        deliveryDate: formattedDate,
         paymentMethod: values.transactionMethod,
       }),
     });
@@ -223,8 +224,8 @@ const AddTransaction = () => {
         initialValue='Delivery'
       >
         <Select>
-          <Option value={'Delivery'}>Delivery</Option>
-          <Option value={'Cash'}>Cash</Option>
+          <Option value={'Cash on Delivery'}>Delivery</Option>
+          <Option value={'Paid in Store'}>Paid in Store</Option>
         </Select>
       </Form.Item>
 
