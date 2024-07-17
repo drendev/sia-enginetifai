@@ -1,56 +1,153 @@
 "use client";
 
-import { useState } from "react";
-import { Select } from 'antd';
+import { useState, useEffect } from "react";
+import { Select, Pagination, Badge, Skeleton } from 'antd';
+import { useSession } from "next-auth/react";
+import Link from 'next/link';
+import moment from 'moment-timezone';
+
+interface MyTransactions {
+    id: string;
+    delivery: string;
+    totalPrice: string;
+    createAt: string;
+    deliveryStatus: string;
+}
 
 export function MyTransactions() {
+    const { data: session } = useSession();
     const { Option } = Select;
     const [status, setStatus] = useState("done");
+    const [transactions, setTransactions] = useState([] as MyTransactions[]);
+    const [currentPage, setCurrentPage] = useState(1);
 
-    return(
+    const pageSize = 3; // Number of transactions per page
+
+    const currentUser = session?.user?.username;
+    useEffect(() => {
+        if (!currentUser) return; // Avoid fetching data if user is null
+
+        const fetchSalesData = async () => {
+            const res = await fetch('/api/transactions/mytransactions', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    user: currentUser
+                }),
+            });
+            const data = await res.json();
+            // Sort transactions from newest to oldest
+            const sortedData = data.sort((a: MyTransactions, b: MyTransactions) => 
+                new Date(b.createAt).getTime() - new Date(a.createAt).getTime()
+            );
+            setTransactions(sortedData);
+        };
+
+        fetchSalesData();
+    }, [currentUser]);
+
+    const handlePageChange = (page: number) => {
+        setCurrentPage(page);
+    };
+
+    const currentTransactions = transactions.slice(
+        (currentPage - 1) * pageSize,
+        currentPage * pageSize
+    );
+
+    console.log(transactions);
+
+    if (!currentUser) {
+        return <div className="p-4"><Skeleton active /></div>;
+    }
+
+    // Format user's transaction time
+    const utcDate = new Date();
+    const timeZone = 'Asia/Manila';
+
+    const dateToday = moment.tz(utcDate, timeZone).format('YYYY-MM-DDTHH:mm:ss.SSS[Z]');
+
+    const formatTransactionTime = (dateTime: string) => {
+        const now = moment.tz(dateToday, timeZone);  // Use dateToday instead of the current moment
+        const transactionTime = moment.tz(dateTime, timeZone);
+        const diffMinutes = now.diff(transactionTime, 'minutes');
+        const diffHours = now.diff(transactionTime, 'hours');
+        const diffDays = now.diff(transactionTime, 'days');
+
+        if (diffMinutes < 1) {
+            return 'just now';
+        } else if (diffMinutes < 60) {
+            return `${diffMinutes} minute${diffMinutes > 1 ? 's' : ''} ago`;
+        } else if (diffHours < 24) {
+            return `${diffHours} hour${diffHours > 1 ? 's' : ''} ago`;
+        } else {
+            return `${diffDays} day${diffDays > 1 ? 's' : ''} ago`;
+        }
+    };
+
+    const formatCurrency = (amount: string) => {
+        const formatter = new Intl.NumberFormat('en-PH', {
+            style: 'currency',
+            currency: 'PHP',
+            minimumFractionDigits: 0,
+            maximumFractionDigits: 0,
+        });
+        return formatter.format(parseFloat(amount));
+    };
+
+    return (
         <>
             <div className="flex justify-between pt-3">
-            <h1 className='text-red-900 font-sans font-bold text-xl pb-2'> My Transactions </h1>
-            <Select
-                defaultValue="done"
-                style={{ width: 120, marginBottom: 20 }}
-                onChange={(value) => setStatus(value)}
-            >
-                <Option value="active">Active</Option>
-                <Option value="pending">Pending</Option>
-                <Option value="done">Done</Option>
-            </Select>
+                <h1 className='text-red-900 font-sans font-bold text-xl pb-2'> My Transactions </h1>
+                <Select
+                    defaultValue="done"
+                    style={{ width: 120, marginBottom: 20 }}
+                    onChange={(value) => setStatus(value)}
+                >
+                    <Option value="active">Active</Option>
+                    <Option value="pending">Pending</Option>
+                    <Option value="done">Done</Option>
+                </Select>
             </div>
 
             <div className="w-full">
-                    <div className="bg-red-primary/15 flex font-bold">
-                        <div className="text-left p-2 flex-1">Type</div>
-                        <div className="text-left p-2 flex-1">Sales</div>
-                        <div className="text-left p-2 flex-1">Time</div>
-                    </div>
-                    <div className="divide-y">
-                        {/* {transaction.map((item) => (
-                            <Link key={item.engineId} href={'test'}>
-                                <div key={item.engineId} className="flex hover:bg-red-primary/5">
-                                    <div className="p-4 flex-1">
-                                        {item.engineName.length > 1 
-                                            ? `${item.engineName[0]} +${item.engineName.length - 1}`
-                                            : item.engineName[0]}
+                <div className="bg-red-primary/15 font-sans flex font-bold">
+                    <div className="text-left p-2 flex-1">Type</div>
+                    <div className="text-left p-2 flex-1">Sales</div>
+                    <div className="text-left p-2 flex-1">Time</div>
+                </div>
+                <div className="divide-y">
+                    {currentTransactions.length === 0 ? (
+                        <div className="text-center p-4">No transactions</div>
+                    ) : (
+                        currentTransactions.map((item) => (
+                            <Link key={item.id} href={'test'}>
+                                <div key={item.id} className="flex hover:bg-red-primary/5 font-sans text-slate-800 dark:text-slate-200">
+                                    <div className="p-2 flex-1">
+                                        <Badge status={item.delivery ? "success" : "processing"} text={item.delivery ? "Delivery" : "Store"} className='text-xs' />
                                     </div>
-                                    <div className="p-4 flex-1">
-                                        <Badge status={item.delivery ? "success" : "processing"} text={item.delivery ? "Delivery" : "Store"} className='text-xs'/>
-                                    </div>
-                                    <div className="p-4 flex-1">{formatTransactionTime(item.createAt)}</div>
-                                    <div className="p-4 flex-1">
-                                        <Avatar.Group>
-                                            <Avatar src={`${item.user}`} style={{ backgroundColor: '#fde3cf' }}>A</Avatar>
-                                        </Avatar.Group>
+                                    <div className="p-2 flex-1">{formatCurrency(item.totalPrice)}</div>
+                                    <div className="p-2 flex-1">
+                                        {formatTransactionTime(item.createAt)}
                                     </div>
                                 </div>
                             </Link>
-                        ))} */}
-                    </div>
+                        ))
+                    )}
                 </div>
+                {transactions.length > 0 && (
+                    <div className="text-center pt-3">
+                        <Pagination
+                            current={currentPage}
+                            pageSize={pageSize}
+                            total={transactions.length}
+                            onChange={handlePageChange}
+                        />
+                    </div>
+                )}
+            </div>
         </>
-    )
+    );
 }

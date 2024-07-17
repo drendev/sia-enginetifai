@@ -221,10 +221,10 @@ const AddTransaction = () => {
         className='flex-1'
         label="Transaction Method"
         name="transactionMethod"
-        initialValue='Delivery'
+        initialValue='Cash On Delivery'
       >
         <Select>
-          <Option value={'Cash on Delivery'}>Delivery</Option>
+          <Option value={'Cash on Delivery'}>Cash On Delivery</Option>
           <Option value={'Paid in Store'}>Paid in Store</Option>
         </Select>
       </Form.Item>
