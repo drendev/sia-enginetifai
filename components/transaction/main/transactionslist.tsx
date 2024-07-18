@@ -1,9 +1,9 @@
 "use client";
 
-import { Input, Pagination, Skeleton } from 'antd';
+import { Avatar, Input, Pagination } from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
 import { useState, useEffect } from 'react';
-import moment from 'moment';
+import moment from 'moment-timezone';
 
 interface Transaction {
     id: number;
@@ -12,6 +12,7 @@ interface Transaction {
     paymentMethod: string;
     deliveryDate: string;
     createAt: string;
+    picture: string[]; // Ensure picture is an array of strings
 }
 
 export function TransactionsList() {
@@ -118,7 +119,18 @@ export function TransactionsList() {
                         currentTransactions.map((item) => (
                             <div key={item.id} className="flex hover:bg-red-primary/5 font-sans text-slate-800 dark:text-slate-200">
                                 <div className="p-2 flex-1">{item.id}</div>
-                                <div className="p-2 flex-1">{item.engineName}</div>
+                                <div className="p-2 flex-1">
+                                    <Avatar.Group 
+                                        max={{
+                                        count: 2,
+                                        style: { color: 'red-primary/10', backgroundColor: '#BB4747', cursor: 'pointer' },
+                                        popover: { trigger: 'click' },
+                                    }}>
+                                        {item.picture.map((pic, index) => (
+                                            pic ? <Avatar key={index} src={pic} /> : <Avatar key={index}>A</Avatar>
+                                        ))}
+                                    </Avatar.Group>
+                                </div>
                                 <div className="p-2 flex-1">{formatCurrency(item.totalPrice)}</div>
                                 <div className="p-2 flex-1">{item.paymentMethod}</div>
                                 <div className="p-2 flex-1">{formatDate(item.deliveryDate)}</div>
