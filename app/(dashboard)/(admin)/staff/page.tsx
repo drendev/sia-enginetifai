@@ -3,7 +3,7 @@
 import { useEffect, useState, useRef, createContext } from "react";
 import * as z from "zod";
 import { useRouter } from "next/navigation";
-import { useForm, Controller } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import type { RadioChangeEvent } from "antd";
 
@@ -37,16 +37,17 @@ const FormSchema = z
     password: z
       .string()
       .min(1, "Password is required")
-      .min(8, "Password must have at least 8 characters"),
+      .min(8, "Password must have than 8 characters"),
     confirmPassword: z.string().min(1, "Password confirmation is required"),
-    role: z.enum(["admin", "employee", "courier"]).optional(),
+    role: z.enum(["user", "admin"]).optional(),
   })
   .refine((data) => data.password === data.confirmPassword, {
     path: ["confirmPassword"],
-    message: "Passwords do not match",
+    message: "Password do not match",
   });
 
 export default function Employees() {
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   const [modal, contextHolder] = Modal.useModal();
   const [showDelModal, setShowDelModal] = useState(false);
   // Users Data
@@ -66,9 +67,13 @@ export default function Employees() {
   const [checkUsername, setCheckUsername] = useState<string | undefined>(
     undefined
   );
-  const [checkUsernameObj, setCheckUsernameObj] = useState<User | undefined>(
-    undefined
-  );
+  const [checkEmail, setCheckEmail] = useState<string | undefined>(undefined);
+  const [checkIfExistingUsername, setCheckIfExistingUsername] = useState<
+    User | undefined
+  >(undefined);
+  const [checkIfExistingEmail, setCheckIfExistingEmail] = useState<
+    User | undefined
+  >(undefined);
   const pageSize = 6;
   const roles: string[] = ["No Filter", "employee", "admin", "courier"];
 
@@ -138,6 +143,8 @@ export default function Employees() {
   }, []);
 
   // Create User
+
+  // Check if username is existing
   useEffect(() => {
     const fetchData = async () => {
       if (!checkUsername) return setCheckUsername(undefined);
@@ -149,11 +156,41 @@ export default function Employees() {
         }
       );
       const data = await res.json();
-      setCheckUsernameObj(data);
+      setCheckIfExistingUsername(data);
     };
 
     fetchData();
   }, [checkUsername]);
+
+  // Check if email is existing
+
+  useEffect(() => {
+    const fetchData = async () => {
+      if (!checkEmail) return setCheckEmail(undefined);
+
+      const res = await fetch(
+        `/api/staffCheck/checkEmail?email=${checkEmail}`,
+        {
+          method: "POST",
+        }
+      );
+      const data = await res.json();
+      setCheckIfExistingEmail(data);
+    };
+
+    fetchData();
+  }, [checkEmail]);
+
+  const form = useForm<z.infer<typeof FormSchema>>({
+    resolver: zodResolver(FormSchema),
+    defaultValues: {
+      username: "",
+      email: "",
+      password: "",
+      confirmPassword: "",
+      role: "admin",
+    },
+  });
 
   const onChange = (e: RadioChangeEvent) => {
     console.log("radio checked", e.target.value);
@@ -288,21 +325,6 @@ export default function Employees() {
     setIsModalOpen(false);
   };
 
-  const {
-    control,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<z.infer<typeof FormSchema>>({
-    resolver: zodResolver(FormSchema),
-    defaultValues: {
-      username: "",
-      email: "",
-      password: "",
-      confirmPassword: "",
-      role: "admin",
-    },
-  });
-
   return (
     <>
       <div className="pt-20 pl-10 pr-10 ">
@@ -372,7 +394,7 @@ export default function Employees() {
               labelCol={{ span: 8 }}
               wrapperCol={{ span: 16 }}
               style={{ maxWidth: 600 }}
-              onFinish={handleSubmit(onSubmit)}
+              onFinish={onSubmit}
               autoComplete="off"
             >
               <Form.Item
@@ -382,11 +404,9 @@ export default function Employees() {
                   { required: true, message: "Please input username" },
                   () => ({
                     validator(_, value) {
-                      console.log(value);
-                      console.log(checkUsernameObj?.username);
                       if (value === undefined) {
                         return Promise.reject();
-                      } else if (value === checkUsernameObj?.username) {
+                      } else if (value === checkIfExistingUsername?.username) {
                         return Promise.reject("Username already exists");
                       } else if (value.length < 5 && value.length > 1) {
                         return Promise.reject("Minimum 5 characters required.");
@@ -404,85 +424,13 @@ export default function Employees() {
 
               <Form.Item
                 label="Role"
-                validateStatus={errors.role ? "error" : ""}
-                help={errors.role?.message}
-              >
-                <Controller
-                  name="role"
-                  control={control}
-                  render={({ field }) => (
-                    <Radio.Group {...field} onChange={onChange} value={value}>
-                      <Radio value="admin">Admin</Radio>
-                      <Radio value="employee">Employee</Radio>
-                      <Radio value="courier">Courier</Radio>
-                    </Radio.Group>
-                  )}
-                />
-              </Form.Item>
-
-              <Form.Item
-                label="Email"
-                validateStatus={errors.email ? "error" : ""}
-                help={errors.email?.message}
-              >
-                <Controller
-                  name="email"
-                  control={control}
-                  render={({ field }) => <Input {...field} />}
-                />
-              </Form.Item>
-
-              <Form.Item
-                label="Password"
-                validateStatus={errors.password ? "error" : ""}
-                help={errors.password?.message}
-              >
-                <Controller
-                  name="password"
-                  control={control}
-                  render={({ field }) => <Input.Password {...field} />}
-                />
-              </Form.Item>
-
-              <Form.Item
-                label="Confirm Password"
-                validateStatus={errors.confirmPassword ? "error" : ""}
-                help={errors.confirmPassword?.message}
-              >
-                <Controller
-                  name="confirmPassword"
-                  control={control}
-                  render={({ field }) => <Input.Password {...field} />}
-                />
-              </Form.Item>
-
-              <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
-                <Button type="primary" htmlType="submit">
-                  Submit
-                </Button>
-              </Form.Item>
-            </Form>
-
-            {/* <Form
-              labelCol={{ span: 8 }}
-              wrapperCol={{ span: 16 }}
-              style={{ maxWidth: 600 }}
-              onFinish={onSubmit}
-              autoComplete="off"
-            >
-              
-
-              <Form.Item
-                label="Role"
                 name="role"
-                rules={[
-                  { required: true, message: "Please input your username!" },
-                ]}
+                rules={[{ required: true, message: "Please select a role!" }]}
               >
                 <Radio.Group onChange={onChange} value={value}>
-                  <Radio value={"admin"}>Admin</Radio>
-                  <Radio value={"employee"}>Employee</Radio>
-                  <Radio value={"courier"}>Courier</Radio>
+                  <Radio value="admin">Admin</Radio>
+                  <Radio value="employee">Employee</Radio>
+                  <Radio value="courier">Courier</Radio>
                 </Radio.Group>
               </Form.Item>
 
@@ -491,9 +439,28 @@ export default function Employees() {
                 name="email"
                 rules={[
                   { required: true, message: "Please input your email!" },
+                  () => ({
+                    validator(_, value) {
+                      console.log(value);
+                      console.log(checkIfExistingEmail);
+                      if (value == undefined || value == "") {
+                        return Promise.reject();
+                      } else if (!emailRegex.test(value)) {
+                        return Promise.reject("Invalid email format!");
+                      } else if (value === checkIfExistingEmail?.email) {
+                        return Promise.reject("Email already exists");
+                      } else if (value.length < 5 && value.length > 1) {
+                        return Promise.reject("Minimum 5 characters required.");
+                      }
+                      return Promise.resolve();
+                    },
+                  }),
                 ]}
               >
-                <Input />
+                <Input
+                  value={checkEmail}
+                  onChange={(e) => setCheckEmail(e.target.value)}
+                />
               </Form.Item>
 
               <Form.Item
@@ -501,26 +468,46 @@ export default function Employees() {
                 name="password"
                 rules={[
                   { required: true, message: "Please input your password!" },
-                ]}
-              >
-                <Input.Password />
-              </Form.Item>
-              <Form.Item
-                label="Confirm Password"
-                name="confirmPassword"
-                rules={[
-                  { required: true, message: "Please input your password!" },
+                  () => ({
+                    validator(_, value) {
+                      if (value.length < 8 && value.length > 1) {
+                        return Promise.reject("Password is too short");
+                      }
+                      return Promise.resolve();
+                    },
+                  }),
+                  
                 ]}
               >
                 <Input.Password />
               </Form.Item>
 
+              <Form.Item
+                label="Confirm Password"
+                name="confirmPassword"
+                dependencies={["password"]}
+                rules={[
+                  { required: true, message: "Please confirm your password!" },
+                  ({ getFieldValue }) => ({
+                    validator(_, value) {
+                      if (!value || getFieldValue("password") === value) {
+                        return Promise.resolve();
+                      }
+                      return Promise.reject(
+                        new Error("The two passwords do not match!")
+                      );
+                    },
+                  }),
+                ]}
+              >
+                <Input.Password />
+              </Form.Item>
               <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
                 <Button type="primary" htmlType="submit" loading={loadings}>
                   Submit
                 </Button>
               </Form.Item>
-            </Form> */}
+            </Form>
           </Modal>
         </div>
 
