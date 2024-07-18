@@ -37,7 +37,7 @@ export async function POST(req: Request) {
         totalPrice: transactions.totalPrice,
         deliveryDate: transactions.deliveryDate,
         deliveryStatus: transactions.deliveryInformation.flatMap(delivery => {
-            return delivery.deliverStatus[0];
+            return delivery.deliverStatus;
         }),
     }));
 
