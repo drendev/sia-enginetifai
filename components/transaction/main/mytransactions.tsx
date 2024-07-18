@@ -8,10 +8,11 @@ import moment from 'moment-timezone';
 
 interface MyTransactions {
     id: string;
-    delivery: string;
+    delivery: boolean;
     totalPrice: string;
     createAt: string;
     deliveryStatus: string;
+    deliveryDate: string;
 }
 
 export function MyTransactions() {
@@ -52,7 +53,29 @@ export function MyTransactions() {
         setCurrentPage(page);
     };
 
-    const currentTransactions = transactions.slice(
+    const filteredTransactions = transactions.map((item) => {
+        const now = moment();
+        const deliveryDate = moment(item.deliveryDate);
+
+        if (deliveryDate.isAfter(now, 'day') || item.deliveryStatus === 'pending') {
+            item.deliveryStatus = 'pending';
+        } else if (deliveryDate.isSame(now, 'day') || item.deliveryStatus === 'active') {
+            item.deliveryStatus = 'active';
+        }
+
+        return item;
+    }).filter((item) => {
+        if (status === 'done') {
+            return item.deliveryStatus === 'done' || !item.delivery;
+        } else if (status === 'active') {
+            return item.deliveryStatus === 'active' && item.delivery;
+        } else if (status === 'pending') {
+            return item.deliveryStatus === 'pending';
+        }
+        return true;
+    });
+
+    const currentTransactions = filteredTransactions.slice(
         (currentPage - 1) * pageSize,
         currentPage * pageSize
     );
@@ -137,12 +160,12 @@ export function MyTransactions() {
                         ))
                     )}
                 </div>
-                {transactions.length > 0 && (
+                {filteredTransactions.length > 0 && (
                     <div className="text-center pt-3">
                         <Pagination
                             current={currentPage}
                             pageSize={pageSize}
-                            total={transactions.length}
+                            total={filteredTransactions.length}
                             onChange={handlePageChange}
                         />
                     </div>
