@@ -32,18 +32,28 @@ interface User {
 
 const FormSchema = z
   .object({
-    username: z.string().min(1, "Username is required").max(100),
-    email: z.string().min(1, "Email is required").email("Invalid email"),
-    password: z
+    usernameInput: z
       .string()
-      .min(1, "Password is required")
-      .min(8, "Password must have than 8 characters"),
-    confirmPassword: z.string().min(1, "Password confirmation is required"),
-    role: z.enum(["user", "admin"]).optional(),
+      .min(5, "Minimum 5 characters required.")
+      .max(100)
+      .refine((username) => username.trim().length > 0, {
+        message: "Username is required",
+      }),
+    role: z.enum(["admin", "employee", "courier"]),
+    email: z
+      .string()
+      .email("Invalid email format")
+      .min(5, "Minimum 5 characters required.")
+      .max(100)
+      .refine((email) => email.trim().length > 0, {
+        message: "Email is required",
+      }),
+    password: z.string().min(8, "Password must have at least 8 characters"),
+    confirmPassword: z.string(),
   })
   .refine((data) => data.password === data.confirmPassword, {
+    message: "Passwords do not match",
     path: ["confirmPassword"],
-    message: "Password do not match",
   });
 
 export default function Employees() {
@@ -184,9 +194,9 @@ export default function Employees() {
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
-      username: "",
+      usernameInput: "",
       email: "",
-      password: "",
+      password: " ",
       confirmPassword: "",
       role: "admin",
     },
@@ -199,13 +209,14 @@ export default function Employees() {
 
   const onSubmit = async (values: z.infer<typeof FormSchema>) => {
     setLoadings(true);
+    console.log(values);
     const response = await fetch("/api/user", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        username: values.username,
+        username: values.usernameInput,
         email: values.email,
         password: values.password,
         role: values.role,
@@ -470,13 +481,13 @@ export default function Employees() {
                   { required: true, message: "Please input your password!" },
                   () => ({
                     validator(_, value) {
+                      console.log("values: ", { value });
                       if (value.length < 8 && value.length > 1) {
                         return Promise.reject("Password is too short");
                       }
                       return Promise.resolve();
                     },
                   }),
-                  
                 ]}
               >
                 <Input.Password />
