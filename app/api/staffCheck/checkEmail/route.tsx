@@ -6,14 +6,14 @@ import { NextResponse } from 'next/server';
 export async function POST(req: Request) {
     try {
         const url = new URL(req.url);
-        const username = url.searchParams.get('username') ?? '';
+        const email = url.searchParams.get('email') ?? '';
 
         const checkStaff = await db.user.findUnique({
             where: {
-                username: username,
+                email: email,
             },
             select: {
-                username: true,
+                email: true,
             }
         });
 
