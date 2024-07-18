@@ -1,5 +1,4 @@
 import { db } from '@/lib/db';
-import { create } from 'domain';
 import { NextResponse } from 'next/server';
 
 export async function POST() {

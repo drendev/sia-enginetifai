@@ -62,7 +62,7 @@ export function TransactionsMainPage() {
                                     </div>
                                 </div>
                                     <TransactionsCard />
-                            </div>
+                            </div> 
                         </div>
                     
                         <div className="flex flex-col md:flex-none w-full md:w-2/6 space-y-4 p-6 md:p-0 gap-4">

@@ -119,7 +119,7 @@ const CalendarTransaction: React.FC = () => {
                     </div>
                     <div className="divide-y">
                       {transactions.map((item) => (
-                              <Link key={item.id} href={'test'}>
+                              <Link key={item.id} href={`/transactions/view/${item.id}`}>
                                   <div key={item.id} className="flex hover:bg-red-primary/5">
                                       <div className="p-4 flex-1">
                                         <Badge status={item.delivery ? "success" : "processing"} text={item.delivery ? "Delivery" : "Store"} className='text-xs'/>

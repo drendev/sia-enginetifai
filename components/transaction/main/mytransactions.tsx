@@ -18,7 +18,7 @@ interface MyTransactions {
 export function MyTransactions() {
     const { data: session } = useSession();
     const { Option } = Select;
-    const [status, setStatus] = useState("done");
+    const [status, setStatus] = useState("all");
     const [transactions, setTransactions] = useState([] as MyTransactions[]);
     const [currentPage, setCurrentPage] = useState(1);
 
@@ -71,6 +71,8 @@ export function MyTransactions() {
             return item.deliveryStatus === 'active' && item.delivery;
         } else if (status === 'pending') {
             return item.deliveryStatus === 'pending';
+        } else if (status === 'all') {
+            return true;
         }
         return true;
     });
@@ -125,10 +127,11 @@ export function MyTransactions() {
             <div className="flex justify-between pt-3">
                 <h1 className='text-red-900 font-sans font-bold text-xl pb-2'> My Transactions </h1>
                 <Select
-                    defaultValue="done"
+                    defaultValue="all"
                     style={{ width: 120, marginBottom: 20 }}
                     onChange={(value) => setStatus(value)}
                 >
+                    <Option value="all">All</Option>
                     <Option value="active">Active</Option>
                     <Option value="pending">Pending</Option>
                     <Option value="done">Done</Option>
@@ -146,7 +149,7 @@ export function MyTransactions() {
                         <div className="text-center p-4">No transactions</div>
                     ) : (
                         currentTransactions.map((item) => (
-                            <Link key={item.id} href={'test'}>
+                            <Link key={item.id} href={`/transactions/view/${item.id}`}>
                                 <div key={item.id} className="flex hover:bg-red-primary/5 font-sans text-slate-800 dark:text-slate-200">
                                     <div className="p-2 flex-1">
                                         <Badge status={item.delivery ? "success" : "processing"} text={item.delivery ? "Delivery" : "Store"} className='text-xs' />

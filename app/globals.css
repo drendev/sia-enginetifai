@@ -350,6 +350,12 @@ html {
 }
 .custom-dots li button {
   @apply bg-red-primary !important; /* Change this to your desired color */
+  @apply relative
+}
+
+.custom-dots1 li button {
+  @apply bg-red-50 !important; /* Change this to your desired color */
+  @apply relative
 }
 
 .flip-card {
@@ -396,3 +402,4 @@ html {
 .group:hover .transform {
   transform: scale(1.05);
 }
+

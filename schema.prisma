@@ -151,18 +151,18 @@ model TransactionEngine {
 
 model Delivery {
   id            Int         @id @default(autoincrement())
-  transaction   Transaction @relation(fields: [transactionId, transactionBy, paymentMethod, deliveryDate], references: [id, transactionUser, paymentMethod, deliveryDate])
+  transaction   Transaction @relation(fields: [transactionId, transactionBy, paymentMethod, deliveryDate], references: [id, transactionUser, paymentMethod, deliveryDate], onDelete: Cascade)
   transactionId Int
   transactionBy String
   paymentMethod String
   deliveryDate  String
-  deliveryTime  String
-  address       String
-  city          String
-  latitude      Decimal
-  longitude     Decimal
-  deliveryUser  String
-  deliverStatus String
+  deliveryTime  String?
+  address       String?
+  city          String?
+  latitude      Decimal?
+  longitude     Decimal?
+  deliveryUser  String?
+  deliverStatus String?
   createAt      DateTime    @default(now())
   updatedAt     DateTime    @updatedAt
 }

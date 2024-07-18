@@ -4,6 +4,7 @@ import { Avatar, Input, Pagination } from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
 import { useState, useEffect } from 'react';
 import moment from 'moment-timezone';
+import Link from 'next/link';
 
 interface Transaction {
     id: number;
@@ -117,14 +118,15 @@ export function TransactionsList() {
                         <div className="text-center p-4">No transactions</div>
                     ) : (
                         currentTransactions.map((item) => (
-                            <div key={item.id} className="flex hover:bg-red-primary/5 font-sans text-slate-800 dark:text-slate-200">
+                            <Link href={`/transactions/view/${item.id}`} key={item.id} className="flex hover:bg-red-primary/5 font-sans text-slate-800 dark:text-slate-200">
                                 <div className="p-2 flex-1">{item.id}</div>
                                 <div className="p-2 flex-1">
                                     <Avatar.Group 
+                                        shape='square'
                                         max={{
                                         count: 2,
                                         style: { color: 'red-primary/10', backgroundColor: '#BB4747', cursor: 'pointer' },
-                                        popover: { trigger: 'click' },
+                                        popover: { trigger: 'hover' },
                                     }}>
                                         {item.picture.map((pic, index) => (
                                             pic ? <Avatar key={index} src={pic} /> : <Avatar key={index}>A</Avatar>
@@ -135,7 +137,7 @@ export function TransactionsList() {
                                 <div className="p-2 flex-1">{item.paymentMethod}</div>
                                 <div className="p-2 flex-1">{formatDate(item.deliveryDate)}</div>
                                 <div className="p-2 flex-1">{formatTransactionTime(item.createAt)}</div>
-                            </div>
+                            </Link>
                         ))
                     )}
                 </div>
