@@ -22,6 +22,7 @@ export async function POST(req: Request) {
             delivery: true,
             totalPrice: true,
             createAt: true,
+            deliveryDate: true,
             deliveryInformation: {
                 select: {
                     deliverStatus: true,
@@ -34,6 +35,7 @@ export async function POST(req: Request) {
         delivery: transactions.delivery,
         createAt: transactions.createAt,
         totalPrice: transactions.totalPrice,
+        deliveryDate: transactions.deliveryDate,
         deliveryStatus: transactions.deliveryInformation.flatMap(delivery => {
             return delivery.deliverStatus[0];
         }),
