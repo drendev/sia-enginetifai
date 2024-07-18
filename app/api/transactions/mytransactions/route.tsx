@@ -40,7 +40,7 @@ export async function POST(req: Request) {
             return delivery.deliverStatus;
         }),
     }));
-
+    
     return NextResponse.json(response);
     } catch (error) {
         console.error("Error fetching transactions:", error);
