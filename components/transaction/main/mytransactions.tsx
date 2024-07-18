@@ -76,7 +76,7 @@ export function MyTransactions() {
         }
         return true;
     });
-
+ 
     const currentTransactions = filteredTransactions.slice(
         (currentPage - 1) * pageSize,
         currentPage * pageSize
