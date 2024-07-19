@@ -77,7 +77,7 @@ export function RecentEngineTransaction() {
                     </div>
                     <div className="divide-y">
                         {transaction.map((item) => (
-                            <Link key={item.engineId} href={'test'}>
+                            <Link key={item.engineId} href={`/transactions/view/${item.engineId}`}>
                                 <div key={item.engineId} className="flex hover:bg-red-primary/5">
                                     <div className="p-4 flex-1">
                                         <Avatar.Group 

@@ -11,9 +11,9 @@ export function EngineTypesChart() {
   useEffect(() => {
     if (chartRef.current) {
       const data = {
-        labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'July', 'July', 'July',],
+        labels: ['Silent Diesel Generator', 'Open Type Diesel Generator', 'Diesel Engine', 'Twin-Cylinder Diesel Engine', 'Twin-Cylinder Diesel Generator', 'Diesel High Pressure Pump', 'Gasoline Engine', 'Inverter Generator', 'Tillers', 'Gasoline Iron Pump',],
         datasets: [{
-          label: 'Dataset 1',
+          label: 'Transactions',
           data: [30, 50, 30, 40, 50, 60, 70, 90, 20, 10],
           backgroundColor: '#BB4747',
           borderRadius: 10,

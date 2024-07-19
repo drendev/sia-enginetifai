@@ -105,7 +105,7 @@ export function EngineList() {
                     </Link>
                 </div>
                 <div className='flex justify-start gap-2 mb-4'>
-                    <span className='text-lg font-sans text-red-800 font-semibold'> Filter: </span>
+                    <span className='text-md font-sans text-red-800 font-semibold'> Filter: </span>
                     <Select
                         showSearch
                         className='w-72'
