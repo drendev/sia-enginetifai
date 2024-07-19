@@ -31,10 +31,9 @@ interface Engine {
   engineName: string[]
 }
 
-const optionsWithDisabled = [
-  { label: 'Cash On Delivery', value: 'Cash On Delivery' },
-  { label: 'Paid', value: 'Paid' },
-];
+interface TransactionId {
+  id: number;
+}
 
 const AddTransaction = () => {
   const [engineName, setEngineName] = useState<string[]>([]);
@@ -45,9 +44,10 @@ const AddTransaction = () => {
   const { data: session } = useSession();
   const router = useRouter();
   const user = session?.user.username;
-  const [value4, setValue4] = useState('Apple');
   const [selectedMethod, setSelectedMethod] = useState('Cash On Delivery');
   const [loading, setLoading] = useState<boolean>(false);
+  const [transactionId, setTransactionId] = useState<TransactionId | null>(null);
+
   useEffect(() => {
     const fetchData = async () => {
       if (!engineName) return setEngineName([]);
@@ -122,8 +122,15 @@ const AddTransaction = () => {
       }),
     });
 
+    const data = await response.json();
+
     if (responseStock.ok && response.ok) {
-      router.push('/transactions');
+      setTransactionId(data.id)
+      if(values.delivery == true) {
+      router.push(`/deliverytracking/forms/${data.id}`);
+      } else {
+      router.push(`/transactions`);
+      }
     } else {
       console.log('Something went wrong.');
       setLoading(false);
@@ -142,10 +149,6 @@ const AddTransaction = () => {
 
   const onClose = () => {
     setOpen(false);
-  };
-
-  const onChange4 = ({ target: { value } }: RadioChangeEvent) => {
-    setValue4(value);
   };
 
   const handleSelect = (method: any) => {
@@ -182,7 +185,7 @@ const AddTransaction = () => {
             <div className="flex flex-col gap-4">
               <h3 className="text-center text-xl md:text-3xl font-bold font-sans text-red-950"> <span className="bg-highlight bg-no-repeat bg-left-top bg-contain pt-6">Add Transaction</span> </h3>
               <Form
-                className='flex flex-col md:flex-row mx-auto w-[55rem] gap-4 px-2'
+                className='flex flex-col md:flex-row mx-auto w-full md:w-[55rem] gap-4 px-2'
                 onFinish={onSubmit}
                 autoComplete="off"
                 requiredMark={false}

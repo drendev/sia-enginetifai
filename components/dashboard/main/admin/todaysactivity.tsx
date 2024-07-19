@@ -44,19 +44,19 @@ export function TodayActivity() {
         {
             title:"Transactions",
             number: transaction?.today || 0,
-            href:"#",
+            href:"/transactions",
             background: "bg-transactions",
         },
         {
             title:"Total Sales",
             number: transaction?.profit || 0,
-            href:"#",
+            href:"/transactions",
             background: "bg-salesbg",
         },
         {
             title:"Average Order",
             number: transaction?.averageWeeklyTransactions || 0,
-            href:"#",
+            href:"/transactions",
             background: "bg-orderbg",
         },
     ];

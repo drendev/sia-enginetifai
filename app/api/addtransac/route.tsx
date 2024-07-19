@@ -54,10 +54,16 @@ export async function POST(req: Request) {
         deliveryDate,
         paymentMethod,
         createAt: dateToday,
+        deliveryInformation: {
+          create: {
+            deliverStatus: 'pending',
+          }
+        }
       },
+      
     });
 
-    return NextResponse.json({ message: 'Success' });
+    return NextResponse.json(newTransaction);
 
   } catch (error: any) {
     console.error('Error occurred:', error);
