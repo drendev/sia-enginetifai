@@ -6,7 +6,7 @@ import { useSession } from "next-auth/react";
 import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Form, DatePicker, InputNumber, Select, ConfigProvider, Switch, Badge, List, Avatar, Drawer, Image, Spin,  } from 'antd';
+import { Form, DatePicker, InputNumber, Select, ConfigProvider, Switch, Badge, List, Avatar, Drawer, Image, Spin, notification } from 'antd';
 import dayjs from 'dayjs';
 import EngineButton from '../ui/index/button';
 import Grid from '../ui/engineforms/FormGrid';
@@ -47,6 +47,20 @@ const AddTransaction = () => {
   const [selectedMethod, setSelectedMethod] = useState('Cash On Delivery');
   const [loading, setLoading] = useState<boolean>(false);
   const [transactionId, setTransactionId] = useState<TransactionId | null>(null);
+  const [api, contextHolder] = notification.useNotification();
+
+  type NotificationType = 'error';
+
+  const openNotificationWithIcon = (type: NotificationType) => {
+    api[type]({
+      message: 'Something went wrong',
+      description:
+        'Please check the form and try again.',
+      showProgress: true,
+      pauseOnHover: true,
+    });
+  };
+
 
   useEffect(() => {
     const fetchData = async () => {
@@ -134,6 +148,7 @@ const AddTransaction = () => {
     } else {
       console.log('Something went wrong.');
       setLoading(false);
+      openNotificationWithIcon('error');
     }
   };
 
@@ -180,6 +195,7 @@ const AddTransaction = () => {
           }
         }}
       >
+        {contextHolder}
         <div className="pt-8 pb-16 md:pb-0">
           <div className='items-center mx-auto flex flex-col'>
             <div className="flex flex-col gap-4">
@@ -267,7 +283,7 @@ const AddTransaction = () => {
                                 () => ({
                                   validator(_, value) {
                                     if (value % 1 !== 0 && value > 0) {
-                                      return Promise.reject('');
+                                      return Promise.reject('Invalid quantity');
                                     }
                                     if (engine && value > item.quantity) {
                                       return Promise.reject('Not enough stock');

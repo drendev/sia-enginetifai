@@ -177,7 +177,7 @@ const AddEngineForm = () => {
       })
 
       if(response.ok){
-          router.push('/')
+          router.push('/engines')
       }
       else {
           openNotificationWithIcon('error');
@@ -228,6 +228,9 @@ const AddEngineForm = () => {
           validator(_, value) {
             if (!value) {
               return Promise.resolve();
+            }
+            if (value.length > 30) {
+              return Promise.reject('Maximum Characters Limit Exceeded.');
             }
             if (value === engine?.engineName || value === !undefined) {
               return Promise.reject('Engine already exist');
@@ -313,7 +316,17 @@ const AddEngineForm = () => {
     <Form.Item
       label="Price"
       name="price"
-      rules={[{ required: true, message: 'Please input Engine Price' }]}
+      rules={[{ required: true, message: 'Please input Engine Price' },
+        () => ({
+          validator(_, value) {
+            if (value > 100000) {
+              return Promise.reject('Maximum price exceeded.');
+            }
+            return Promise.resolve();
+          },
+
+        })
+      ]}
     >
       <InputNumber />
     </Form.Item>
@@ -326,6 +339,9 @@ const AddEngineForm = () => {
           validator(_, value) {
             if (value.length < 10) {
               return Promise.reject('Minimum 10 characters required.');
+            }
+            else if (value.length > 300) {
+              return Promise.reject('Maximum characters limit exceeded.');
             }
             return Promise.resolve();
           },
