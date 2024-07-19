@@ -380,7 +380,7 @@ export default function EnginePageGrid({
 
                   {/* Recent Transaction */}
                   <div className="text-2xl font-bold font-sans mb-7 my-5">
-                    <span className="bg-fireworks bg-no-repeat bg-right-bottom bg-contain pb-4 text-red-900"> Recently Transacted </span>
+                     Recently Transacted
                   </div>
                   <div className="text-sm">
                     <div className="w-full">
