@@ -138,7 +138,7 @@ export function MyTransactions() {
                 </Select>
             </div>
 
-            <div className="w-full">
+            <div className="w-full text-sm">
                 <div className="bg-red-primary/15 font-sans flex font-bold">
                     <div className="text-left p-2 flex-1">Type</div>
                     <div className="text-left p-2 flex-1">Sales</div>

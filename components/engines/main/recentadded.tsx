@@ -77,7 +77,7 @@ export function RecentEngineAdded() {
                         <h4 className="text-sm font-semibold">{engine.engineName}</h4>
                         <p className="text-sm text-gray-400">
                             {formatTransactionTime(engine.engineAdded)}
-                        </p>
+                        </p> 
                     </div>
                     </Link>
                 ))}

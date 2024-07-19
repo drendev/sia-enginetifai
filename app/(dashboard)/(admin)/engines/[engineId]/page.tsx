@@ -118,12 +118,12 @@ export default function EnginePageGrid({
   const renderSpecifications = (specifications: EngineSpecification | null) => {
     if (!specifications) return null;
     return (
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-2 text-sm">
         {Object.entries(specifications).map(([key, value]) => {
           if (value) {
             return (
               <div key={key} className="p-2">
-                <span className="font-semibold">{key}:</span> <span className="text-red-950 dark:text-red-primary font-sans font-bold">{value}</span>
+                <span className="font-semibold">{key}:</span> <span className="text-red-900 dark:text-red-primary font-sans font-bold">{value}</span>
               </div>
             );
           }
@@ -382,12 +382,12 @@ export default function EnginePageGrid({
                   <div className="text-2xl font-bold font-sans mb-7 my-5">
                     <span className="bg-fireworks bg-no-repeat bg-right-bottom bg-contain pb-4 text-red-900"> Recently Transacted </span>
                   </div>
-                  <div className="text-md">
+                  <div className="text-sm">
                     <div className="w-full">
                       <div className="bg-red-primary/15 flex font-bold">
-                        <div className="text-left p-4 flex-1">Quantity</div>
-                        <div className="text-left p-4 flex-1">Total Sales</div>
-                        <div className="text-left p-4 flex-1">Time</div>
+                        <div className="text-left p-2 flex-1">Quantity</div>
+                        <div className="text-left p-2 flex-1">Total Sales</div>
+                        <div className="text-left p-2 flex-1">Time</div>
                       </div>
                       <div className="divide-y">
                         {sortedData.length > 0 ? (

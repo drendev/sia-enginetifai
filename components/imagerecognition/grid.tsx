@@ -1,6 +1,6 @@
 "use client";
 import Upload from "./form";
-import { Button, ConfigProvider, Spin, notification, Progress, Tooltip } from 'antd';
+import { Button, ConfigProvider, Spin, notification, Progress, Tooltip, Modal } from 'antd';
 import { LoadingOutlined } from '@ant-design/icons';
 import { useState } from 'react';
 import type { ProgressProps } from 'antd';
@@ -21,6 +21,7 @@ export function ImageRecognitionPage() {
     const [labels, setLabels] = useState<Label[]>([]);
     const [loading, setLoading] = useState<boolean>(false);
     const [api, contextHolder] = notification.useNotification();
+    const [isModalVisible, setIsModalVisible] = useState(false); // State for modal visibility
 
     // handle errors notification
     const openNotificationWithIcon = (type: NotificationType) => {
@@ -83,6 +84,14 @@ export function ImageRecognitionPage() {
         '100%': '#BB4747',
     };
 
+    const showModal = () => {
+        setIsModalVisible(true);
+    };
+
+    const handleCancel = () => {
+        setIsModalVisible(false);
+    };
+
     return (
         <div>
             <ConfigProvider
@@ -90,7 +99,7 @@ export function ImageRecognitionPage() {
                     token: {
                         colorPrimary: '#BB4747',
                         colorLink: '#BB4747',
-                        colorText: '#BB4747',
+                        colorText: 'text-slate-700',
                         colorBorder: '#BB4747',
                         colorBgContainerDisabled: 'bg-red-800',
                     },
@@ -107,11 +116,52 @@ export function ImageRecognitionPage() {
                                     <div className="mt-10 md:mt-10">
                                         <Button
                                             type="primary"
-                                            htmlType="submit"
+                                            htmlType="button"
                                             className='flex bg-red-primary hover:bg-red-primary font-bold rounded-full md:w-72 text-md h-auto py-2 px-7 tracking-wider border-red-800 border-2 border-b-4 active:border-b-2'
+                                            onClick={showModal} // Show modal on button click
                                         >
                                             Terms of use
                                         </Button>
+                                        <Modal 
+                                            title="Terms of Use for Image Recognition Service" 
+                                            open={isModalVisible} 
+                                            onCancel={handleCancel} 
+                                            footer={null} // Remove default footer
+                                        >
+                                            <p>
+                                                <div>
+                                                <div className="font-bold"> 1. Image Upload Requirements</div>
+                                                <div>
+                                                1.1. The Service only supports image files uploaded in the following file extensions: .jpg, .jpeg, .png, jfif, and .webp.
+                                                </div>
+                                                <div>
+                                                1.2. The quality and accuracy of the image recognition depend significantly on the quality and capture of the uploaded images. Users are advised to upload clear and high-resolution images for better recognition results.
+                                                </div>
+                                                </div>
+                                                <div>
+                                                <div className="font-bold"> 2. Detection Accuracy</div>
+                                                <div>
+                                                2.1. The accuracy of the image recognition may vary based on the quality of the uploaded image. The Service aims to provide accurate detection; however, it may not be accurate all the time.
+                                                </div>
+                                                <div>
+                                                2.2. The Service provides a confidence level for each detection. Any confidence level below 70% is not guaranteed to be accurate. Users should interpret these results with caution and should not rely solely on the Service for critical decisions.
+                                                </div>
+                                                </div>
+                                                <div>
+                                                <div className="font-bold"> 3. Limitations of the Service</div>
+                                                <div>
+                                                3.1. The Service is designed to detect engine types only. It does not support the detection of other objects or categories.
+                                                </div>
+                                                <div>
+                                                3.1. We do not guarantee that the Service will be error-free, uninterrupted, or free from unauthorized access. We will not be liable for any loss or damage caused by your reliance on the accuracy or timeliness of the information provided by the Service.
+                                                </div>
+                                                <div>
+                                                3.2. Users are responsible for ensuring that the images they upload comply with the supported file extensions and quality requirements specified in these Terms of Use.
+                                                </div>
+                                                </div>
+                                            </p>
+                                            
+                                        </Modal>
                                     </div>
                                 </div>
                                 <div className="flex flex-col md:grid md:grid-cols-2 gap-5">

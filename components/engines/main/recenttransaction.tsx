@@ -13,6 +13,7 @@ interface RecentTransaction {
     transactionUser: string;
     delivery: boolean;
     user: string;
+    pictures: string[]; // Added pictures array
 }
 
 export function RecentEngineTransaction() {
@@ -20,10 +21,9 @@ export function RecentEngineTransaction() {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        // Simulate a data fetch
         setTimeout(() => {
             setLoading(false);
-        }, 1000); // Adjust the timeout duration as needed
+        }, 1000);
     }, []);
     
     useEffect(() => {
@@ -44,7 +44,7 @@ export function RecentEngineTransaction() {
     const dateToday = moment.tz(utcDate, timeZone).format('YYYY-MM-DDTHH:mm:ss.SSS[Z]');
 
     const formatTransactionTime = (dateTime: string) => {
-        const now = moment.tz(dateToday, timeZone);  // Use dateToday instead of the current moment
+        const now = moment.tz(dateToday, timeZone);
         const transactionTime = moment.tz(dateTime, timeZone);
         const diffMinutes = now.diff(transactionTime, 'minutes');
         const diffHours = now.diff(transactionTime, 'hours');
@@ -63,26 +63,34 @@ export function RecentEngineTransaction() {
     
     return (
         <> 
-            <div className="text-2xl font-bold font-sans mb-7 my-5">
-                <span className="bg-fireworks bg-no-repeat bg-right-bottom bg-contain pb-4 text-red-900"> Recently Transacted </span>
+            <div className="text-lg font-bold font-sans mb-7 my-5 text-slate-300 md:text-red-900">
+                 Recently Transacted
             </div>
             <Skeleton className='pt-10' loading={loading} active>
             <div className="text-md">
-                <div className="w-full">
+                <div className="w-full text-sm">
                     <div className="bg-red-primary/15 flex font-bold">
-                        <div className="text-left p-4 flex-1">Engine</div>
-                        <div className="text-left p-4 flex-1">Type</div>
-                        <div className="text-left p-4 flex-1">Time</div>
-                        <div className="text-left p-4 flex-1">Staff</div>
+                        <div className="text-left p-2 flex-1">Engine</div>
+                        <div className="text-left p-2 flex-1">Type</div>
+                        <div className="text-left p-2 flex-1">Time</div>
+                        <div className="text-left p-2 flex-1">Staff</div>
                     </div>
                     <div className="divide-y">
                         {transaction.map((item) => (
                             <Link key={item.engineId} href={'test'}>
                                 <div key={item.engineId} className="flex hover:bg-red-primary/5">
                                     <div className="p-4 flex-1">
-                                        {item.engineName.length > 1 
-                                            ? `${item.engineName[0]} +${item.engineName.length - 1}`
-                                            : item.engineName[0]}
+                                        <Avatar.Group 
+                                            shape='square'
+                                            max={{
+                                                count: 2,
+                                                style: { color: 'red-primary/10', backgroundColor: '#BB4747', cursor: 'pointer' },
+                                                popover: { trigger: 'hover' },
+                                            }}>
+                                            {item.pictures.map((pic, index) => (
+                                                pic ? <Avatar key={index} src={pic} /> : <Avatar key={index}>A</Avatar>
+                                            ))}
+                                        </Avatar.Group>
                                     </div>
                                     <div className="p-4 flex-1">
                                         <Badge status={item.delivery ? "success" : "processing"} text={item.delivery ? "Delivery" : "Store"} className='text-xs'/>
