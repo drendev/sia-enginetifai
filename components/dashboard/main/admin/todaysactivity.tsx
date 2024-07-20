@@ -1,22 +1,20 @@
 "use client"
 
-import React from "react";
-import { useEffect, useState } from "react"
+import React, { useEffect, useState } from "react";
 import { TodayCard } from "./todaycard";
 
-export interface TodaysActivityItem{
-    href:   string;
+export interface TodaysActivityItem {
+    href: string;
     number: any;
-    title:  string;
+    title: string;
     background: string;
 }
 
 interface TodaysActivity {
-    today: number,
-    profit: number,
-    averageWeeklyTransactions: number
+    today: number;
+    profit: number;
+    averageWeeklyTransactions: number;
 }
-
 
 export function TodayActivity() {
     // State to store the data
@@ -25,55 +23,62 @@ export function TodayActivity() {
     // Fetching data from the server
     useEffect(() => {
         const fetchEngineData = async () => {
-            
-        const res = await fetch('/api/datavisualization/todaysdata',{
-            method: 'POST',
-            next: {
-            revalidate: 2
-            }
-        })
-        const data = await res.json()
-        setTransaction(data)
-        }
+            const res = await fetch('/api/datavisualization/todaysdata', {
+                method: 'POST',
+                next: {
+                    revalidate: 2
+                }
+            });
+            const data = await res.json();
+            setTransaction(data);
+        };
 
-        fetchEngineData() 
-    }, [])
+        fetchEngineData();
+    }, []);
+
+    const formatToPhpCurrency = (value: number) => {
+        return new Intl.NumberFormat('en-PH', {
+            style: 'currency',
+            currency: 'PHP',
+            minimumFractionDigits: 0,
+            maximumFractionDigits: 0
+        }).format(value);
+    };
 
     // Data to be displayed
     const todaysActivity = [
         {
-            title:"Transactions",
+            title: "Transactions",
             number: transaction?.today || 0,
-            href:"/transactions",
+            href: "/transactions",
             background: "bg-transactions",
         },
         {
-            title:"Total Sales",
-            number: transaction?.profit || 0,
-            href:"/transactions",
+            title: "Total Sales",
+            number: transaction ? formatToPhpCurrency(transaction.profit) : 'PHP 0',
+            href: "/transactions",
             background: "bg-salesbg",
         },
         {
-            title:"Average Order",
+            title: "Average Order",
             number: transaction?.averageWeeklyTransactions || 0,
-            href:"/transactions",
+            href: "/transactions",
             background: "bg-orderbg",
         },
     ];
 
     return (
         <>
-        <h1 className="text-3xl md:text-4xl font-bold font-sans text-red-950 mb-5 mt-2 md:mt-0">
-            <span className="bg-highlight bg-no-repeat bg-left-top bg-contain pt-6">Todays Activity</span> 
-        </h1>
-        <div className="flex md:grid grid-cols-3 gap-2 flex-col">
-            {todaysActivity.map((item,i)=>{
-                return(
-                    <TodayCard item={item} key={i}/>  
-                );
-                })
-            }
-        </div>
+            <h1 className="text-3xl md:text-4xl font-bold font-sans text-red-950 mb-5 mt-2 md:mt-0">
+                <span className="bg-highlight bg-no-repeat bg-left-top bg-contain pt-6">Todays Activity</span>
+            </h1>
+            <div className="flex md:grid grid-cols-3 gap-2 flex-col">
+                {todaysActivity.map((item, i) => {
+                    return (
+                        <TodayCard item={item} key={i} />
+                    );
+                })}
+            </div>
         </>
-    )
+    );
 }
