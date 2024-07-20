@@ -85,7 +85,6 @@ const RecentTransactions: React.FC<EngineTypeTransactionProps> = ({ engineType, 
                                 <div className="p-4 text-center block text-red-950">No transactions found.</div>
                             ) : (
                                 transactions.map((transaction) => (
-                                    <Link key={transaction.transactionId} href={'test'}>
                                         <div className="flex hover:bg-red-primary/5">
                                             <div className="p-4 flex-1">
                                                 {transaction.quantity} pcs.
@@ -95,7 +94,6 @@ const RecentTransactions: React.FC<EngineTypeTransactionProps> = ({ engineType, 
                                             </div>
                                             <div className="p-4 flex-1">{formatTransactionTime(transaction.transactionDate)}</div>
                                         </div>
-                                    </Link>
                                 ))
                             )}
                         </div>
