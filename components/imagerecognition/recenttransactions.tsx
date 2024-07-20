@@ -85,7 +85,7 @@ const RecentTransactions: React.FC<EngineTypeTransactionProps> = ({ engineType, 
                                 <div className="p-4 text-center block text-red-950">No transactions found.</div>
                             ) : (
                                 transactions.map((transaction) => (
-                                        <div className="flex hover:bg-red-primary/5">
+                                        <div key={transaction.transactionId} className="flex hover:bg-red-primary/5">
                                             <div className="p-4 flex-1">
                                                 {transaction.quantity} pcs.
                                             </div>
