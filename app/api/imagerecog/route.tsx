@@ -22,7 +22,7 @@ export async function POST(req: Request) {
       },
       ProjectVersionArn: 'arn:aws:rekognition:us-east-1:381492280590:project/enginetifai/version/enginetifai.2024-07-14T04.35.07/1720902907646',
       MaxResults: 10,
-      MinConfidence: 10,
+      MinConfidence: 80,
     };
 
     try {

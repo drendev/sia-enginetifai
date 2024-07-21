@@ -1,223 +1,109 @@
-"use client";
-import React, { useEffect, useRef } from "react";
-import mapboxgl, { GeoJSONSourceRaw, Layer, Map } from "mapbox-gl";
+import React, { useEffect, useRef } from 'react';
+import mapboxgl from 'mapbox-gl';
+import 'mapbox-gl/dist/mapbox-gl.css';
 
-const mapContainerStyle = {
-    width: "100%",
-    height: "100vh",  
-    borderRadius: "50px",  
-  };
+const MapboxExample: React.FC = () => {
+  const mapContainerRef = useRef<HTMLDivElement>(null);
+  const mapRef = useRef<mapboxgl.Map | null>(null);
+  const userPath = useRef<GeoJSON.Position[]>([]);
 
-interface Vessel {
-id: number;
-name: string;
-coordinates: number[];
-path: VesselFeature[];
-}
+  // Define the type for geolocation result
+  interface GeolocateResult {
+    coords: {
+      latitude: number;
+      longitude: number;
+      altitude?: number;
+      accuracy: number;
+      altitudeAccuracy?: number;
+      heading?: number;
+      speed?: number;
+    };
+    timestamp: number;
+  }
 
-interface VesselFeatureProperties {
-name: string;
-}
+  useEffect(() => {
+    mapboxgl.accessToken = 'pk.eyJ1IjoiZHJlbmRldiIsImEiOiJjbG9yY2s4cHkwcGdkMmpuMHQwdDR0M2NuIn0.tcSIczUaEaDGwm_SA6gh_w';
 
-interface VesselFeature
-extends GeoJSON.Feature<GeoJSON.Point, VesselFeatureProperties> {}
+    if (mapContainerRef.current) {
+      mapRef.current = new mapboxgl.Map({
+        container: mapContainerRef.current,
+        style: 'mapbox://styles/mapbox/streets-v12',
+        center: [-24, 42],
+        zoom: 1
+      });
 
-const MapComponent: React.FC = () => {
-const mapContainer = useRef<HTMLDivElement>(null);
-const vessels: Vessel[] = [
-    {
-    id: 1,
-    name: "Vessel 1",
-    coordinates: [120.970665, 14.613915],
-    path: [],
-    },
+      // Add geolocate control to the map.
+      const geolocateControl = new mapboxgl.GeolocateControl({
+        positionOptions: {
+          enableHighAccuracy: true
+        },
+        trackUserLocation: true,
+        showUserHeading: true
+      });
 
-];
+      mapRef.current.addControl(geolocateControl);
 
-useEffect(() => {
-    mapboxgl.accessToken = "pk.eyJ1IjoiZHJlbmRldiIsImEiOiJjbHgwa2t6YjIwMWNzMmtzYTBiZnIzNG53In0.frLf9qdvpp34baFqC_ObCQ";
-
-    if (mapContainer.current) {
-    const map = new mapboxgl.Map({
-        container: mapContainer.current,
-        style: "mapbox://styles/mapbox/streets-v12",
-        center: [120.970665, 14.613915],
-        zoom: 20,
-        maxZoom: 30,
-        attributionControl: false,
-    });
-    
-
-    map.addControl(new mapboxgl.NavigationControl(), "top-left");
-
-    map.on("style.load", () => {
-        map.loadImage(
-        "https://res.cloudinary.com/hnqdnvduj/image/upload/v1720300857/profile-pictures/xqwugharfggl4sgeqj7f.jpg",
-        (error, image) => {
-            if (error) throw error;
-
-            if (image) {
-            map.addImage("custom-marker", image);
-
-            vessels.forEach((vessel) => {
-                map.addSource(`vessel-source-${vessel.id}`, {
-                type: "geojson",
-                data: {
-                    type: "FeatureCollection",
-                    features: [],
-                },
-                });
-
-                map.addLayer({
-                id: `vessel-layer-${vessel.id}`,
-                type: "symbol",
-                source: `vessel-source-${vessel.id}`,
-                layout: {
-                    "icon-image": "custom-marker",
-                    "icon-size": 0.3, 
-                    "icon-allow-overlap": true,
-                },
-                });
-
-                map.addSource(`vessel-line-source-${vessel.id}`, {
-                type: "geojson",
-                data: {
-                    type: "FeatureCollection",
-                    features: [],
-                },
-                });
-
-                map.addLayer({
-                id: `vessel-line-layer-${vessel.id}`,
-                type: "line",
-                source: `vessel-line-source-${vessel.id}`,
-                paint: {
-                    "line-color": "#ff0000",
-                    "line-width": 2,
-                },
-                });
-                
-                map.on('load', function () {
-
-                    map.addLayer({
-                      id: '3d-buildings',
-                      source: 'composite',
-                      'source-layer': 'building',
-                      filter: ['==', 'extrude', 'true'],
-                      type: 'fill-extrusion',
-                      minzoom: 15,
-                      paint: {
-                        'fill-extrusion-color': '#aaa',
-                        'fill-extrusion-height': [
-                          'interpolate',
-                          ['linear'],
-                          ['zoom'],
-                          15,
-                          0,
-                          15.05,
-                          ['get', 'height']
-                        ],
-                        'fill-extrusion-base': [
-                          'interpolate',
-                          ['linear'],
-                          ['zoom'],
-                          15,
-                          0,
-                          15.05,
-                          ['get', 'min_height']
-                        ],
-                        'fill-extrusion-opacity': 0.5
-                      }
-                    });
-                  });
-
-                vessel.path = [
-                {
-                    type: "Feature",
-                    geometry: {
-                    type: "Point",
-                    coordinates: vessel.coordinates,
-                    },
-                    properties: {
-                    name: vessel.name,
-                    },
-                },
-                ];
-            });
-            } else {
-            console.error("Failed to load the custom image.");
+      // Add a source and layer for the user's path
+      mapRef.current.on('load', () => {
+        if (mapRef.current) {
+          mapRef.current.addSource('user-path', {
+            type: 'geojson',
+            data: {
+              type: 'FeatureCollection',
+              features: []
             }
+          });
+
+          mapRef.current.addLayer({
+            id: 'user-path-layer',
+            type: 'line',
+            source: 'user-path',
+            layout: {
+              'line-join': 'round',
+              'line-cap': 'round'
+            },
+            paint: {
+              'line-color': '#007cbf',
+              'line-width': 4
+            }
+          });
         }
-        );
+      });
 
-        setInterval(() => {
-        vessels.forEach((vessel) => {
-            vessel.coordinates = [
-            vessel.coordinates[0] + 0.00001 * Math.random(),
-            vessel.coordinates[1] + 0.00001 * Math.random(),
-            ];
+      // Update the user's location and path
+      geolocateControl.on('geolocate', (event) => {
+        const e = event as unknown as { coords: GeolocateResult['coords'] };
+        if (!e.coords) return; // handle the case where coords might be undefined
 
-            const source = map.getSource(`vessel-source-${vessel.id}`);
+        const { longitude, latitude } = e.coords;
+        const newCoords: GeoJSON.Position = [longitude, latitude];
+        userPath.current.push(newCoords);
 
-            if (source && source.type === "geojson") {
-            const newFeature: VesselFeature = {
-                type: "Feature",
-                geometry: {
-                type: "Point",
-                coordinates: vessel.coordinates,
-                },
-                properties: {
-                name: vessel.name,
-                },
-            };
+        const lineStringFeature: GeoJSON.Feature<GeoJSON.LineString> = {
+          type: 'Feature',
+          geometry: {
+            type: 'LineString',
+            coordinates: userPath.current
+          },
+          properties: {}
+        };
 
-            source.setData({
-                type: "FeatureCollection",
-                features: [newFeature],
-            });
+        const source = mapRef.current?.getSource('user-path') as mapboxgl.GeoJSONSource;
+        if (source) {
+          source.setData({
+            type: 'FeatureCollection',
+            features: [lineStringFeature]
+          });
+        }
+      });
 
-            const lineSource = map.getSource(
-                `vessel-line-source-${vessel.id}`
-            );
-            if (lineSource && lineSource.type === "geojson") {
-
-                vessel.path.push(newFeature);
-
-                const lineStringFeature: GeoJSON.Feature<
-                GeoJSON.LineString,
-                {}
-                > = {
-                type: "Feature",
-                geometry: {
-                    type: "LineString",
-                    coordinates: vessel.path.map((f) => f.geometry.coordinates),
-                },
-                properties: {},
-                };
-
-                lineSource.setData({
-                type: "FeatureCollection",
-                features: vessel.path.length > 1 ? [lineStringFeature] : [],
-                });
-            }
-            }
-        });
-        }, 1000);
-    });
-
-    return () => map.remove();
+      return () => {
+        mapRef.current?.remove();
+      };
     }
-    }, []);
+  }, []);
 
-return (
-    <div className="flex h-[60rem] md:w-[60rem] pt-15 pl-8 w-full">
-    <div
-      ref={mapContainer}
-      style={mapContainerStyle}
-    />
-    
-  </div>
-);
+  return <div id="map" ref={mapContainerRef} style={{ height: '100vh', width: '100%' }}></div>;
 };
 
-export default MapComponent;
+export default MapboxExample;
