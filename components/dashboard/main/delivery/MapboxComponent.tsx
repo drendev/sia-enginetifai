@@ -139,7 +139,7 @@ const MapboxExample: React.FC = () => {
       if (coordinates) {
         submitCoordinates(coordinates.latitude, coordinates.longitude);
       }
-    }, 1000);
+    }, 1500);
 
     return () => clearInterval(interval);
   }, [coordinates, user]);
