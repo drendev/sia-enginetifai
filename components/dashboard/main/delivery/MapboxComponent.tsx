@@ -116,11 +116,33 @@ const MapboxExample: React.FC = () => {
   }, []);
 
   useEffect(() => {
+    const submitCoordinates = async (latitude: number, longitude: number) => {
+      try {
+        const response = await fetch('/api/delivery/deliverylocation', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ 
+            latitude: latitude, 
+            longitude: longitude }),
+        });
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+      } catch (error) {
+        console.error('Failed to submit coordinates:', error);
+      }
+    };
+
     const interval = setInterval(() => {
-      // The coordinates state will automatically update every second if changed
-    }, 1000);
+      if (coordinates) {
+        submitCoordinates(coordinates.latitude, coordinates.longitude);
+      }
+    }, 1500);
+
     return () => clearInterval(interval);
-  }, [coordinates]);
+  }, [coordinates, user]);
 
   return (
     <div>
