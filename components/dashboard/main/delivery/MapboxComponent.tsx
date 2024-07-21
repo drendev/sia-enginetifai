@@ -1,11 +1,19 @@
-import React, { useEffect, useRef } from 'react';
+"use client";
+
+import React, { useEffect, useRef, useState } from 'react';
 import mapboxgl from 'mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
+import { useSession } from "next-auth/react";
 
 const MapboxExample: React.FC = () => {
   const mapContainerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<mapboxgl.Map | null>(null);
   const userPath = useRef<GeoJSON.Position[]>([]);
+
+  const { data: session } = useSession();
+  const user = session?.user?.username;
+
+  const [coordinates, setCoordinates] = useState<{ latitude: number, longitude: number } | null>(null);
 
   // Define the type for geolocation result
   interface GeolocateResult {
@@ -76,6 +84,10 @@ const MapboxExample: React.FC = () => {
         if (!e.coords) return; // handle the case where coords might be undefined
 
         const { longitude, latitude } = e.coords;
+        console.log(`Current coordinates: Latitude: ${latitude}, Longitude: ${longitude}`); // Log the coordinates
+
+        setCoordinates({ latitude, longitude });
+
         const newCoords: GeoJSON.Position = [longitude, latitude];
         userPath.current.push(newCoords);
 
@@ -103,7 +115,28 @@ const MapboxExample: React.FC = () => {
     }
   }, []);
 
-  return <div id="map" ref={mapContainerRef} style={{ height: '100vh', width: '100%' }}></div>;
+  useEffect(() => {
+    const interval = setInterval(() => {
+      // The coordinates state will automatically update every second if changed
+    }, 1000);
+    return () => clearInterval(interval);
+  }, [coordinates]);
+
+  return (
+    <div>
+      <div id="map" ref={mapContainerRef} style={{ height: '100vh', width: '100%' }}></div>
+      <div className='mt-16' style={{ position: 'absolute', top: 10, left: 10, backgroundColor: 'white', padding: '10px', borderRadius: '5px' }}>
+        {coordinates ? (
+          <div>
+            <p>Latitude: {coordinates.latitude}</p>
+            <p>Longitude: {coordinates.longitude}</p>
+          </div>
+        ) : (
+          <p>Fetching location...</p>
+        )}
+      </div>
+    </div>
+  );
 };
 
 export default MapboxExample;
