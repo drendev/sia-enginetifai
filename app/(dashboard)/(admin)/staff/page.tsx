@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import type { RadioChangeEvent } from "antd";
+import { LoadingOutlined } from "@ant-design/icons";
 
 import {
   Pagination,
@@ -17,6 +18,7 @@ import {
   Form,
   Radio,
   Skeleton,
+  Spin,
 } from "antd";
 import { SearchOutlined, PlusOutlined } from "@ant-design/icons";
 
@@ -84,6 +86,12 @@ export default function Employees() {
   const [checkIfExistingEmail, setCheckIfExistingEmail] = useState<
     User | undefined
   >(undefined);
+
+  // Edit Staff
+  const [showEditStaffForm, setShowEditStaffForm] = useState(false);
+  const [editStaffForm] = Form.useForm();
+  const [userEditData, setUserEditData] = useState<User | null>(null);
+
   const pageSize = 6;
   const roles: string[] = ["No Filter", "employee", "admin", "courier"];
 
@@ -276,6 +284,48 @@ export default function Employees() {
   const showDeleteModal = (userId: string) => {
     setSelectedUserId(userId);
     setShowDelModal(true);
+  };
+
+  // Edit Staff
+  const handleEditStaffButtonClick = (user: User) => {
+    setShowEditStaffForm(true);
+    setUserEditData(user);
+    editStaffForm.setFieldsValue({
+      userID: user.id,
+      username: user.username,
+      email: user.email,
+      role: user.role,
+      password: user.password,
+    });
+  };
+
+  const handleEditStaffSubmit = async (values: any) => {
+    setLoadings(true);
+    console.log("values: ", values);
+    const response = await fetch(`/api/staffEdit/`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        userID: values.userID,
+        username: values.username,
+        email: values.email,
+        role: values.role,
+        password: values.password,
+      }),
+    });
+
+    if (response.ok) {
+      setLoadings(false);
+      setShowEditStaffForm(false);
+      const updatedData = await response.json();
+      setUserEditData(updatedData);
+      window.location.reload();
+    } else {
+      setLoadings(false);
+      console.log("Something went wrong.");
+    }
   };
 
   // Dropdown
@@ -482,7 +532,9 @@ export default function Employees() {
                   () => ({
                     validator(_, value) {
                       console.log("values: ", { value });
-                      if (value.length < 8 && value.length > 1) {
+                      if (value == undefined || value == "") {
+                        return Promise.reject();
+                      } else if (value.length < 8 && value.length > 0) {
                         return Promise.reject("Password is too short");
                       }
                       return Promise.resolve();
@@ -521,6 +573,144 @@ export default function Employees() {
             </Form>
           </Modal>
         </div>
+        {/* Kupal */}
+        {showEditStaffForm && (
+          <div className="fixed inset-0 flex items-center justify-center z-50 bg-gray-900 bg-opacity-50 overflow-scroll md:overflow-auto">
+            <div className="bg-white dark:bg-gray-800 p-6 rounded-lg mt-16 shadow-lg w-full max-w-4xl">
+              <h2 className="text-lg font-semibold mb-4">
+                Edit Staff : {userEditData?.username}{" "}
+              </h2>
+              <Form
+                autoComplete="off"
+                form={editStaffForm}
+                onFinish={handleEditStaffSubmit}
+              >
+                <div className="grid grid-cols-2 md:grid-cols-2 gap-3">
+                  <div className="mb-4">
+                    <Form.Item style={{ display: 'none' }}
+                      name="userID"
+                    >
+                      <Input
+                        type="hidden"
+                      />
+                    </Form.Item>
+                    <label className="text-slate-50 dark:text-slate-200 block mb-1 font-sans font-semibold">
+                      Username
+                    </label>
+                    <Form.Item
+                      className="mb-0"
+                      name="username"
+                      rules={[
+                        { required: true, message: "Please enter username" },
+                      ]}
+                    >
+                      <Input
+                        placeholder="Username"
+                        className="p-2 border border-gray-300 dark:border-gray-700 rounded-lg dark:bg-gray-900 dark:text-white focus:outline-none w-full"
+                        required
+                      />
+                    </Form.Item>
+                  </div>
+                  <div className="mb-4">
+                    <label className="text-slate-50 dark:text-slate-200 block mb-1 font-sans font-semibold">
+                      E-mail
+                    </label>
+                    <Form.Item
+                      className="mb-0"
+                      name="email"
+                      rules={[
+                        { required: true, message: "Please enter e-mail" },
+                      ]}
+                    >
+                      <Input
+                        placeholder="E-mail"
+                        className="p-2 border border-gray-300 dark:border-gray-700 rounded-lg dark:bg-gray-900 dark:text-white focus:outline-none w-full"
+                        required
+                      />
+                    </Form.Item>
+                  </div>
+                  <div className="mb-4">
+                    <label className="text-slate-50 dark:text-slate-200 block mb-1 font-sans font-semibold">
+                      Password
+                    </label>
+                    <Form.Item
+                      className="mb-0"
+                      name="password"
+                      rules={[
+                        { required: true, message: "Please enter password" },
+                      ]}
+                    >
+                      <Input
+                        type="password"
+                        placeholder="Description"
+                        className="p-2 border border-gray-300 dark:border-gray-700 rounded-lg dark:bg-gray-900 dark:text-white focus:outline-none w-full"
+                        required
+                      />
+                    </Form.Item>
+                  </div>
+                  <div className="mb-4">
+                    <label className="text-slate-50 dark:text-slate-200 block mb-1 font-sans font-semibold">
+                      Role
+                    </label>
+                    <Form.Item
+                      className="mb-0"
+                      name="role"
+                      rules={[{ required: true, message: "Please enter role" }]}
+                    >
+                      <Select
+                        showSearch
+                        placeholder="Search to Select"
+                        optionFilterProp="label"
+                        filterSort={(optionA, optionB) =>
+                          (optionA?.label ?? "")
+                            .toLowerCase()
+                            .localeCompare((optionB?.label ?? "").toLowerCase())
+                        }
+                        options={[
+                          {
+                            value: "Admin",
+                            label: "Admin",
+                          },
+                          {
+                            value: "Employee",
+                            label: "Employee",
+                          },
+                          {
+                            value: "Courier",
+                            label: "Courier",
+                          },
+                        ]}
+                      />
+                    </Form.Item>
+                  </div>
+                </div>
+                <div className="flex justify-end">
+                  <button
+                    type="button"
+                    className="px-4 py-2 bg-gray-500 text-white rounded-lg mr-2"
+                    onClick={() => setShowEditStaffForm(false)}
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="submit"
+                    className="px-4 py-2 bg-red-primary text-white rounded-lg"
+                  >
+                    {loadings ? (
+                      <Spin
+                        indicator={
+                          <LoadingOutlined className="text-white" spin />
+                        }
+                      />
+                    ) : (
+                      "Edit Staff"
+                    )}
+                  </button>
+                </div>
+              </Form>
+            </div>
+          </div>
+        )}
 
         {/* Staff Cards */}
         <Skeleton loading={skeleton} active avatar paragraph={{ rows: 5 }}>
@@ -567,12 +757,14 @@ export default function Employees() {
                     >
                       <ul className="py-2">
                         <li>
-                          <a
-                            href="#"
+                          <button
+                            onClick={() => {
+                              handleEditStaffButtonClick(user);
+                            }}
                             className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
                           >
                             Edit
-                          </a>
+                          </button>
                         </li>
                         <li>
                           <button
