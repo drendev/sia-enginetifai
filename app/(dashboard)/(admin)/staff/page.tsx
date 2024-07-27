@@ -443,7 +443,7 @@ export default function Employees() {
                 fill="white"
               />
             </svg>
-            Add Employee
+            Add Staff
           </Button>
           <Modal
             title="Add Staff"
@@ -640,9 +640,8 @@ export default function Employees() {
                         { required: true, message: "Please enter password" },
                       ]}
                     >
-                      <Input
-                        type="password"
-                        placeholder="Description"
+                      <Input.Password
+                        placeholder="password"
                         className="p-2 border border-gray-300 dark:border-gray-700 rounded-lg dark:bg-gray-900 dark:text-white focus:outline-none w-full"
                         required
                       />
@@ -759,7 +758,7 @@ export default function Employees() {
                         <li>
                           <button
                             onClick={() => {
-                              handleEditStaffButtonClick(user);
+                              handleEditStaffButtonClick(user), setDropdownOpen((prev) => ({ ...prev, [index]: false }));
                             }}
                             className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
                           >
