@@ -41,7 +41,7 @@ const MapComponent2: React.FC = () => {
     ];
 
     const destination = {
-        coordinates: [120.9678641, 14.6157236],
+        coordinates: [120.9761774, 14.58679],
         name: "Destination",
     };
 
@@ -98,7 +98,7 @@ const MapComponent2: React.FC = () => {
                         layout: {
                             "icon-image": "vessel-marker",
                             "icon-size": 0.3,
-                            "icon-allow-overlap": true,
+                            "icon-allow-overlap": false,
                         },
                     });
 
