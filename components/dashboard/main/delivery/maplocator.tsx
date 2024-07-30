@@ -199,7 +199,7 @@ const MapComponent2: React.FC = () => {
             setEngineData(data);
         };
 
-        const interval = setInterval(fetchEngineData, 500);
+        const interval = setInterval(fetchEngineData, 100);
         fetchEngineData();
 
         return () => clearInterval(interval);
