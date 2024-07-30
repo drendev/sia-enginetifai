@@ -62,124 +62,129 @@ const MapComponent2: React.FC = () => {
             mapRef.current = map;
 
             map.on("style.load", () => {
-                map.loadImage(
-                    "https://res.cloudinary.com/hnqdnvduj/image/upload/v1720300857/profile-pictures/xqwugharfggl4sgeqj7f.jpg",
-                    (error, image) => {
-                        if (error) throw error;
+                map.loadImage("https://res.cloudinary.com/hnqdnvduj/image/upload/v1720300857/profile-pictures/xqwugharfggl4sgeqj7f.jpg", (error, image) => {
+                    if (error) throw error;
 
-                        if (image) {
-                            map.addImage("custom-marker", image);
-
-                            vessels.forEach((vessel) => {
-                                map.addSource(`vessel-source-${vessel.id}`, {
-                                    type: "geojson",
-                                    data: {
-                                        type: "FeatureCollection",
-                                        features: [],
-                                    },
-                                });
-
-                                map.addLayer({
-                                    id: `vessel-layer-${vessel.id}`,
-                                    type: "symbol",
-                                    source: `vessel-source-${vessel.id}`,
-                                    layout: {
-                                        "icon-image": "custom-marker",
-                                        "icon-size": 0.3,
-                                        "icon-allow-overlap": true,
-                                    },
-                                });
-
-                                map.addSource(`vessel-line-source-${vessel.id}`, {
-                                    type: "geojson",
-                                    data: {
-                                        type: "FeatureCollection",
-                                        features: [],
-                                    },
-                                });
-
-                                map.addLayer({
-                                    id: `vessel-line-layer-${vessel.id}`,
-                                    type: "line",
-                                    source: `vessel-line-source-${vessel.id}`,
-                                    paint: {
-                                        "line-color": "#BB4747",
-                                        "line-width": 8,
-                                    },
-                                });
-
-                                vessel.path = [
-                                    vessel.coordinates
-                                ];
-                            });
-
-                            map.addSource("destination-source", {
-                                type: "geojson",
-                                data: {
-                                    type: "FeatureCollection",
-                                    features: [
-                                        {
-                                            type: "Feature",
-                                            geometry: {
-                                                type: "Point",
-                                                coordinates: destination.coordinates,
-                                            },
-                                            properties: {
-                                                name: destination.name,
-                                            },
-                                        },
-                                    ],
-                                },
-                            });
-
-                            map.addLayer({
-                                id: "destination-layer",
-                                type: "symbol",
-                                source: "destination-source",
-                                layout: {
-                                    "icon-image": "custom-marker",
-                                    "icon-size": 0.3,
-                                    "icon-allow-overlap": true,
-                                },
-                            });
-
-                            map.on('load', function () {
-                                map.addLayer({
-                                    id: '3d-buildings',
-                                    source: 'composite',
-                                    'source-layer': 'building',
-                                    filter: ['==', 'extrude', 'true'],
-                                    type: 'fill-extrusion',
-                                    minzoom: 15,
-                                    paint: {
-                                        'fill-extrusion-color': '#aaa',
-                                        'fill-extrusion-height': [
-                                            'interpolate',
-                                            ['linear'],
-                                            ['zoom'],
-                                            15,
-                                            0,
-                                            15.05,
-                                            ['get', 'height']
-                                        ],
-                                        'fill-extrusion-base': [
-                                            'interpolate',
-                                            ['linear'],
-                                            ['zoom'],
-                                            15,
-                                            0,
-                                            15.05,
-                                            ['get', 'min_height']
-                                        ],
-                                        'fill-extrusion-opacity': 0.5
-                                    }
-                                });
-                            });
-                        } else {
-                            console.error("Failed to load the custom image.");
-                        }
+                    if (image) {
+                        map.addImage("vessel-marker", image);
+                    } else {
+                        console.error("Failed to load vessel icon.");
                     }
-                );
+                });
+
+                map.loadImage("/locationpin.png", (error, image) => {
+                    if (error) throw error;
+
+                    if (image) {
+                        map.addImage("destination-marker", image);
+                    } else {
+                        console.error("Failed to load destination icon.");
+                    }
+                });
+
+                vessels.forEach((vessel) => {
+                    map.addSource(`vessel-source-${vessel.id}`, {
+                        type: "geojson",
+                        data: {
+                            type: "FeatureCollection",
+                            features: [],
+                        },
+                    });
+
+                    map.addLayer({
+                        id: `vessel-layer-${vessel.id}`,
+                        type: "symbol",
+                        source: `vessel-source-${vessel.id}`,
+                        layout: {
+                            "icon-image": "vessel-marker",
+                            "icon-size": 0.3,
+                            "icon-allow-overlap": true,
+                        },
+                    });
+
+                    map.addSource(`vessel-line-source-${vessel.id}`, {
+                        type: "geojson",
+                        data: {
+                            type: "FeatureCollection",
+                            features: [],
+                        },
+                    });
+
+                    map.addLayer({
+                        id: `vessel-line-layer-${vessel.id}`,
+                        type: "line",
+                        source: `vessel-line-source-${vessel.id}`,
+                        paint: {
+                            "line-color": "#BB4747",
+                            "line-width": 8,
+                        },
+                    });
+
+                    vessel.path = [vessel.coordinates];
+                });
+
+                map.addSource("destination-source", {
+                    type: "geojson",
+                    data: {
+                        type: "FeatureCollection",
+                        features: [
+                            {
+                                type: "Feature",
+                                geometry: {
+                                    type: "Point",
+                                    coordinates: destination.coordinates,
+                                },
+                                properties: {
+                                    name: destination.name,
+                                },
+                            },
+                        ],
+                    },
+                });
+
+                map.addLayer({
+                    id: "destination-layer",
+                    type: "symbol",
+                    source: "destination-source",
+                    layout: {
+                        "icon-image": "destination-marker",
+                        "icon-size": 0.05,
+                        "icon-allow-overlap": true,
+                    },
+                });
+
+                map.on('load', function () {
+                    map.addLayer({
+                        id: '3d-buildings',
+                        source: 'composite',
+                        'source-layer': 'building',
+                        filter: ['==', 'extrude', 'true'],
+                        type: 'fill-extrusion',
+                        minzoom: 15,
+                        paint: {
+                            'fill-extrusion-color': '#aaa',
+                            'fill-extrusion-height': [
+                                'interpolate',
+                                ['linear'],
+                                ['zoom'],
+                                15,
+                                0,
+                                15.05,
+                                ['get', 'height']
+                            ],
+                            'fill-extrusion-base': [
+                                'interpolate',
+                                ['linear'],
+                                ['zoom'],
+                                15,
+                                0,
+                                15.05,
+                                ['get', 'min_height']
+                            ],
+                            'fill-extrusion-opacity': 0.5
+                        }
+                    });
+                });
             });
         }
     }, []);
