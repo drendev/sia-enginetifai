@@ -249,7 +249,7 @@ const MapComponent2: React.FC = () => {
                                 "line-cap": "round",
                             },
                             paint: {
-                                "line-color": "#888",
+                                "line-color": "#BB4747",
                                 "line-width": 6,
                             },
                         });
