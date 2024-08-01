@@ -228,7 +228,9 @@ const MapComponent: React.FC = () => {
 
       {/* Right Side Content (Map Component) */}
       <div className="md:flex-1 md:ml-4 w-full">
-        <MapboxComponent2 />
+        <MapboxComponent2 
+        transactionId="2"
+        />
         <DeliveryTracking/>
       </div>
 
