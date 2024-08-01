@@ -27,7 +27,7 @@ export async function POST(req: Request) {
             },
             data: {
                 deliveryInformation: {
-                    create: {
+                    update: {
                         address: address,
                         deliverStatus: 'pending',
                         deliveryUser: deliveryUser,
