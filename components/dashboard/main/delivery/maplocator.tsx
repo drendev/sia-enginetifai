@@ -215,7 +215,6 @@ const MapComponent2: React.FC<DeliveryProps> = ({ transactionId }) => {
             const data = await res.json();
             setEngineData(data);
         };
-
         const interval = setInterval(fetchEngineLocation, 100);
         fetchEngineLocation();
 
