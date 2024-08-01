@@ -10,11 +10,10 @@ import { Form, DatePicker, InputNumber, Select, ConfigProvider, Switch, Badge, L
 import dayjs from 'dayjs';
 import EngineButton from '../ui/index/button';
 import Grid from '../ui/engineforms/FormGrid';
-import type { RadioChangeEvent } from 'antd';
 import { BankOutlined, CreditCardFilled, LoadingOutlined } from '@ant-design/icons';
 
 const FormSchema = z.object({
-    transactionUser: z.string().min(5, 'Username Max Limit.').max(30),
+    transactionUser: z.string().min(5, 'Transaction Max Limit.').max(30),
     engineName: z.string().min(5, 'Engine Max Limit.').max(30),
     quantity: z.any(),
     delivery: z.boolean(),

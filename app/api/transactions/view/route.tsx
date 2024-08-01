@@ -25,7 +25,6 @@ export async function POST(req: Request) {
                     select: {
                         deliveryUser: true,
                         deliverStatus: true,
-                        deliveryDate: true,
                         deliveryTime: true,
                         address: true,
                         city: true,

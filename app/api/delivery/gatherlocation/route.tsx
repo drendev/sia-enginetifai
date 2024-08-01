@@ -6,13 +6,17 @@ export async function POST(req: Request) {
         const body = await req.json();
         const { id } = body;
 
-        const getMap = await db.delivery.findUnique({
+        const getMap = await db.transaction.findUnique({
             where: {
                 id: id
             },
             select: {
-                longitude: true,
-                latitude: true,
+                deliveryInformation: {
+                    select: {
+                        longitude: true,
+                        latitude: true
+                    }
+                }
             }
         })
 
@@ -20,7 +24,7 @@ export async function POST(req: Request) {
             return NextResponse.json({ error: 'Transaction not found' });
         }
 
-        return NextResponse.json(getMap);
+        return NextResponse.json(getMap.deliveryInformation);
     } catch (error) {
         console.error("Error fetching engine price:", error);
         return NextResponse.json({ error: 'Internal Server Error' });

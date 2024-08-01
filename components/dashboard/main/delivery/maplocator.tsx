@@ -24,10 +24,20 @@ interface TrackLocation {
     latitude: number;
 }
 
+interface DeliveryProps {
+    transactionId: string;
+}
+
+interface Destination {
+    longloc: number;
+    latloc: number;
+}
+
 interface VesselFeature extends GeoJSON.Feature<GeoJSON.Point, VesselFeatureProperties> {}
 
-const MapComponent2: React.FC = () => {
+const MapComponent2: React.FC<DeliveryProps> = ({ transactionId }) => {
     const [engineData, setEngineData] = useState<TrackLocation | null>(null);
+    const [destination1, setDestination] = useState<Destination | null>(null);
     const mapContainer = useRef<HTMLDivElement>(null);
     const mapRef = useRef<mapboxgl.Map | null>(null);
 
@@ -40,10 +50,17 @@ const MapComponent2: React.FC = () => {
         },
     ];
 
-    const destination = {
-        coordinates: [120.9761774, 14.58679],
-        name: "Destination",
+    const fetchEngineData = async () => {
+        const res = await fetch(`/api/delivery/destination?transactionId=${transactionId}`, {
+            method: 'POST',
+        });
+        const data = await res.json();
+        setDestination(data);
     };
+
+    useEffect(() => {
+        fetchEngineData();
+    }, [transactionId]);
 
     useEffect(() => {
         mapboxgl.accessToken = "pk.eyJ1IjoiZHJlbmRldiIsImEiOiJjbHgwa2t6YjIwMWNzMmtzYTBiZnIzNG53In0.frLf9qdvpp34baFqC_ObCQ";
@@ -132,10 +149,10 @@ const MapComponent2: React.FC = () => {
                                 type: "Feature",
                                 geometry: {
                                     type: "Point",
-                                    coordinates: destination.coordinates,
+                                    coordinates: [120.970665, 14.613915],
                                 },
                                 properties: {
-                                    name: destination.name,
+                                    name: "Destination",
                                 },
                             },
                         ],
@@ -190,27 +207,27 @@ const MapComponent2: React.FC = () => {
     }, []);
 
     useEffect(() => {
-        const fetchEngineData = async () => {
+        const fetchEngineLocation = async () => {
             const res = await fetch(`/api/delivery/gatherlocation`, {
                 method: 'POST',
-                body: JSON.stringify({ id: 23 }),
+                body: JSON.stringify({ id: Number(transactionId) }),
             });
             const data = await res.json();
             setEngineData(data);
         };
 
-        const interval = setInterval(fetchEngineData, 1000);
-        fetchEngineData();
+        const interval = setInterval(fetchEngineLocation, 100);
+        fetchEngineLocation();
 
         return () => clearInterval(interval);
     }, []);
 
     useEffect(() => {
         const fetchRoute = async () => {
-            if (engineData) {
+            if (engineData && destination1) {
                 const { longitude, latitude } = engineData;
                 const response = await fetch(
-                    `https://api.mapbox.com/directions/v5/mapbox/driving/${longitude},${latitude};${destination.coordinates.join(',')}?geometries=geojson&access_token=${mapboxgl.accessToken}`
+                    `https://api.mapbox.com/directions/v5/mapbox/driving/${longitude},${latitude};${destination1.longloc},${destination1.latloc}?geometries=geojson&access_token=${mapboxgl.accessToken}`
                 );
                 const data = await response.json();
                 const route = data.routes[0].geometry;
@@ -264,7 +281,7 @@ const MapComponent2: React.FC = () => {
         };
 
         fetchRoute();
-    }, [engineData]);
+    }, [engineData, destination1]);
 
     useEffect(() => {
         if (engineData && mapRef.current) {
@@ -325,6 +342,32 @@ const MapComponent2: React.FC = () => {
             });
         }
     }, [engineData]);
+
+    useEffect(() => {
+        if (mapRef.current && destination1) {
+            const map = mapRef.current;
+            map.setCenter([destination1.longloc, destination1.latloc]);
+
+            const source = map.getSource("destination-source") as mapboxgl.GeoJSONSource;
+            if (source) {
+                source.setData({
+                    type: "FeatureCollection",
+                    features: [
+                        {
+                            type: "Feature",
+                            geometry: {
+                                type: "Point",
+                                coordinates: [destination1.longloc, destination1.latloc],
+                            },
+                            properties: {
+                                name: "Destination",
+                            },
+                        },
+                    ],
+                });
+            }
+        }
+    }, [destination1]);
 
     return (
         <div className="flex h-[60rem] md:w-[60rem] pt-15 pl-8 w-full">

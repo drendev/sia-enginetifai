@@ -5,17 +5,16 @@ import { z } from 'zod';
 
 const engineSchema = z.object({
     address: z.string().min(5, 'Engine Max Limit.').max(100),
-    city: z.string().min(1, 'Engine Type is required').max(100),
     deliveryUser: z.string().min(1, 'Price is required').max(100),
     deliveryTime: z.any(),
-    longitude: z.number(),
-    latitude: z.number(),
+    longloc: z.number(),
+    latloc: z.number(),
 })
 
 export async function POST(req: Request) {
     try {
         const body = await req.json();
-        const { address, city, deliveryUser, deliveryTime, longitude, latitude } = engineSchema.parse(body);
+        const { address, deliveryUser, deliveryTime, longloc, latloc} = engineSchema.parse(body);
 
         const url = new URL(req.url);
         const transactionId = url.searchParams.get('transactionId');
@@ -30,11 +29,11 @@ export async function POST(req: Request) {
                 deliveryInformation: {
                     create: {
                         address: address,
-                        city: city,
+                        deliverStatus: 'pending',
                         deliveryUser: deliveryUser,
                         deliveryTime: deliveryTime,
-                        longitude,
-                        latitude,
+                        longloc: longloc,
+                        latloc: latloc,
                     }
                 }
             }

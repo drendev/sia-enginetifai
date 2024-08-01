@@ -36,9 +36,7 @@ export async function POST(req: Request) {
         createAt: transactions.createAt,
         totalPrice: transactions.totalPrice,
         deliveryDate: transactions.deliveryDate,
-        deliveryStatus: transactions.deliveryInformation.flatMap(delivery => {
-            return delivery.deliverStatus;
-        }),
+        deliveryStatus: transactions.deliveryInformation?.deliverStatus
     }));
     
     return NextResponse.json(response);

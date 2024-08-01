@@ -136,9 +136,9 @@ model Transaction {
   updatedAt       DateTime @updatedAt
 
   // Relational Tables
-  deliveryInformation Delivery[]
+  deliveryInformation Delivery?
 
-  @@unique([id, transactionUser, paymentMethod, deliveryDate])
+  @@unique([id])
 }
 
 model TransactionEngine {
@@ -151,11 +151,8 @@ model TransactionEngine {
 
 model Delivery {
   id            Int         @id @default(autoincrement())
-  transaction   Transaction @relation(fields: [transactionId, transactionBy, paymentMethod, deliveryDate], references: [id, transactionUser, paymentMethod, deliveryDate], onDelete: Cascade)
-  transactionId Int
-  transactionBy String
-  paymentMethod String
-  deliveryDate  String
+  transaction   Transaction @relation(fields: [transactionId], references: [id], onDelete: Cascade)
+  transactionId Int         @unique
   deliveryTime  String?
   address       String?
   city          String?
@@ -163,6 +160,8 @@ model Delivery {
   longitude     Decimal?
   deliveryUser  String?
   deliverStatus String?
+  latloc        Decimal?
+  longloc       Decimal?
   createAt      DateTime    @default(now())
   updatedAt     DateTime    @updatedAt
 }
