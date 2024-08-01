@@ -97,19 +97,6 @@ const MapboxExample: React.FC<DeliveryProps> = ({ transactionId }) => {
             }
           });
 
-          mapRef.current.addLayer({
-            id: 'user-path-layer',
-            type: 'line',
-            source: 'user-path',
-            layout: {
-              'line-join': 'round',
-              'line-cap': 'round'
-            },
-            paint: {
-              'line-color': '#007cbf',
-              'line-width': 2
-            }
-          });
         }
       });
 
