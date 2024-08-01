@@ -8,7 +8,7 @@ export async function POST(req: Request) {
 
         const getTransaction = await db.delivery.update({
             where: {
-                id: 70,
+                id: 35,
             },
             data: {
                 longitude: longitude,
