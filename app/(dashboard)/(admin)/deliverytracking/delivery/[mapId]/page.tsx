@@ -2,7 +2,6 @@
     // MapComponent.tsx
 
     import React, { useState, useEffect } from "react";
-    import { FaSearch, FaArrowRight, FaUser, FaEnvelope } from "react-icons/fa";
     import TransactionHistoryModal from "@/components/dashboard/main/delivery/TransactionHistoryModal"; // Import your modal component
     import MapboxComponent2 from "@/components/dashboard/main/delivery/maplocator";
     import DeliveryTracking from "@/components/dashboard/main/delivery/DeliveryTracking";
@@ -34,7 +33,6 @@
     }
 
     export default function Page({ params }: { params: { mapId: string } }) {
-    const [searchTerm, setSearchTerm] = useState("");
     const [trackingNumber, setTrackingNumber] = useState("");
     const [packages, setPackages] = useState<any>({});
     const [showAddForm, setShowAddForm] = useState(false);
@@ -138,7 +136,7 @@
         }
         });
     return (
-        <div className="flex font-sans bg-red-50 flex-col md:flex-row h-auto md:w-full p-4">
+        <div className="flex font-sans bg-red-50 flex-col md:flex-row h-auto md:w-full p-4 pt-20">
         {/* Left Side Content */}
         <div className="flex flex-col md:w-[40rem] w-full">
 

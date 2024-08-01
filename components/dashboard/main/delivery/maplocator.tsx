@@ -70,7 +70,7 @@ const MapComponent2: React.FC<DeliveryProps> = ({ transactionId }) => {
                 container: mapContainer.current,
                 style: "mapbox://styles/mapbox/streets-v12",
                 center: [120.970665, 14.613915],
-                zoom: 20,
+                zoom: 17,
                 maxZoom: 30,
                 attributionControl: false,
             });
@@ -79,7 +79,7 @@ const MapComponent2: React.FC<DeliveryProps> = ({ transactionId }) => {
             mapRef.current = map;
 
             map.on("style.load", () => {
-                map.loadImage("https://res.cloudinary.com/hnqdnvduj/image/upload/v1720300857/profile-pictures/xqwugharfggl4sgeqj7f.jpg", (error, image) => {
+                map.loadImage("/deliver2.png", (error, image) => {
                     if (error) throw error;
 
                     if (image) {
@@ -114,8 +114,8 @@ const MapComponent2: React.FC<DeliveryProps> = ({ transactionId }) => {
                         source: `vessel-source-${vessel.id}`,
                         layout: {
                             "icon-image": "vessel-marker",
-                            "icon-size": 0.3,
-                            "icon-allow-overlap": false,
+                            "icon-size": 0.15,
+                            "icon-allow-overlap": true,
                         },
                     });
 

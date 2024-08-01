@@ -54,6 +54,11 @@ export async function POST(req: Request) {
         deliveryDate,
         paymentMethod,
         createAt: dateToday,
+        deliveryInformation: {
+          create: {
+            deliverStatus: 'pending',
+          }
+        }
       },
       
     });
