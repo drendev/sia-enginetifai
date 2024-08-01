@@ -89,6 +89,14 @@ const MapboxExample: React.FC<DeliveryProps> = ({ transactionId }) => {
       // Add a source and layer for the user's path
       mapRef.current.on('load', () => {
         if (mapRef.current) {
+          // Add the custom icon image
+          mapRef.current.loadImage('/locationpin.png', (error, image) => {
+            if (error) throw error;
+            if (image) {
+              mapRef.current?.addImage('locationpin', image);
+            }
+          });
+
           mapRef.current.addSource('user-path', {
             type: 'geojson',
             data: {
@@ -97,6 +105,15 @@ const MapboxExample: React.FC<DeliveryProps> = ({ transactionId }) => {
             }
           });
 
+          mapRef.current.addLayer({
+            id: 'user-path-layer',
+            type: 'line',
+            source: 'user-path',
+            layout: {
+              'line-join': 'round',
+              'line-cap': 'round'
+            },
+          });
         }
       });
 
@@ -111,23 +128,6 @@ const MapboxExample: React.FC<DeliveryProps> = ({ transactionId }) => {
 
         const newCoords: GeoJSON.Position = [longitude, latitude];
         userPath.current.push(newCoords);
-
-        const lineStringFeature: GeoJSON.Feature<GeoJSON.LineString> = {
-          type: 'Feature',
-          geometry: {
-            type: 'LineString',
-            coordinates: userPath.current
-          },
-          properties: {}
-        };
-
-        const source = mapRef.current?.getSource('user-path') as mapboxgl.GeoJSONSource;
-        if (source) {
-          source.setData({
-            type: 'FeatureCollection',
-            features: [lineStringFeature]
-          });
-        }
       });
 
       return () => {
@@ -139,12 +139,9 @@ const MapboxExample: React.FC<DeliveryProps> = ({ transactionId }) => {
   useEffect(() => {
     const submitCoordinates = async (latitude: number, longitude: number) => {
       try {
-        const response = await fetch(`/api/delivery/deliverylocation?transactionId=${transactionId}&latitude=${latitude}&longitude=${longitude}`, {
+        await fetch(`/api/delivery/deliverylocation?transactionId=${transactionId}&latitude=${latitude}&longitude=${longitude}`, {
           method: 'POST',
         });
-        if (!response.ok) {
-          throw new Error('Network response was not ok');
-        }
       } catch (error) {
         console.error('Failed to submit coordinates:', error);
       }
@@ -228,6 +225,19 @@ const MapboxExample: React.FC<DeliveryProps> = ({ transactionId }) => {
               });
             }
           }
+
+          // Add a marker at the destination
+          if (destination1 && mapRef.current) {
+            const markerElement = document.createElement('div');
+            markerElement.style.backgroundImage = 'url(/locationpin.png)';
+            markerElement.style.width = '30px'; // Adjust size as needed
+            markerElement.style.height = '30px';
+            markerElement.style.backgroundSize = 'cover';
+
+            new mapboxgl.Marker({ element: markerElement })
+              .setLngLat([destination1.longloc, destination1.latloc])
+              .addTo(mapRef.current);
+          }
         } catch (error) {
           console.error('Failed to fetch route:', error);
         }
@@ -246,7 +256,7 @@ const MapboxExample: React.FC<DeliveryProps> = ({ transactionId }) => {
   return (
     <div>
       <div id="map" ref={mapContainerRef} style={{ height: '100vh', width: '100%' }}></div>
-      <div className='mt-16' style={{ position: 'absolute', top: 10, left: 10, backgroundColor: 'white', padding: '10px', borderRadius: '5px' }}>
+      {/* <div className='mt-16' style={{ position: 'absolute', top: 10, left: 10, backgroundColor: 'white', padding: '10px', borderRadius: '5px' }}>
         <h2>Mapbox Directions</h2>
         {destination1 && (
           <p>Destination: {destination1.latloc}, {destination1.longloc}</p>
@@ -266,7 +276,7 @@ const MapboxExample: React.FC<DeliveryProps> = ({ transactionId }) => {
             </ul>
           </div>
         )}
-      </div>
+      </div> */}
     </div>
   );
 };

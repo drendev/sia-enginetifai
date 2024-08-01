@@ -208,9 +208,8 @@ const MapComponent2: React.FC<DeliveryProps> = ({ transactionId }) => {
 
     useEffect(() => {
         const fetchEngineLocation = async () => {
-            const res = await fetch(`/api/delivery/gatherlocation`, {
+            const res = await fetch(`/api/delivery/gatherlocation?transactionId=${transactionId}`, {
                 method: 'POST',
-                body: JSON.stringify({ id: Number(transactionId) }),
             });
             const data = await res.json();
             setEngineData(data);
@@ -219,7 +218,7 @@ const MapComponent2: React.FC<DeliveryProps> = ({ transactionId }) => {
         fetchEngineLocation();
 
         return () => clearInterval(interval);
-    }, []);
+    }, [transactionId]);
 
     useEffect(() => {
         const fetchRoute = async () => {
