@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { Input, ConfigProvider, Badge, Pagination, Empty, Select, Button, Skeleton } from 'antd';
+import { Input, ConfigProvider, Badge, Pagination, Empty, Select, Button, Skeleton, Drawer, Modal } from 'antd';
 import { SearchOutlined, PlusOutlined } from '@ant-design/icons';
-import EngineButton from "@/components/ui/index/button";
 import Link from 'next/link';
+import moment from 'moment-timezone';
+import * as XLSX from 'xlsx';
 
 interface Engine {
     id: number,
@@ -13,6 +14,15 @@ interface Engine {
     picture: string,
 }
 
+interface ScrapEngine {
+    id: number,
+    engineName: string,
+    quantity: number,
+    reason: string,
+    user: string,
+    createAt: string,
+}
+
 // Utility function to create options with the same label and value
 const createOptions = (values: string[]) => {
     return values.map(value => ({ value, label: value }));
@@ -21,10 +31,14 @@ const createOptions = (values: string[]) => {
 export function EngineList() {
     const [currentPage, setCurrentPage] = useState(1);
     const [engineData, setEngineData] = useState<Engine[]>([]);
+    const [scrapData, setScrapData] = useState<ScrapEngine[]>([]);
     const [search, setSearch] = useState('');
     const [selectedEngineType, setSelectedEngineType] = useState<string | null>(null);
     const [selectedStock, setSelectedStock] = useState<string | null>(null);
     const [loading, setLoading] = useState(true);
+    const [isDrawerVisible, setIsDrawerVisible] = useState(false);
+    const [isModalVisible, setIsModalVisible] = useState(false);
+    const [modalContent, setModalContent] = useState('');
 
     useEffect(() => {
         // Simulate a data fetch
@@ -34,6 +48,42 @@ export function EngineList() {
     }, []);
 
     const pageSize = 8;
+    const scrapPageSize = 10;
+
+    const utcDate = new Date();
+    const timeZone = 'Asia/Manila';
+  
+    const dateToday = moment.tz(utcDate, timeZone).format('YYYY-MM-DDTHH:mm:ss.SSS[Z]');
+  
+    const formatTransactionTime = (dateTime: string) => {
+      const now = moment.tz(dateToday, timeZone);  // Use dateToday instead of the current moment
+      const transactionTime = moment.tz(dateTime, timeZone);
+      const diffMinutes = now.diff(transactionTime, 'minutes');
+      const diffHours = now.diff(transactionTime, 'hours');
+      const diffDays = now.diff(transactionTime, 'days');
+  
+      if (diffMinutes < 1) {
+        return 'just now';
+      } else if (diffMinutes < 60) {
+        return `${diffMinutes} minute${diffMinutes > 1 ? 's' : ''} ago`;
+      } else if (diffHours < 24) {
+        return `${diffHours} hour${diffHours > 1 ? 's' : ''} ago`;
+      } else {
+        return `${diffDays} day${diffDays > 1 ? 's' : ''} ago`;
+      }
+    };
+
+    useEffect(() => {
+        const fetchScrapData = async () => {
+            const res = await fetch('/api/engines/scrapengines', {
+              method: 'POST',
+            });
+            const data = await res.json();
+            const sortedData = data.sort((a: ScrapEngine, b: ScrapEngine) => new Date(b.createAt).getTime() - new Date(a.createAt).getTime());
+            setScrapData(sortedData);
+        };
+        fetchScrapData();
+      }, []);
 
     useEffect(() => {
         const fetchEngineData = async () => {
@@ -54,6 +104,10 @@ export function EngineList() {
         setCurrentPage(page);
     };
 
+    const handleScrapPageChange = (page: number) => {
+        setCurrentPage(page);
+    };
+
     const clearFilters = () => {
         setSelectedEngineType(null);
         setSelectedStock(null);
@@ -67,6 +121,32 @@ export function EngineList() {
     });
 
     const currentEngines = filteredEngines.slice((currentPage - 1) * pageSize, currentPage * pageSize);
+
+    const showDrawer = () => {
+        setIsDrawerVisible(true);
+    };
+
+    const closeDrawer = () => {
+        setIsDrawerVisible(false);
+    };
+
+    const showModal = (reason: string) => {
+        setModalContent(reason);
+        setIsModalVisible(true);
+    };
+
+    const handleCancel = () => {
+        setIsModalVisible(false);
+    };
+
+    const exportToExcel = () => {
+        const ws = XLSX.utils.json_to_sheet(scrapData);
+        const wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, 'ScrapEngines');
+        XLSX.writeFile(wb, `scrap_engines_${moment().format('YYYYMMDD_HHmmss')}.xlsx`);
+    };
+
+    const currentScrapData = scrapData.slice((currentPage - 1) * scrapPageSize, currentPage * scrapPageSize);
 
     return (
         <>
@@ -131,24 +211,20 @@ export function EngineList() {
                         onChange={(value) => setSelectedStock(value)}
                         value={selectedStock}
                     />
-                    <div className='hidden md:block'>
                     <Button
-                    className='flex bg-red-primary hover:bg-red-primary font-semibold rounded-lg w-28 text-md h-auto py-2 px-5 tracking-wider border-red-800 border-2 border-b-4 active:border-b-2'
-                    type='primary'
-                    onClick={clearFilters}>
+                        className='flex bg-red-primary hover:bg-red-primary font-semibold rounded-lg w-28 text-md h-auto py-2 px-5 tracking-wider border-red-800 border-2 border-b-4 active:border-b-2'
+                        type='primary'
+                        onClick={clearFilters}>
                         Clear Filters
                     </Button>
-                    </div>
-                    </div>
-                    <div className='block md:hidden'>
                     <Button
-                    className='flex bg-red-primary hover:bg-red-primary font-semibold rounded-lg w-28 text-md h-auto py-2 px-5 tracking-wider border-red-800 border-2 border-b-4 active:border-b-2'
-                    type='primary'
-                    onClick={clearFilters}>
-                        Clear Filters
+                        className='flex bg-red-primary hover:bg-red-primary font-semibold rounded-lg w-28 text-md h-auto py-2 px-5 tracking-wider border-red-800 border-2 border-b-4 active:border-b-2 ml-2'
+                        type='primary'
+                        onClick={showDrawer}>
+                        Scrap Engines
                     </Button>
-                    </div>
-                    <Skeleton loading={loading} active>
+                </div>
+                <Skeleton loading={loading} active>
                     <div className="grid grid-cols-2 gap-x-8 gap-y-4 md:grid-cols-2 xl:grid-cols-4 2xl:grid-cols-5 mb-4">
                         {currentEngines.length > 0 ? currentEngines.map(engine => (
                             engine.quantity < 15 ? (
@@ -210,6 +286,79 @@ export function EngineList() {
                     </div>
                 )}
                 </Skeleton>
+                <Drawer
+                    title="Scrap Engines"
+                    placement="right"
+                    closable={true}
+                    onClose={closeDrawer}
+                    open={isDrawerVisible}
+                    size='large'
+                >
+                    <div className="w-full mb-4">
+                    <button onClick={exportToExcel} className="bg-red-primary text-white px-4 py-2 rounded">
+                        Export to Excel
+                    </button>
+                    </div>
+                    <div className="w-full">
+                    <div className="bg-red-primary/15 flex font-bold">
+                        <div className="text-left p-2 flex-1">ID</div>
+                        <div className="text-left p-2 flex-1">Engine</div>
+                        <div className="text-left p-2 flex-1">Quantity</div>
+                        <div className="text-left p-2 flex-1">User</div>
+                        <div className="text-left p-2 flex-1">Reason</div>
+                        <div className="text-left p-2 flex-1">Time</div>
+                    </div>
+                    <div className="divide-y">
+                        {currentScrapData.map((item) => (
+                            <div key={item.id} className="flex hover:bg-red-primary/5">
+                            <div className="p-4 flex-1">
+                                {item.id}
+                            </div>
+                            <div className="p-4 flex-1">
+                                {item.engineName}
+                            </div>
+                            <div className="p-4 flex-1">
+                                {item.quantity}
+                            </div>
+                            <div className="p-4 flex-1">
+                                {item.user}
+                            </div>
+                            <div className="p-4 flex-1">
+                                {item.reason.length > 10 ? (
+                                    <>
+                                        {item.reason.substring(0, 10)}...
+                                        <Button type="link" onClick={() => showModal(item.reason)}>see more</Button>
+                                    </>
+                                ) : (
+                                    item.reason
+                                )}
+                            </div>
+                            <div className="p-4 flex-1">
+                            {formatTransactionTime(item.createAt)}
+                            </div>
+                            </div>
+                        ))}
+                    </div>
+                    </div>
+                    {scrapData.length > scrapPageSize && (
+                        <div className="text-center">
+                            <Pagination
+                                current={currentPage}
+                                pageSize={scrapPageSize}
+                                total={scrapData.length}
+                                onChange={handleScrapPageChange}
+                            />
+                        </div>
+                    )}
+                </Drawer>
+                <Modal
+                    title="Reason"
+                    open={isModalVisible}
+                    onCancel={handleCancel}
+                    footer={null}
+                >
+                    <p>{modalContent}</p>
+                </Modal>
             </ConfigProvider>
         </>
     );

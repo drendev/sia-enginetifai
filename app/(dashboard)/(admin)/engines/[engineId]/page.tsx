@@ -6,6 +6,7 @@ import { LoadingOutlined } from '@ant-design/icons';
 import { useEffect, useState, createContext } from "react";
 import { useRouter } from "next/navigation";
 import moment from 'moment-timezone';
+import { useSession } from "next-auth/react";
 
 const ReachableContext = createContext<string | null>(null);
 
@@ -45,11 +46,15 @@ export default function EnginePageGrid({
   const [showEditEngineForm, setShowEditEngineForm] = useState(false);
   const [showEditSpecificationForm, setShowEditSpecificationForm] = useState(false);
   const [showAddStockForm, setShowAddStockForm] = useState(false);
+  const [showReduceStockForm, setShowReduceStockForm] = useState(false);
   const [editEngineForm] = Form.useForm();
   const [editSpecificationForm] = Form.useForm();
   const [addStockForm] = Form.useForm();
-  const [fileList, setFileList] = useState<any[]>([]);
+  const [reduceStockForm] = Form.useForm();
   const [loading, setLoading] = useState<boolean>(false);
+
+  const { data: session } = useSession();
+  const currentUser = session?.user?.username;
 
   /* Fetch Engine data */
   useEffect(() => {
@@ -160,6 +165,10 @@ export default function EnginePageGrid({
     setShowAddStockForm(true);
   };
 
+  const handleReduceStockButtonClick = () => {
+    setShowReduceStockForm(true);
+  };
+
   const handleEditEngineSubmit = async (values: any) => {
     setLoading(true);
     const response = await fetch(`/api/engines/editengine?engineId=${params.engineId}`, {
@@ -222,6 +231,32 @@ export default function EnginePageGrid({
     if (response.ok) {
       setLoading(false);
       setShowAddStockForm(false);
+      const updatedData = await response.json();
+      setEngineData(updatedData);
+    } else {
+      setLoading(false);
+      console.log('Something went wrong.');
+    }
+  };
+
+  const handleReduceStockSubmit = async (values: any) => {
+    setLoading(true);
+    const response = await fetch(`/api/engines/reducestock?engineId=${params.engineId}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        quantity: values.quantity,
+        reason: values.reason,
+        engineName: engineData?.engineName,
+        user: currentUser,
+      })
+    });
+
+    if (response.ok) {
+      setLoading(false);
+      setShowReduceStockForm(false);
       const updatedData = await response.json();
       setEngineData(updatedData);
     } else {
@@ -329,6 +364,14 @@ export default function EnginePageGrid({
                       className="bg-red-primary hover:bg-red-primary h-auto font-bold rounded-full w-auto text-md py-2 px-7 tracking-wider border-red-800 border-2 border-b-4 active:border-b-2"
                     >
                       Edit Specification
+                    </Button>
+                    <Button
+                      onClick={handleReduceStockButtonClick}
+                      type="primary"
+                      htmlType="submit"
+                      className="bg-red-primary hover:bg-red-primary h-auto font-bold rounded-full w-auto text-md py-2 px-7 tracking-wider border-red-800 border-2 border-b-4 active:border-b-2"
+                    >
+                      Reduce Stock
                     </Button>
                     <Form
                       onFinish={async () => {
@@ -579,6 +622,52 @@ export default function EnginePageGrid({
                               className="px-4 py-2 bg-red-primary text-white rounded-lg hover:bg-red-primary/80"
                             >
                               {loading ? <Spin indicator={<LoadingOutlined className="text-white" spin />} /> : 'Add Stock'}
+                            </button>
+                          </div>
+                        </Form>
+                      </div>
+                    </div>
+                  )}
+
+                  {showReduceStockForm && (
+                    <div className="fixed inset-0 flex items-center justify-center z-50 bg-gray-900 bg-opacity-50 overflow-scroll md:overflow-auto">
+                      <div className="bg-white dark:bg-slate-900 p-6 rounded-lg mt-6 md:mt-16 shadow-lg w-72 max-w-4xl">
+                        <h2 className="text-lg font-semibold">Reduce Stock for {engineData?.engineName}</h2>
+                        <Form autoComplete="off" form={reduceStockForm} onFinish={handleReduceStockSubmit}>
+                          <div className="mb-1">
+                            <label className="text-slate-50 dark:text-slate-200 block mb-1 font-sans font-semibold">Quantity</label>
+                            <Form.Item className="mb-0" name="quantity" rules={[{ required: true, message: 'Please enter quantity' }]}>
+                              <Input
+                                type="number"
+                                placeholder="Quantity"
+                                min={1}
+                                className="p-2 border border-gray-300 dark:border-gray-700 rounded-lg dark:bg-gray-900 dark:text-white focus:outline-none w-full"
+                                required
+                              />
+                              
+                            </Form.Item>
+                            <Form.Item className="mb-0" name="reason" rules={[{ required: true, message: 'Please enter quantity' }]}>
+                            <Input.TextArea
+                                placeholder="Reason"
+                                className="p-2 my-2 border border-gray-300 dark:border-gray-700 rounded-lg dark:bg-gray-900 dark:text-white focus:outline-none w-full"
+                                required
+                                
+                              />
+                            </Form.Item>
+                          </div>
+                          <div className="flex justify-end">
+                            <button
+                              type="button"
+                              className="px-4 py-2 bg-gray-500 text-white rounded-lg mr-2"
+                              onClick={() => setShowReduceStockForm(false)}
+                            >
+                              Cancel
+                            </button>
+                            <button
+                              type="submit"
+                              className="px-4 py-2 bg-red-primary text-white rounded-lg hover:bg-red-primary/80"
+                            >
+                              {loading ? <Spin indicator={<LoadingOutlined className="text-white" spin />} /> : 'Reduce Stock'}
                             </button>
                           </div>
                         </Form>

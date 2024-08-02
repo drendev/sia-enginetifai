@@ -8,6 +8,7 @@ import dayjs from 'dayjs';
 import Link from 'next/link';
 import { Badge, Avatar } from 'antd';
 import moment from 'moment-timezone';
+import * as XLSX from 'xlsx';
 
 const onPanelChange = (value: Dayjs, mode: CalendarProps<Dayjs>['mode']) => {
   console.log(value.format('YYYY-MM-DD'), mode);
@@ -26,7 +27,7 @@ const CalendarTransaction: React.FC = () => {
   const { token } = theme.useToken();
   const [drawerVisible, setDrawerVisible] = useState(false);
   const [selectedDate, setSelectedDate] = useState<Dayjs | null>(null);
-  const [transactions, setTransactions] = useState([]  as Transactions[]);
+  const [transactions, setTransactions] = useState([] as Transactions[]);
 
   const wrapperStyle: React.CSSProperties = {
     border: `1px solid ${token.colorBorderSecondary}`,
@@ -69,31 +70,37 @@ const CalendarTransaction: React.FC = () => {
   }, [selectedDate]);
 
   // Format time of initiated transaction
-
   const utcDate = new Date();
   const timeZone = 'Asia/Manila';
 
   const dateToday = moment.tz(utcDate, timeZone).format('YYYY-MM-DDTHH:mm:ss.SSS[Z]');
 
   const formatTransactionTime = (dateTime: string) => {
-      const now = moment.tz(dateToday, timeZone);  // Use dateToday instead of the current moment
-      const transactionTime = moment.tz(dateTime, timeZone);
-      const diffMinutes = now.diff(transactionTime, 'minutes');
-      const diffHours = now.diff(transactionTime, 'hours');
-      const diffDays = now.diff(transactionTime, 'days');
+    const now = moment.tz(dateToday, timeZone);  // Use dateToday instead of the current moment
+    const transactionTime = moment.tz(dateTime, timeZone);
+    const diffMinutes = now.diff(transactionTime, 'minutes');
+    const diffHours = now.diff(transactionTime, 'hours');
+    const diffDays = now.diff(transactionTime, 'days');
 
-      if (diffMinutes < 1) {
-          return 'just now';
-      } else if (diffMinutes < 60) {
-          return `${diffMinutes} minute${diffMinutes > 1 ? 's' : ''} ago`;
-      } else if (diffHours < 24) {
-          return `${diffHours} hour${diffHours > 1 ? 's' : ''} ago`;
-      } else {
-          return `${diffDays} day${diffDays > 1 ? 's' : ''} ago`;
-      }
+    if (diffMinutes < 1) {
+      return 'just now';
+    } else if (diffMinutes < 60) {
+      return `${diffMinutes} minute${diffMinutes > 1 ? 's' : ''} ago`;
+    } else if (diffHours < 24) {
+      return `${diffHours} hour${diffHours > 1 ? 's' : ''} ago`;
+    } else {
+      return `${diffDays} day${diffDays > 1 ? 's' : ''} ago`;
+    }
   };
-    
 
+  const exportToExcel = () => {
+    const filteredTransactions = transactions.map(({ user, ...rest }) => rest);
+    const ws = XLSX.utils.json_to_sheet(filteredTransactions);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Transactions');
+    XLSX.writeFile(wb, `transactions_${selectedDate?.format('YYYY-MM-DD')}.xlsx`);
+  };
+  
   return (
     <>
       <div className='justify-center align-center self-center'>
@@ -110,32 +117,37 @@ const CalendarTransaction: React.FC = () => {
         size='large'
       >
         {/* Content for the drawer goes here */}
+        <div className="w-full mb-4">
+          <button onClick={exportToExcel} className="bg-red-primary text-white px-4 py-2 rounded">
+            Export to Excel
+          </button>
+        </div>
         <div className="w-full">
-                    <div className="bg-red-primary/15 flex font-bold">
-                        <div className="text-left p-2 flex-1">Type</div>
-                        <div className="text-left p-2 flex-1">Payment</div>
-                        <div className="text-left p-2 flex-1">Staff</div>
-                        <div className="text-left p-2 flex-1">Time</div>
-                    </div>
-                    <div className="divide-y">
-                      {transactions.map((item) => (
-                              <Link key={item.id} href={`/transactions/view/${item.id}`}>
-                                  <div key={item.id} className="flex hover:bg-red-primary/5">
-                                      <div className="p-4 flex-1">
-                                        <Badge status={item.delivery ? "success" : "processing"} text={item.delivery ? "Delivery" : "Store"} className='text-xs'/>
-                                      </div>
-                                      <div className="p-4 flex-1">
-                                        {item.paymentMethod}
-                                      </div>
-                                      <div className="p-4 flex-1"><Avatar src={`${item.user}`} style={{ backgroundColor: '#fde3cf' }}></Avatar></div>
-                                      <div className="p-4 flex-1">
-                                        {formatTransactionTime(item.createAt)}
-                                      </div>
-                                  </div>
-                              </Link>
-                          ))}
-                    </div>
+          <div className="bg-red-primary/15 flex font-bold">
+            <div className="text-left p-2 flex-1">Type</div>
+            <div className="text-left p-2 flex-1">Payment</div>
+            <div className="text-left p-2 flex-1">Staff</div>
+            <div className="text-left p-2 flex-1">Time</div>
+          </div>
+          <div className="divide-y">
+            {transactions.map((item) => (
+              <Link key={item.id} href={`/transactions/view/${item.id}`}>
+                <div key={item.id} className="flex hover:bg-red-primary/5">
+                  <div className="p-4 flex-1">
+                    <Badge status={item.delivery ? "success" : "processing"} text={item.delivery ? "Delivery" : "Store"} className='text-xs' />
+                  </div>
+                  <div className="p-4 flex-1">
+                    {item.paymentMethod}
+                  </div>
+                  <div className="p-4 flex-1"><Avatar src={`${item.user}`} style={{ backgroundColor: '#fde3cf' }}></Avatar></div>
+                  <div className="p-4 flex-1">
+                    {formatTransactionTime(item.createAt)}
+                  </div>
                 </div>
+              </Link>
+            ))}
+          </div>
+        </div>
       </Drawer>
     </>
   );

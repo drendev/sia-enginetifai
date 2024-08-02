@@ -55,6 +55,15 @@ model Engine {
   @@unique([id, engineName])
 }
 
+model Scrap {
+  id         Int      @id @default(autoincrement())
+  reason     String?
+  quantity   Int?
+  user       String?
+  engineName String?
+  createAt   DateTime @default(now())
+}
+
 model Specification {
   id                Int     @id @default(autoincrement())
   engine            Engine  @relation(fields: [engineId, engineName], references: [id, engineName], onDelete: Cascade)
