@@ -315,13 +315,15 @@ export const TransactionHistoryCard: React.FC<TransactionHistoryProps> = ({ tran
           </div>
           <Modal title="Handle Delivery" open={isModalVisible} onCancel={handleCancel} footer={null}>
             <div className="md:flex justify-center items-center">
-              <Button 
-                type="primary"
-                onClick={() => updateDeliveryStatus("active")}
-                className='bg-red-primary hover:bg-red-primary font-bold rounded-full text-md h-auto py-2 px-3 tracking-wider border-red-800 border-2 border-b-4 active:border-b-2'
-              >
-                Start Delivery
-              </Button>
+              {transactionData?.deliveryStatus !== "active" && (
+                <Button 
+                  type="primary"
+                  onClick={() => updateDeliveryStatus("active")}
+                  className='bg-red-primary hover:bg-red-primary font-bold rounded-full text-md h-auto py-2 px-3 tracking-wider border-red-800 border-2 border-b-4 active:border-b-2'
+                >
+                  Start Delivery
+                </Button>
+              )}
               {transactionData?.deliveryStatus === "active" && (
                 <Button 
                   type="primary" 
