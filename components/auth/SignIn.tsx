@@ -97,11 +97,6 @@ import { signIn } from 'next-auth/react';
                   {loading ? <Spin indicator={<LoadingOutlined className="text-white" spin />} /> : 'Log in'}
                 </Button>
               </Form.Item>
-              <Form.Item>
-                <a className="login-form-forgot text-red-primary" href="">
-                  Forgot password
-                </a>
-              </Form.Item>
             </Form>
           
         </div>
