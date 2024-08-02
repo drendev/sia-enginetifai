@@ -395,7 +395,7 @@ export default function Employees() {
         />
         <div className="flex">
           <div className="mt-3 flex-grow">
-            {filteredUsers.length - 1}{" "}
+            {filteredUsers.length - 1 < 0 ? filteredUsers.length : filteredUsers.length}{" "}
             {filteredUsers.length === 2 || filteredUsers.length === 1
               ? "Staff"
               : "Staffs"}
