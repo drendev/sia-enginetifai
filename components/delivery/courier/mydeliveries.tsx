@@ -68,7 +68,7 @@ export function MyDeliveries() {
 
     return (
         <>
-            <h1 className='text-red-900 font-sans font-bold text-xl pb-2'>Active Deliveries</h1>
+            <h1 className='text-red-900 font-sans font-bold text-xl pb-2'>My Deliveries</h1>
             <div className="w-full text-sm">
                 <div className="bg-red-primary/15 font-sans flex font-bold">
                     <div className="flex items-center justify-center p-2 flex-1">ID</div>
