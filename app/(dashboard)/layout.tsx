@@ -9,9 +9,10 @@ export default async function RootLayout({
   children: React.ReactNode;
 }) {
   const session = await getServerSession(authOptions);
-  const isAdmin = session?.user?.role === "admin" || "employee";
+  const isAdmin = session?.user?.role === "admin";
+  const isEmployee = session?.user?.role === "employee";
 
-  if(!isAdmin) redirect("/");
+  if(!isAdmin && !isEmployee) redirect("/");
 
   return (
     <div className="">

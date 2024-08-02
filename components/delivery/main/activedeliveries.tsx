@@ -63,7 +63,7 @@ export function ActiveDeliveries() {
                                     {item.transactionUser}
                                 </div>
                                 <div className="flex items-center justify-center p-2 flex-1">
-                                    <Link key={item.id} href={`/deliverytracking/track/${item.id}`}>
+                                    <Link key={item.id} href={`/deliverytracking/delivery/${item.id}`}>
                                         <Button
                                             type="primary"
                                             htmlType="submit"
