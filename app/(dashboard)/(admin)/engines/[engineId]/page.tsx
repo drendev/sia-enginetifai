@@ -568,6 +568,7 @@ export default function EnginePageGrid({
                                     placeholder={key}
                                     className="p-2 border border-gray-300 dark:border-gray-700 rounded-lg dark:bg-gray-900 dark:text-white focus:outline-none w-full"
                                     required
+                                    max={20}
                                   />
                                 </Form.Item>
                               </div>
