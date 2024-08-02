@@ -41,6 +41,7 @@ export const PackageInformationCard: React.FC<PackageProps> = ({ transactionId }
 
   const { data: session } = useSession();
   const currentUser = session?.user?.username;
+
   useEffect(() => {
     const fetchTransactionData = async () => {
       const res = await fetch(`/api/delivery/delivarydetails?transactionId=${transactionId}`, {
@@ -211,7 +212,7 @@ export const TransactionHistoryCard: React.FC<TransactionHistoryProps> = ({ tran
                 reverse={false}
                 items={[
                   {
-                    children: `Created Transaction on ${formatDate(transactionData.createAt)}`,
+                    children: `Created Transaction`,
                     color: "#BB4747",
                   },
                   {
@@ -234,7 +235,7 @@ export const TransactionHistoryCard: React.FC<TransactionHistoryProps> = ({ tran
                 reverse={false}
                 items={[
                   {
-                    children: `Created Transaction on ${formatDate(transactionData.createAt)}`,
+                    children: `Created Transaction`,
                     color: "#BB4747",
                   },
                   {
@@ -258,7 +259,7 @@ export const TransactionHistoryCard: React.FC<TransactionHistoryProps> = ({ tran
                 reverse={false}
                 items={[
                   {
-                    children: `Created Transaction on ${formatDate(transactionData.createAt)}`,
+                    children: `Created Transaction`,
                     color: "#BB4747",
                   },
                   {
@@ -288,7 +289,7 @@ export const TransactionHistoryCard: React.FC<TransactionHistoryProps> = ({ tran
                 reverse={false}
                 items={[
                   {
-                    children: `Created Transaction on ${formatDate(transactionData.createAt)}`,
+                    children: `Created Transaction`,
                     color: "#BB4747",
                   },
                   {
