@@ -1,5 +1,4 @@
 import { DeliveryPage } from '@/components/delivery/main/grid'
-import Link from 'next/link'
 
 export default function DeliveryTracking() {
     return (

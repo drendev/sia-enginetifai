@@ -1,10 +1,10 @@
-import MapComponent from "@/components/dashboard/main/delivery"
+import { CourierPage } from "@/components/delivery/courier/grid"
 
 
 export default function CourierDashboard () {
   return(
     <>
-        <MapComponent />     
+        <CourierPage />
     </>
   )
 }

@@ -1,10 +1,10 @@
 "use client"
 // MapComponent.tsx
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { FaSearch, FaArrowRight, FaUser, FaEnvelope } from "react-icons/fa";
 import TransactionHistoryModal from "@/components/dashboard/main/delivery/TransactionHistoryModal"; // Import your modal component
-import MapboxComponent2 from "@/components/dashboard/main/delivery/maplocator";
+import MapboxComponent from "@/components/dashboard/main/delivery/MapboxComponent";
 import DeliveryTracking from "@/components/dashboard/main/delivery/DeliveryTracking";
 import { PackageInformationCard, TransactionHistoryCard } from "@/components/dashboard/main/delivery/TransactionHistory";
 import { PlusOutlined } from "@ant-design/icons";
@@ -28,8 +28,7 @@ const generateTransactionNumber = (): string => {
   return result;
 };
 
-const MapComponent: React.FC = () => {
-  const [searchTerm, setSearchTerm] = useState("");
+export default function Page({ params }: { params: { trackId: string } }) {
   const [trackingNumber, setTrackingNumber] = useState("");
   const [packages, setPackages] = useState<any>({});
   const [showAddForm, setShowAddForm] = useState(false);
@@ -126,7 +125,7 @@ const MapComponent: React.FC = () => {
     });
 
   return (
-    <div className="flex font-sans bg-red-50 flex-col md:flex-row h-auto md:w-full p-4">
+    <div className="flex font-sans bg-red-50 flex-col md:flex-row h-auto md:w-full pt-20 p-4">
       {/* Left Side Content */}
       <div className="flex flex-col md:w-[40rem] w-full">
 
@@ -228,8 +227,8 @@ const MapComponent: React.FC = () => {
 
       {/* Right Side Content (Map Component) */}
       <div className="md:flex-1 md:ml-4 w-full">
-        <MapboxComponent2 
-        transactionId="2"
+        <MapboxComponent 
+        transactionId={Number(params.trackId)}
         />
         <DeliveryTracking/>
       </div>
@@ -250,6 +249,4 @@ const MapComponent: React.FC = () => {
     </div>
   );
 };
-
-export default MapComponent;
 
