@@ -237,7 +237,7 @@ export function EngineList() {
                                                 </div>
                                                 <div className="flex-1 pb-2 bg-slate-50 dark:bg-slate-900">
                                                     <h3 className="text-gray-800 dark:text-slate-300 text-center">
-                                                        <span className="font-bold font-sans text-sm">{engine.engineName}</span>
+                                                        <span className="font-bold font-sans text-sm">{engine.engineName.length > 12 ? '...' : engine.engineName}</span>
                                                     </h3>
                                                     <h3 className="text-gray-800 dark:text-slate-300 text-center">
                                                         <span className="font-semibold font-sans text-sm">Available:</span> 
@@ -257,7 +257,15 @@ export function EngineList() {
                                                 </div>
                                                 <div className="flex-1 pb-2 bg-slate-50 dark:bg-slate-900">
                                                     <h3 className="text-gray-800 dark:text-slate-300 text-center">
-                                                        <span className="font-bold font-sans text-sm">{engine.engineName}</span>
+                                                        <span className="font-bold font-sans text-sm">
+                                                        {engine.engineName.length > 15 ? (
+                                                            <>
+                                                                {engine.engineName.substring(0, 10)}...
+                                                            </>
+                                                        ) : (
+                                                            engine.engineName
+                                                        )}
+                                                        </span>
                                                     </h3>
                                                     <h3 className="text-gray-800 dark:text-slate-300 text-center">
                                                         <span className="font-semibold font-sans text-sm">Available:</span> 
@@ -315,7 +323,13 @@ export function EngineList() {
                                 {item.id}
                             </div>
                             <div className="p-4 flex-1">
-                                {item.engineName}
+                            {item.engineName.length > 15 ? (
+                                    <>
+                                        {item.engineName.substring(0, 10)}...
+                                    </>
+                                ) : (
+                                    item.engineName
+                                )}
                             </div>
                             <div className="p-4 flex-1">
                                 {item.quantity}

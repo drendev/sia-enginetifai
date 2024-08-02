@@ -464,7 +464,7 @@ export default function EnginePageGrid({
                         <Form autoComplete="off" form={editEngineForm} onFinish={handleEditEngineSubmit}>
                           <div className="grid grid-cols-2 md:grid-cols-2 gap-3">
                             <div className="mb-4">
-                              <label className="text-slate-50 dark:text-slate-200 block mb-1 font-sans font-semibold">Engine Name</label>
+                              <label className="text-slate-600 dark:text-slate-200 block mb-1 font-sans font-semibold">Engine Name</label>
                               <Form.Item className="mb-0" name="engineName" rules={[{ required: true, message: 'Please enter engine name' }]}>
                                 <Input
                                   placeholder="Engine Name"
@@ -474,7 +474,7 @@ export default function EnginePageGrid({
                               </Form.Item>
                             </div>
                             <div className="mb-4">
-                              <label className="text-slate-50 dark:text-slate-200 block mb-1 font-sans font-semibold">Engine Type</label>
+                              <label className="text-slate-600 dark:text-slate-200 block mb-1 font-sans font-semibold">Engine Type</label>
                               <Form.Item className="mb-0" name="engineType" rules={[{ required: true, message: 'Please enter engine type' }]}>
                               <Select
                               
@@ -514,7 +514,7 @@ export default function EnginePageGrid({
                               </Form.Item>
                             </div>
                             <div className="mb-4">
-                              <label className="text-slate-50 dark:text-slate-200 block mb-1 font-sans font-semibold">Price</label>
+                              <label className="text-slate-600 dark:text-slate-200 block mb-1 font-sans font-semibold">Price</label>
                               <Form.Item className="mb-0" name="price" rules={[{ required: true, message: 'Please enter price' }]}>
                                 <Input
                                   type="number"
@@ -525,7 +525,7 @@ export default function EnginePageGrid({
                               </Form.Item>
                             </div>
                             <div className="mb-4">
-                              <label className="text-slate-50 dark:text-slate-200 block mb-1 font-sans font-semibold">Description</label>
+                              <label className="text-slate-600 dark:text-slate-200 block mb-1 font-sans font-semibold">Description</label>
                               <Form.Item className="mb-0" name="description" rules={[{ required: true, message: 'Please enter description' }]}>
                                 <Input.TextArea
                                   placeholder="Description"
@@ -562,7 +562,7 @@ export default function EnginePageGrid({
                           <div className="grid grid-cols-3 md:grid-cols-4 gap-3">
                             {engineSpecification && Object.keys(engineSpecification).filter(key => engineSpecification[key]).map((key) => (
                               <div className="mb-4" key={key}>
-                                <label className="text-slate-50 dark:text-slate-200 block mb-1 font-sans font-semibold">{key}</label>
+                                <label className="text-slate-600 dark:text-slate-200 block mb-1 font-sans font-semibold">{key}</label>
                                 <Form.Item className="mb-0" name={key} rules={[{ required: true, message: `Please enter ${key}` }]}>
                                   <Input
                                     placeholder={key}
@@ -598,7 +598,6 @@ export default function EnginePageGrid({
                         <h2 className="text-lg font-semibold mb-4">Add Stock for {engineData?.engineName}</h2>
                         <Form autoComplete="off" form={addStockForm} onFinish={handleAddStockSubmit}>
                           <div className="mb-4">
-                            <label className="text-slate-50 dark:text-slate-200 block mb-1 font-sans font-semibold">Quantity</label>
                             <Form.Item className="mb-0" name="quantity" rules={[{ required: true, message: 'Please enter quantity' }]}>
                               <Input
                                 type="number"
@@ -635,7 +634,6 @@ export default function EnginePageGrid({
                         <h2 className="text-lg font-semibold">Reduce Stock for {engineData?.engineName}</h2>
                         <Form autoComplete="off" form={reduceStockForm} onFinish={handleReduceStockSubmit}>
                           <div className="mb-1">
-                            <label className="text-slate-50 dark:text-slate-200 block mb-1 font-sans font-semibold">Quantity</label>
                             <Form.Item className="mb-0" name="quantity" rules={[{ required: true, message: 'Please enter quantity' }]}>
                               <Input
                                 type="number"
