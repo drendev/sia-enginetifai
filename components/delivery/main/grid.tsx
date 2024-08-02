@@ -56,7 +56,7 @@ export function DeliveryPage() {
                                             <p>
                                                 <div>
                                                 <div className="font-bold"> 1. Service Description</div>
-                                                Our delivery tracking service allows users to monitor the status and location of their deliveries in real-time. The service is provided "as is" and "as available" without any warranties of any kind, either express or implied.
+                                                Our delivery tracking service allows users to monitor the status and location of their deliveries in real-time. The service is provided &quot;as is&quot; and &quot;as available&quot; without any warranties of any kind, either express or implied.
                                                 </div>
                                                 <div>
                                                 <div className="font-bold"> 2. User Responsibilities</div>
