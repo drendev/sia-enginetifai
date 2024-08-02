@@ -395,10 +395,7 @@ export default function Employees() {
         />
         <div className="flex">
           <div className="mt-3 flex-grow">
-            {filteredUsers.length - 1 === -1 ? "0" : filteredUsers.length - 1}{" "}
-            {filteredUsers.length - 1 === 1
-              ? "Staff"
-              : "Staffs"}
+            Staff
           </div>
 
           <Select
