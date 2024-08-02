@@ -82,8 +82,6 @@ export function MyTransactions() {
         currentPage * pageSize
     );
 
-    console.log(transactions);
-
     if (!currentUser) {
         return <div className="p-4"><Skeleton active /></div>;
     }

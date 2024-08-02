@@ -26,6 +26,7 @@ const config: Config = {
         "enginebackground": "url('/enginebackground.png')",
         "imagerecog": "url('/imagerecog.png')",
         "transactionmain": "url('/transactionbg.png')",
+        "delivery": "url('/deliverybg.png')",
         },
         backgroundSize: {
           "16": "12rem",
