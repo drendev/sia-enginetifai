@@ -66,14 +66,6 @@ export default function UserHeader({children}: any) {
                             Profile
                         </Link>
                     </li>
-                    <li>
-                    <Link
-                        href="#"
-                        className="flex items-center gap-3 text-sm font-medium duration-300 ease-in-out text-red-primary hover:opacity-60 active:opacity-90 lg:text-sm"
-                    >
-                        Help
-                    </Link>
-                    </li>
                 </ul>
                 <button 
                 className="flex items-center gap-3.5 px-6 py-4 text-sm font-bold duration-300 ease-in-out text-red-primary hover:opacity-60 active:opacity-90 lg:text-sm"
