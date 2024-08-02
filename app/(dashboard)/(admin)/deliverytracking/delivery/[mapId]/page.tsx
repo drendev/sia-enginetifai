@@ -40,6 +40,7 @@
     const [quantity, setQuantity] = useState("");
     const [destination, setDestination] = useState<Destination | null>(null);
     const [place, setPlace] = useState("");
+    
     const [transactionHistory, setTransactionHistory] = useState<any[]>([
         {
         trackingNumber: generateTransactionNumber(),
@@ -113,7 +114,6 @@
         setShowAddForm(false);
     };
 
-
     useEffect(() => {
         const fetchEngineData = async () => {
             const res = await fetch(`/api/delivery/destination?transactionId=${params.mapId}`, {
@@ -141,105 +141,35 @@
         <div className="flex flex-col md:w-[40rem] w-full">
 
             {/* Adding New Package Card */}
-            <div className="dark:bg-gray-900 bg-red-200 rounded-lg p-6 shadow-md mb-2 w-full bg-no-repeat bg-cover" style={{ backgroundImage: `url("./bg-red.png")` }}>
+            <div className="bg-red-primary rounded-lg p-6 shadow-md mb-2 w-full bg-right-bottom bg-contain bg-no-repeat bg-track">
             <div className="flex items-center justify-between p-2 ">
                 <div>
                 <p className="text-red-100 text-4xl font-sans font-extrabold pb-2">
-                    Add New Package
+                    Track Delivery
                 </p>
                 <h1 className="text-sm text-white dark:text-white pl-1 pb-3">
-                    Fill out the form to create new package
+                    Real-Time Delivery Tracking
                 </h1>
                 </div>
             </div>
-            <div className="flex items-center mb-2">
-                <button
-                className="flex bg-red-primary hover:bg-red-primary text-white font-bold rounded-full md:w-30 text-md h-auto py-2 px-7 tracking-wider border-red-800 border-2 border-b-4 active:border-b-2"
-                onClick={handleAddButtonClick}
-                > New Package <PlusOutlined className="pl-2 pt-1" />
-                </button>
             </div>
-            </div>
-
 
             {/* Package Information Card */}
-            <PackageInformationCard packages={packages} />
+            <PackageInformationCard  
+            transactionId={Number(params.mapId)}
+            />
 
             {/* Transaction History Card */}
             <TransactionHistoryCard
-            transactionHistory={transactionHistory}
-            setPackages={setPackages}
-            onSeeMore={() => setShowTransactionHistoryModal(true)} // Set showModal state to true
+            transactionId={Number(params.mapId)}
             />
             
         </div>
 
-        {/* Add Package Form */}
-        {showAddForm && (
-            <div className="fixed inset-0 flex items-center justify-center z-50 bg-gray-900 bg-opacity-50">
-            <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg w-[30rem]">
-                <h2 className="text-lg font-semibold mb-4">Add a New Package</h2>
-                <form onSubmit={handleFormSubmit}>
-                <div className="mb-4">
-                    <label className="block mb-1">Engine Name</label>
-                    <select
-                    value={engineName}
-                    onChange={(e) => setEngineName(e.target.value)}
-                    className="p-2 border border-gray-300 dark:border-gray-700 rounded-lg dark:bg-gray-900 dark:text-white focus:outline-none w-full"
-                    required
-                    >
-                    <option value="">Select Engine</option>
-                    <option value="Engine ABC">Engine ABC</option>
-                    <option value="Engine XYZ">Engine XYZ</option>
-                    <option value="Engine 123">Engine 123</option>
-                    </select>
-                </div>
-                <div className="mb-4">
-                    <label className="block mb-1">Quantity</label>
-                    <input
-                    type="number"
-                    placeholder="Quantity"
-                    value={quantity}
-                    onChange={(e) => setQuantity(e.target.value)}
-                    className="p-2 border border-gray-300 dark:border-gray-700 rounded-lg dark:bg-gray-900 dark:text-white focus:outline-none w-full"
-                    required
-                    />
-                </div>
-                <div className="mb-4">
-                    <label className="block mb-1">Place</label>
-                    <input
-                    type="text"
-                    placeholder="Place"
-                    value={place}
-                    onChange={(e) => setPlace(e.target.value)}
-                    className="p-2 border border-gray-300 dark:border-gray-700 rounded-lg dark:bg-gray-900 dark:text-white focus:outline-none w-full"
-                    required
-                    />
-                </div>
-                <div className="flex justify-end">
-                    <button
-                    type="button"
-                    className="px-4 py-2 bg-gray-500 text-white rounded-lg mr-2"
-                    onClick={() => setShowAddForm(false)}
-                    >
-                    Cancel
-                    </button>
-                    <button
-                    type="submit"
-                    className="px-4 py-2 bg-red-500 text-white rounded-lg"
-                    >
-                    Submit
-                    </button>
-                </div>
-                </form>
-            </div>
-            </div>
-        )}
-
         {/* Right Side Content (Map Component) */}
         <div className="md:flex-1 md:ml-4 w-full">
             <MapboxComponent2 
-            transactionId={params.mapId}
+            transactionId={Number(params.mapId)}
             />
             <DeliveryTracking/>
         </div>

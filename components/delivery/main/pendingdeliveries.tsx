@@ -63,7 +63,7 @@ export function PendingDeliveries() {
                             <div className="text-center p-4">No Pending Deliveries</div>
                         ) : (
                             paginatedDeliveries.map((item) => (
-                                <Link key={item.id} href={`/courier/track/${item.id}`}>
+                                <Link key={item.id} href={`/deliverytracking/delivery/${item.id}`}>
                                     <div className="flex hover:bg-red-primary/5 font-sans text-slate-800 dark:text-slate-200">
                                         <div className="justify-center p-2 flex-1">
                                             {item.id}

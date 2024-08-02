@@ -6,7 +6,7 @@ import { DeliveriesOverview } from "@/components/delivery/main/deliveriesovervie
 import { PendingDeliveriesCourier } from "@/components/delivery/courier/pendingdeliveries"
 import { DeliveryGrowth } from "@/components/delivery/main/deliverygrowth"
 import { useState } from 'react';
-import { RecentDeliveries } from '../main/recentdeliveries';
+import { MyDeliveries } from './mydeliveries';
 
 export function CourierPage() {
     const [isModalVisible, setIsModalVisible] = useState(false); // State for modal visibility
@@ -99,7 +99,7 @@ export function CourierPage() {
                         <div className="flex flex-col md:flex-none w-full md:w-2/6 space-y-4 p-6 md:p-0 gap-4">
                             <div className="relative md:fixed pt-0 md:pt-6 md:h-[calc(100vh-96px)] scrollbar-none md:overflow-y-auto md:scrollbar md:scrollbar-thumb-red-primary md:scrollbar-track-transparent">
                                 <PendingDeliveriesCourier />
-                                <RecentDeliveries />
+                                <MyDeliveries />
                             </div>
                         </div>
                     </div>

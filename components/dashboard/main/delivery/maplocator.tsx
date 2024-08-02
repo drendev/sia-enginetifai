@@ -25,7 +25,7 @@ interface TrackLocation {
 }
 
 interface DeliveryProps {
-    transactionId: string;
+    transactionId: number;
 }
 
 interface Destination {
@@ -368,8 +368,8 @@ const MapComponent2: React.FC<DeliveryProps> = ({ transactionId }) => {
     }, [destination1]);
 
     return (
-        <div className="flex h-[60rem] md:w-[60rem] pt-15 pl-8 w-full">
-            <div ref={mapContainer} style={mapContainerStyle} />
+        <div className="flex relative md:fixed h-[60rem] md:w-[60rem] pt-15 pl-0 md:pl-8 w-full">
+            <div ref={mapContainer} style={{ height: '100vh', width: '100%' }} />
         </div>
     );
 };

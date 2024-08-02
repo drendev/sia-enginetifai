@@ -254,7 +254,7 @@ const MapboxExample: React.FC<DeliveryProps> = ({ transactionId }) => {
   };
 
   return (
-    <div>
+    <div className='flex relative md:fixed h-[50rem] md:w-[52rem] pt-15 pl-0 md:pl-8 w-full'>
       <div id="map" ref={mapContainerRef} style={{ height: '100vh', width: '100%' }}></div>
       {/* <div className='mt-16' style={{ position: 'absolute', top: 10, left: 10, backgroundColor: 'white', padding: '10px', borderRadius: '5px' }}>
         <h2>Mapbox Directions</h2>

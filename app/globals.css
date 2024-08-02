@@ -358,6 +358,11 @@ html {
   @apply relative
 }
 
+.custom-dots2 li button {
+  @apply bg-red-primary !important; /* Change this to your desired color */
+  @apply relative
+}
+
 .flip-card {
   perspective: 1000px; /* Remove this if you don't want the 3D effect */
 }

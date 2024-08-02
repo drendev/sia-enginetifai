@@ -1,46 +1,92 @@
 "use client"
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { FaUser, FaEnvelope } from "react-icons/fa";
-import TransactionHistoryModal from "./TransactionHistoryModal"; 
+import { Carousel, Image, Badge, Timeline } from "antd";
+import { ClockCircleOutlined } from "@ant-design/icons";
 
 interface PackageProps {
-  packages: any; // Define your type for packages
+  transactionId: number;
 }
 
-interface Transaction {
-  trackingNumber: string;
-  date: string;
-  engineName: string;
-  place: string;
-  quantity: number;
-  driverName: string;
+interface DeliveryInformation {
+  deliveryUser: string;
+  deliveryTime: string;
+  address: string;
+  pictures: string[];
+  paymentMethod: string;
+  totalPrice: number;
+  deliveryDate: string;
+  createAt: string;
+  quantity: number[];
+  engineName: string[];
+  deliveryStatus: string; // New status field
 }
 
 interface TransactionHistoryProps {
-  transactionHistory: Transaction[];
-  setPackages: React.Dispatch<React.SetStateAction<any>>;
-  onSeeMore: () => void; // New prop for opening modal
+  transactionId: number;
 }
 
-export const PackageInformationCard: React.FC<PackageProps> = ({ packages }) => (
+const formatDate = (dateString: string) => {
+  const options: Intl.DateTimeFormatOptions = { year: 'numeric', month: 'long', day: 'numeric' };
+  return new Date(dateString).toLocaleDateString(undefined, options);
+};
+
+const formatCurrency = (amount: number) => {
+  return `₱${amount.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}`;
+};
+
+export const PackageInformationCard: React.FC<PackageProps> = ({ transactionId  }) => {
+  const [transactionData, setTransactionData] = useState<DeliveryInformation | null>(null);
+
+  useEffect(() => {
+    const fetchTransactionData = async () => {
+        const res = await fetch(`/api/delivery/delivarydetails?transactionId=${transactionId}`, {
+            method: 'POST',
+        });
+        const data = await res.json();
+        setTransactionData(data);
+    };
+    fetchTransactionData();
+}, [transactionId]);
+
+  return(
   <div className="dark:bg-gray-900 bg-white rounded-lg p-4 shadow-md mb-4 w-full dark:text-black-500">
     <div className="mb-2">
       <h1 className="text-base text-black-600 dark:text-white">
-        Transaction Number
+        Delivery Details
       </h1>
       <p className="text-xl font-bold mb-2">
-        {packages.trackingNumber || "No package selected"}
+        Transaction ID: {transactionId}
       </p>
       <hr className="my-2 border-red-600 dark:border-gray-700" />
       <div className="flex flex-wrap justify-between">
         <div className="w-full mb-4 flex">
           <div className="w-1/2">
-            <p className="font-semibold">Order Date</p>
-            <p>{packages.date || "-"}</p>
+            <p className="font-semibold">Engines</p>
+            <div className="relative w-28 h-auto justify-center">
+            <Carousel autoplay dots={{ className: "custom-dots2" }} className='text-center h-40'>
+                {transactionData?.pictures.map((picture, index) => (
+                    <div key={index} className='rounded-xl flex flex-col justify-center items-center'>
+                        <Badge.Ribbon text={transactionData.engineName[index]} color="#BB4747" placement='start' className='ml-1'>
+                            <div className="image-container">
+                                <Image
+                                    src={picture}
+                                    alt={`Engine Image ${index}`}
+                                    width={110}
+                                    height={110}
+                                    className="rounded-xl"
+                                />
+                            </div>
+                        </Badge.Ribbon>
+                        <span className="text-red-950 text-md font-sans font-bold">{transactionData.quantity[index]} pcs.</span>
+                    </div>
+                ))}
+            </Carousel>
+            </div>
           </div>
           <div className="w-1/2">
-            <p className="font-semibold">Engine Name</p>
-            <p>{packages.engineName || "-"}</p>
+            <p className="font-semibold">Delivery Location</p>
+            <p>{transactionData?.address}</p>
           </div>
         </div>
       </div>
@@ -49,98 +95,118 @@ export const PackageInformationCard: React.FC<PackageProps> = ({ packages }) => 
 
       <div className="flex flex-wrap justify-between">
         <div className="w-full md:w-[30%] mb-4">
-          <p className="font-semibold">Place</p>
-          <p>{packages.place || "-"}</p>
+          <p className="font-semibold">Total Sales</p>
+          <p>{transactionData ? formatCurrency(transactionData.totalPrice) : ''}</p>
         </div>
         <div className="w-full md:w-[30%] mb-4">
-          <p className="font-semibold">Quantity</p>
-          <p>{packages.quantity || "-"}</p>
+          <p className="font-semibold">Payment</p>
+          <p>{transactionData?.paymentMethod}</p>
         </div>
       </div>
 
       <div className="flex items-center mt-2">
         <FaUser className="text-gray-500 dark:text-gray-300 mr-2 ml-2" />
-        <p>{packages.driverName || "-"}</p>
-        <button className="ml-auto flex items-center bg-red-700 text-white p-2 rounded-lg">
-          <FaEnvelope className="mr-2 ml-2" />
-        </button>
+        <p>{transactionData?.deliveryUser}</p>
       </div>
     </div>
   </div>
-);
+  );
+}
 
 export const TransactionHistoryCard: React.FC<TransactionHistoryProps> = ({
-  transactionHistory,
-  setPackages,
-  onSeeMore, // Receive the prop
-}) => (
+  transactionId
+}) => {
+  const [transactionData, setTransactionData] = useState<DeliveryInformation | null>(null);
+
+  useEffect(() => {
+    const fetchTransactionData = async () => {
+        const res = await fetch(`/api/delivery/delivarydetails?transactionId=${transactionId}`, {
+            method: 'POST',
+        });
+        const data = await res.json();
+        setTransactionData(data);
+    };
+
+    fetchTransactionData();
+
+    const intervalId = setInterval(() => {
+      fetchTransactionData();
+    }, 1000); // Fetch every 5 seconds
+
+    // Clear interval when status is "active" or "done"
+    if (transactionData?.deliveryStatus === "done") {
+      clearInterval(intervalId);
+    }
+
+    return () => clearInterval(intervalId); // Clear interval on component unmount
+  }, [transactionId, transactionData?.deliveryStatus]);
+
+  return(
   <div className="dark:bg-gray-900 bg-white rounded-lg p-4 shadow-md mb-4 w-full h-100">
     <div className="flex items-center justify-between mb-4">
       <div>
         <p className="text-lg font-semibold text-black-200 dark:text-white p-1">
-          Transaction History
+          Delivery Tracking
         </p>
         <h1 className="text-sm text-gray-500 dark:text-white pl-1">
-          Recent transactions and details
+          Real-Time Delivery Process
         </h1>
       </div>
-      <button
-        className="px-4 py-2 bg-red-700 text-white rounded-lg"
-        onClick={onSeeMore} // Trigger the modal opening
-      >
-        See more
-      </button>
     </div>
     <hr className="my-2 border-red-700 dark:border-gray-700" />
-
-    {/* Displaying Recent Transactions */}
-    <div className="max-h-60 overflow-y-auto">
-      {transactionHistory.slice(0, 3).map((transaction, index) => (
-        <div
-          key={index}
-          className="mb-4 cursor-pointer"
-          onClick={() => {
-            setPackages(transaction); // Set selected package details
-          }}
-        >
-          <div className="flex items-center justify-between mb-2">
-            <div>
-              <p className="text-lg font-semibold">
-                Transaction Number: {transaction.trackingNumber}
-              </p>
-              <div className="flex items-center">
-                <p className="text-sm">
-                  <span className="font-semibold">Order Date:</span>{" "}
-                  {new Date(transaction.date).toLocaleDateString(
-                    "en-US",
-                    {
-                      year: "numeric",
-                      month: "long",
-                      day: "numeric",
-                    }
-                  )}
-                </p>
-                <p className="text-sm ml-4">
-                  <span className="font-semibold">Engine Name:</span>{" "}
-                  {transaction.engineName}
-                </p>
-                <p className="text-sm ml-4">
-                  <span className="font-semibold">Place:</span>{" "}
-                  {transaction.place}
-                </p>
-                <p className="text-sm ml-4">
-                  <span className="font-semibold">Quantity:</span>{" "}
-                  {transaction.quantity}
-                </p>
-              </div>
-            </div>
-          </div>
-          <hr className="border-red-700 dark:border-gray-700" />
-        </div>
-      ))}
+    <div className="pl-8 font-sans font-semibold">
+      {transactionData?.deliveryStatus === "active" ? (
+        <Timeline
+          pending="Delivery on the way"
+          pendingDot={<ClockCircleOutlined style={{ fontSize: '16px', color: '#BB4747' }} />}
+          reverse={false}
+          items={[
+            {
+              children: `Created Transaction on ${formatDate(transactionData.createAt)}`,
+              color: '#BB4747',
+            },
+            {
+              children: 'Delivery Details Confirmed',
+              color: '#BB4747',
+            },
+            {
+              dot: <ClockCircleOutlined style={{ fontSize: '16px' }} />,
+              children: `Delivery Scheduled on ${formatDate(transactionData.deliveryDate)}, ${transactionData.deliveryTime}`,
+              color: '#BB4747',
+            },
+            {
+              color: '#facc15',
+              children: 'Pending Delivery',
+            },
+          ]}
+        />
+      ) : transactionData?.deliveryStatus === "pending" ? (
+        <Timeline
+          reverse={false}
+          items={[
+            {
+              children: `Created Transaction on ${formatDate(transactionData.createAt)}`,
+              color: '#BB4747',
+            },
+            {
+              children: 'Delivery Details Confirmed',
+              color: '#BB4747',
+            },
+            {
+              dot: <ClockCircleOutlined style={{ fontSize: '16px' }} />,
+              children: `Delivery Scheduled on ${formatDate(transactionData.deliveryDate)}, ${transactionData.deliveryTime}`,
+              color: '#BB4747',
+            },
+            {
+              color: '#facc15',
+              children: 'Pending Delivery',
+            },
+          ]}
+        />
+      ) : null}
     </div>
+    
   </div>
-);
+)}
 
 export default TransactionHistoryCard;
-

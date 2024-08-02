@@ -2,12 +2,13 @@
 // MapComponent.tsx
 
 import React, { useState, useEffect } from "react";
-import { FaSearch, FaArrowRight, FaUser, FaEnvelope } from "react-icons/fa";
 import TransactionHistoryModal from "@/components/dashboard/main/delivery/TransactionHistoryModal"; // Import your modal component
 import MapboxComponent from "@/components/dashboard/main/delivery/MapboxComponent";
+import MapboxComponent2 from "@/components/dashboard/main/delivery/maplocator"; // Import the second map component
 import DeliveryTracking from "@/components/dashboard/main/delivery/DeliveryTracking";
 import { PackageInformationCard, TransactionHistoryCard } from "@/components/dashboard/main/delivery/TransactionHistory";
 import { PlusOutlined } from "@ant-design/icons";
+import { useSession } from "next-auth/react";
 
 const generateTransactionNumber = (): string => {
   const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
@@ -28,11 +29,17 @@ const generateTransactionNumber = (): string => {
   return result;
 };
 
+interface DeliveryUser {
+  deliveryUser: string;
+  deliverStatus: string;
+}
+
 export default function Page({ params }: { params: { trackId: string } }) {
   const [trackingNumber, setTrackingNumber] = useState("");
   const [packages, setPackages] = useState<any>({});
   const [showAddForm, setShowAddForm] = useState(false);
   const [engineName, setEngineName] = useState("");
+  const [deliveryUser, setDeliveryUser] = useState<DeliveryUser | null>(null);
   const [quantity, setQuantity] = useState("");
   const [place, setPlace] = useState("");
   const [transactionHistory, setTransactionHistory] = useState<any[]>([
@@ -58,6 +65,9 @@ export default function Page({ params }: { params: { trackId: string } }) {
   const [sortOrder, setSortOrder] = useState<"newest" | "oldest">("newest");
   const [engineFilter, setEngineFilter] = useState<string | null>(null);
 
+  // fetch current user
+  const { data: session } = useSession();
+  const currentUser = session?.user?.username;
 
   const handleAddButtonClick = () => {
     // Generate transaction number when opening the form modal
@@ -108,10 +118,22 @@ export default function Page({ params }: { params: { trackId: string } }) {
     setShowAddForm(false);
   };
 
-
-  const handleMapSubmit = () => {
-    // Handle map submission logic if needed
+  const fetchEngineData = async () => {
+    try {
+      const res = await fetch(`/api/delivery/fetchdelivery?transactionId=${params.trackId}`, {
+        method: 'POST',
+      });
+      if (!res.ok) throw new Error('Network response was not ok');
+      const data = await res.json();
+      setDeliveryUser(data);
+    } catch (error) {
+      console.error('Failed to fetch destination:', error);
+    }
   };
+
+  useEffect(() => {
+    fetchEngineData();
+  }, [params.trackId]);
 
   // Filter and sort transaction history based on selected options
   const filteredAndSortedHistory = transactionHistory
@@ -131,7 +153,7 @@ export default function Page({ params }: { params: { trackId: string } }) {
 
         {/* Adding New Package Card */}
         <div className="dark:bg-gray-900 bg-red-200 rounded-lg p-6 shadow-md mb-2 w-full bg-no-repeat bg-cover" style={{ backgroundImage: `url("./bg-red.png")` }}>
-        <div className="flex items-center justify-between p-2 ">
+          <div className="flex items-center justify-between p-2 ">
             <div>
               <p className="text-red-100 text-4xl font-sans font-extrabold pb-2">
                 Add New Package
@@ -150,17 +172,16 @@ export default function Page({ params }: { params: { trackId: string } }) {
           </div>
         </div>
 
-
         {/* Package Information Card */}
-        <PackageInformationCard packages={packages} />
+        <PackageInformationCard 
+        transactionId={Number(params.trackId)}
+        />
 
         {/* Transaction History Card */}
         <TransactionHistoryCard
-          transactionHistory={transactionHistory}
-          setPackages={setPackages}
-          onSeeMore={() => setShowTransactionHistoryModal(true)} // Set showModal state to true
+          transactionId={Number(params.trackId)}
         />
-        
+
       </div>
 
       {/* Add Package Form */}
@@ -227,26 +248,27 @@ export default function Page({ params }: { params: { trackId: string } }) {
 
       {/* Right Side Content (Map Component) */}
       <div className="md:flex-1 md:ml-4 w-full">
-        <MapboxComponent 
-        transactionId={Number(params.trackId)}
-        />
-        <DeliveryTracking/>
+        {deliveryUser?.deliveryUser === currentUser && deliveryUser?.deliverStatus === "pending" ? (
+          <MapboxComponent transactionId={Number(params.trackId)} />
+        ) : (
+          <MapboxComponent2 transactionId={Number(params.trackId)} />
+        )}
+        <DeliveryTracking />
       </div>
 
       {/* Transaction History Modal */}
       {showTransactionHistoryModal && (
-          <TransactionHistoryModal
-            isOpen={showTransactionHistoryModal}
-            onClose={() => setShowTransactionHistoryModal(false)}
-            transactionHistory={filteredAndSortedHistory}
-            sortOrder={sortOrder}
-            onSortOrderChange={(order) => setSortOrder(order)}
-            engineFilter={engineFilter}
-            onEngineFilterChange={(engine) => setEngineFilter(engine)}
-          />
-        )}
+        <TransactionHistoryModal
+          isOpen={showTransactionHistoryModal}
+          onClose={() => setShowTransactionHistoryModal(false)}
+          transactionHistory={filteredAndSortedHistory}
+          sortOrder={sortOrder}
+          onSortOrderChange={(order) => setSortOrder(order)}
+          engineFilter={engineFilter}
+          onEngineFilterChange={(engine) => setEngineFilter(engine)}
+        />
+      )}
 
     </div>
   );
 };
-

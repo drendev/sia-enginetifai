@@ -27,6 +27,7 @@ const config: Config = {
         "imagerecog": "url('/imagerecog.png')",
         "transactionmain": "url('/transactionbg.png')",
         "delivery": "url('/deliverybg.png')",
+        "track": "url('/trackbg.png')",
         },
         backgroundSize: {
           "16": "12rem",
