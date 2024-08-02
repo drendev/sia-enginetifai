@@ -55,34 +55,21 @@ export function DeliveryPage() {
                                         >
                                             <p>
                                                 <div>
-                                                <div className="font-bold"> 1. Image Upload Requirements</div>
-                                                <div>
-                                                1.1. The Service only supports image files uploaded in the following file extensions: .jpg, .jpeg, .png, jfif, and .webp.
+                                                <div className="font-bold"> 1. Service Description</div>
+                                                Our delivery tracking service allows users to monitor the status and location of their deliveries in real-time. The service is provided "as is" and "as available" without any warranties of any kind, either express or implied.
                                                 </div>
                                                 <div>
-                                                1.2. The quality and accuracy of the image recognition depend significantly on the quality and capture of the uploaded images. Users are advised to upload clear and high-resolution images for better recognition results.
-                                                </div>
-                                                </div>
+                                                <div className="font-bold"> 2. User Responsibilities</div>
                                                 <div>
-                                                <div className="font-bold"> 2. Detection Accuracy</div>
-                                                <div>
-                                                2.1. The accuracy of the image recognition may vary based on the quality of the uploaded image. The Service aims to provide accurate detection; however, it may not be accurate all the time.
+                                                2.1. Account Information: You are responsible for maintaining the confidentiality of your account information and for all activities that occur under your account.
                                                 </div>
                                                 <div>
-                                                2.2. The Service provides a confidence level for each detection. Any confidence level below 70% is not guaranteed to be accurate. Users should interpret these results with caution and should not rely solely on the Service for critical decisions.
+                                                2.2. Accuracy of Information: You agree to provide accurate, current, and complete information when using our service and to update your information to keep it accurate and complete..
                                                 </div>
                                                 </div>
                                                 <div>
-                                                <div className="font-bold"> 3. Limitations of the Service</div>
-                                                <div>
-                                                3.1. The Service is designed to detect engine types only. It does not support the detection of other objects or categories.
-                                                </div>
-                                                <div>
-                                                3.1. We do not guarantee that the Service will be error-free, uninterrupted, or free from unauthorized access. We will not be liable for any loss or damage caused by your reliance on the accuracy or timeliness of the information provided by the Service.
-                                                </div>
-                                                <div>
-                                                3.2. Users are responsible for ensuring that the images they upload comply with the supported file extensions and quality requirements specified in these Terms of Use.
-                                                </div>
+                                                <div className="font-bold"> 3. Privacy</div>
+                                                Your use of the service is also governed by our Privacy Policy, which is incorporated into these Terms and Conditions by this reference. Please review our Privacy Policy to understand our practices regarding your personal data.
                                                 </div>
                                             </p>
                                             
