@@ -152,13 +152,13 @@ export default function Page({ params }: { params: { trackId: string } }) {
 
 
         {/* Package Information Card */}
-        <PackageInformationCard packages={packages} />
-
+        <PackageInformationCard 
+        transactionId={Number(params.trackId)}
+        />
+ 
         {/* Transaction History Card */}
         <TransactionHistoryCard
-          transactionHistory={transactionHistory}
-          setPackages={setPackages}
-          onSeeMore={() => setShowTransactionHistoryModal(true)} // Set showModal state to true
+          transactionId={Number(params.trackId)}
         />
         
       </div>
