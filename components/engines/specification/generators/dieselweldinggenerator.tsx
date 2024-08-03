@@ -39,6 +39,7 @@ export function DieselWeldingGenerator() {
                 >
                     <Input
                     placeholder={item.label}
+                    maxLength={20}
                     />
                 </Form.Item>
                 </Col>

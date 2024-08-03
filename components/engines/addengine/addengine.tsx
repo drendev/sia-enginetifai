@@ -348,7 +348,7 @@ const AddEngineForm = () => {
                     if (value.length < 10) {
                       return Promise.reject('Minimum 10 characters required.');
                     }
-                    else if (value.length > 300) {
+                    else if (value.length > 175) {
                       return Promise.reject('Maximum characters limit exceeded.');
                     }
                     return Promise.resolve();

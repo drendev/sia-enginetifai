@@ -172,6 +172,7 @@ export function EngineList() {
                         prefix={<SearchOutlined />}
                         value={search}
                         onChange={(e) => setSearch(e.target.value)}
+                        maxLength={40}
                     />
 
                     <Link href="/engines/AddEngines" className='flex w-48'>

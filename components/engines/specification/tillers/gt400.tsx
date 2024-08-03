@@ -21,7 +21,9 @@ export function Gt400() {
                     name={item.name}
                     rules={[{ required: true, message: 'Required Specification' }]}
                 >
-                    <Input />
+                    <Input
+                    maxLength={20}
+                    />
                 </Form.Item>
             ))}
         </>

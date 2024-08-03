@@ -30,6 +30,7 @@ export function DieselHighPump() {
                 >
                     <Input
                     placeholder={item.label}
+                    maxLength={20}
                     />
                 </Form.Item>
                 </Col>

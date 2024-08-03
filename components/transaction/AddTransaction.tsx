@@ -297,6 +297,7 @@ const AddTransaction = () => {
                                 min={1}
                                 value={calcQuantity[index]}
                                 onChange={value => handleQuantityChange(index, value || 1)}
+                                maxLength={6}
                               />
                             </Form.Item>
                           </div>
