@@ -28,7 +28,6 @@ interface User {
   id: string;
   username: string;
   email: string;
-  password: string;
   role: string;
 }
 
@@ -292,7 +291,6 @@ export default function Employees() {
       username: user.username,
       email: user.email,
       role: user.role,
-      password: user.password,
     });
   };
 
