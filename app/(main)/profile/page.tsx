@@ -78,7 +78,7 @@ export default function Page() {
                                 <div className="pr-6">
                                     <div className="relative w-28 h-auto justify-center">
                                         <img src={`${currentUserProfile}`} className="rounded-full" alt="" width={100} height={100} />
-                                        <Link className="text-red-50" href={"/upload-picture"}> Change Profile Picture</Link>
+                                        {/* <Link className="text-red-50" href={"/upload-picture"}> Change Profile Picture</Link> */}
                                     </div>
                                 </div>
                             </div>
