@@ -67,14 +67,13 @@ export default function Page() {
                                 <div className="flex flex-col gap-2">
                                     <h1 className="text-red-100 text-4xl font-sans font-extrabold"> My Profile </h1>
                                     <h3 className="text-red-100 text-xl font-sans font-bold pt-5"> {session?.user?.username} </h3>
-
-                                    <Button
+                                    {/* <Button
                                         type="primary"
                                         className="bg-red-primary/90 hover:bg-red-primary h-auto font-bold rounded-full w-auto text-md py-2 px-7 tracking-wider border-red-800 border-2 border-b-4 active:border-b-2"
                                         onClick={showModal}
                                     >
                                         Edit Profile
-                                    </Button>
+                                    </Button> */}
                                 </div>
                                 <div className="pr-6">
                                     <div className="relative w-28 h-auto justify-center">
