@@ -62,7 +62,7 @@ export default function UserHeader({children}: any) {
                         <ToggleMode />
                     </li>
                     <li>
-                        <Link className="flex items-center gap-3 text-sm font-medium duration-300 ease-in-out text-red-primary hover:opacity-60 active:opacity-90 lg:text-sm" href="/upload-picture">
+                        <Link className="flex items-center gap-3 text-sm font-medium duration-300 ease-in-out text-red-primary hover:opacity-60 active:opacity-90 lg:text-sm" href="/profile">
                             Profile
                         </Link>
                     </li>
