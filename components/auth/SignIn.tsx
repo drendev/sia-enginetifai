@@ -75,6 +75,8 @@ import { signIn } from 'next-auth/react';
                   placeholder="Username"
                   className="p-2 px-5 rounded-full shadow-inner"
                   autoComplete="off"
+                  max={30}
+                  maxLength={30}
                   />
               </Form.Item>
 
@@ -85,7 +87,10 @@ import { signIn } from 'next-auth/react';
                 <Input
                   type="password"
                   placeholder="Password"
-                  className="py-2 px-5 rounded-full shadow-inner" />
+                  className="py-2 px-5 rounded-full shadow-inner"
+                  max={30}
+                  maxLength={50}
+                  />
               </Form.Item>
 
               <Form.Item>
