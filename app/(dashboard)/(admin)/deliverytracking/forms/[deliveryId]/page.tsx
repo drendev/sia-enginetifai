@@ -284,6 +284,7 @@ export default function Page({ params }: { params: { deliveryId: string } }) {
                                         value={deliveryAddress}
                                         onChange={(e) => setDeliveryAddress(e.target.value)}
                                         required
+                                        maxLength={250}
                                     />
                                     <Form.Item label="Delivery Time" name="deliveryTime" rules={[{ required: true, message: 'Please select a delivery time!' }]}>
                                         <TimePicker use12Hours format="h:mm a" onChange={onTimeChange} />
