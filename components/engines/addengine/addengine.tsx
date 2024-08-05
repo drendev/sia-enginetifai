@@ -207,6 +207,12 @@ const AddEngineForm = () => {
     return false; // Prevent auto upload
   };
 
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { value, name } = e.target;
+    const newValue = value.replace(/[^a-zA-Z0-9\s]/g, ''); // Remove special characters using regex
+    setValue(name as keyof z.infer<typeof FormSchema>, newValue);
+  };
+
   return (
     <>
       <ConfigProvider
@@ -254,14 +260,17 @@ const AddEngineForm = () => {
             >
               <Input
                 value={engineName}
-                onChange={(e) => setEngineName(e.target.value)}
+                onChange={(e) => {
+                  handleInputChange(e);
+                  setEngineName(e.target.value);
+                }}
               />
             </Form.Item>
 
             <Form.Item
               label="Engine Type"
               name="engineType"
-              rules={[{ required: true, message: 'Please input your username!' }]}
+              rules={[{ required: true, message: 'Please input Engine Type!' }]}
             >
               <Select
                 showSearch
@@ -317,8 +326,7 @@ const AddEngineForm = () => {
                 })
               ]}
             >
-              <InputNumber
-              />
+              <InputNumber />
             </Form.Item>
 
             <Form.Item
@@ -357,8 +365,7 @@ const AddEngineForm = () => {
                 })
               ]}
             >
-
-              <Input />
+              <Input onChange={handleInputChange} />
             </Form.Item>
 
             <Form.Item
