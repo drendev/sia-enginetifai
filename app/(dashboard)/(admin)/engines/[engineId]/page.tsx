@@ -1,9 +1,9 @@
 "use client";
 
 import Link from "next/link";
-import { Button, ConfigProvider, Image, Form, Modal, Input, Upload, Select, Spin, notification } from "antd";
+import { Button, ConfigProvider, Image, Form, Modal, Input, Upload, Select, Spin, notification, Badge } from "antd";
 import { LoadingOutlined } from '@ant-design/icons';
-import { useEffect, useState, createContext } from "react";
+import { useEffect, useState, createContext, ChangeEvent } from "react";
 import { useRouter } from "next/navigation";
 import moment from 'moment-timezone';
 import { useSession } from "next-auth/react";
@@ -18,6 +18,7 @@ interface Engine {
   quantity: string;
   picture: string;
   description: string;
+  status: boolean;
 }
 
 interface Transaction {
@@ -31,7 +32,7 @@ interface EngineSpecification {
   [key: string]: string | undefined;
 }
 
-const numericalFields = ["LoadingQty", "MaxACOutput", "NetWeight", "GrossWeight", "Inlet", "MaxCapacity", "IdleSpeed", "Size", "NetPower", "Weight"];
+const numericalFields = ["LoadingQty", "MaxACOutput", "NetWeight", "GrossWeight", "Inlet", "MaxCapacity", "IdleSpeed", "Size", "NetPower", "Weight", "EngineSpeed", "FuelConsumption", "LubeOilCapacity"];
 
 export default function EnginePageGrid({
   params,
@@ -278,41 +279,45 @@ export default function EnginePageGrid({
     }
   };
 
-  const handleOnSubmit = async () => {
-    const response = await fetch('/api/engines/delete', {
+  const handleSetActiveStatus = async () => {
+    const newStatus = !engineData?.status;
+    const response = await fetch('/api/engines/setinactive', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        engineName: engineData?.engineName,
+        engineId: Number(params.engineId),
+        status: newStatus
       }),
     });
 
     if (response.ok) {
-      setIsDeleted(true);
-      router.push('/engines');
+      const updatedData = await response.json();
+      setEngineData(updatedData);
+      window.location.reload();
     } else {
       setLoading(false);
       console.log('Something went wrong.');
     }
   };
 
+  const filterSpecialCharacters = (value: string) => {
+    return value.replace(/[^\w\s]/gi, '');
+  };
+
+  const handleInputChange = (
+    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+    setFieldValue: (name: string, value: any) => void,
+    fieldName: string
+  ) => {
+    const { value } = e.target;
+    setFieldValue(fieldName, filterSpecialCharacters(value));
+  };
+
   if (isDeleted) {
     return null;
   }
-
-  const config = {
-    title: `Delete ${engineData?.engineName}`,
-    content: (
-      <>
-        <ReachableContext.Consumer>
-          {(name) => `Are you sure you want to permanently delete this engine?`}
-        </ReachableContext.Consumer>
-        <br />
-      </>
-    ),
-  };
 
   return (
     <>
@@ -352,13 +357,26 @@ export default function EnginePageGrid({
                       </Button>
                     </div>
                     <div className="pr-6">
-                      <Image
-                        src={`${engineData?.picture}`}
-                        alt="AI"
-                        width={170}
-                        height={170}
-                        className="self-center rounded-xl"
-                      />
+                      {engineData?.status === false && (
+                        <Badge.Ribbon text={'Deactivated'} color="#BB4747" placement='start' className="opacity-80 p-1">
+                          <Image
+                            src={`${engineData?.picture}`}
+                            alt="AI"
+                            width={170}
+                            height={170}
+                            className="self-center rounded-xl"
+                          />
+                        </Badge.Ribbon>
+                      )}
+                      {engineData?.status === true && (
+                        <Image
+                          src={`${engineData?.picture}`}
+                          alt="AI"
+                          width={170}
+                          height={170}
+                          className="self-center rounded-xl"
+                        />
+                      )}
                     </div>
                   </div>
                   <div className="grid grid-cols-2 md:flex justify-end gap-6 mt-4">
@@ -389,10 +407,15 @@ export default function EnginePageGrid({
                     <Form
                       onFinish={async () => {
                         modal.confirm({
-                          ...config,
-                          onOk: handleOnSubmit,
-                          okText: 'Confirm Delete',
-                          okType: 'danger',
+                          title: `Change Status of ${engineData?.engineName}`,
+                          content: (
+                            <ReachableContext.Consumer>
+                              {(name) => `Are you sure you want to ${engineData?.status ? 'deactivate' : 'activate'} this engine?`}
+                            </ReachableContext.Consumer>
+                          ),
+                          onOk: handleSetActiveStatus,
+                          okText: `Confirm ${engineData?.status ? 'Deactivate' : 'Activate'}`,
+                          okType: engineData?.status ? 'danger' : 'primary',
                         });
                       }}
                     >
@@ -400,9 +423,9 @@ export default function EnginePageGrid({
                         <Button
                           type="primary"
                           htmlType="submit"
-                          className="bg-red-primary/90 hover:bg-red-primary h-auto font-bold rounded-full w-auto text-md py-2 px-7 tracking-wider border-red-800 border-2 border-b-4 active:border-b-2"
+                          className="bg-red-primary hover:bg-red-primary h-auto font-bold rounded-full w-auto text-md py-2 px-7 tracking-wider border-red-800 border-2 border-b-4 active:border-b-2"
                         >
-                          Delete Engine
+                          {engineData?.status ? 'Deactivate Engine' : 'Activate Engine'}
                         </Button>
                         {contextHolder}
                       </ReachableContext.Provider>
@@ -478,49 +501,50 @@ export default function EnginePageGrid({
                               <Form.Item className="mb-0" name="engineName" rules={[{ required: true, message: 'Please enter engine name' }]}>
                                 <Input
                                   placeholder="Engine Name"
+                                  maxLength={15}
                                   className="p-2 border border-gray-300 dark:border-gray-700 rounded-lg dark:bg-gray-900 dark:text-white focus:outline-none w-full"
                                   required
+                                  onChange={(e) => handleInputChange(e, editEngineForm.setFieldValue, 'engineName')}
                                 />
                               </Form.Item>
                             </div>
                             <div className="mb-4">
                               <label className="text-slate-600 dark:text-slate-200 block mb-1 font-sans font-semibold">Engine Type</label>
                               <Form.Item className="mb-0" name="engineType" rules={[{ required: true, message: 'Please enter engine type' }]}>
-                              <Select
-                              
-                              showSearch
-                              placeholder="Search to Select"
-                              optionFilterProp="label"
-                              filterSort={(optionA, optionB) =>
-                                (optionA?.label ?? '').toLowerCase().localeCompare((optionB?.label ?? '').toLowerCase())
-                              }
-                              options={[
-                                { value: 'Diesel Engine', label: 'Diesel Engine' },
-                                { value: 'Twin-Cylinder Diesel Engine', label: 'Twin-Cylinder Diesel Engine' },
-                                { value: 'Open Type Diesel Generator', label: 'Open Type Diesel Generator' },
-                                { value: 'Silent Diesel Generator', label: 'Silent Diesel Generator' },
-                                { value: 'Twin-Cylinder Diesel Generator', label: 'Twin-Cylinder Diesel Generator' },
-                                { value: 'Diesel Water Pump', label: 'Diesel Water Pump' },
-                                { value: 'Diesel High Pressure Pump', label: 'Diesel High Pressure Pump' },
-                                { value: 'Diesel Iron Pump', label: 'Diesel Iron Pump' },
-                                { value: 'Gasoline Engine', label: 'Gasoline Engine' },
-                                { value: 'Gasoline Twin-Cylinder Engine', label: 'Gasoline Twin-Cylinder Engine' },
-                                { value: 'Gasoline Twin-Vertical Engine', label: 'Gasoline Twin-Vertical Engine' },
-                                { value: 'Open Type Gasoline Generator', label: 'Open Type Gasoline Generator' },
-                                { value: 'Silent Gasoline Generator', label: 'Silent Gasoline Generator' },
-                                { value: 'Twin-Cylinder Gasoline Generator', label: 'Twin-Cylinder Gasoline Generator' },
-                                { value: 'Liquified Petroleum Gas & LPT Generator', label: 'Liquified Petroleum Gas & LPT Generator' },
-                                { value: 'Portable Gasoline Generator', label: 'Portable Gasoline Generator' },
-                                { value: 'Gasoline Water Pump', label: 'Gasoline Water Pump' },
-                                { value: 'Gasoline High Pressure Pump', label: 'Gasoline High Pressure Pump' },
-                                { value: 'Gasoline Iron Pump', label: 'Gasoline Iron Pump' },
-                                { value: 'Gasoline Trash Pump', label: 'Gasoline Trash Pump' },
-                                { value: 'Inverter Generator', label: 'Inverter Generator' },
-                                { value: 'Diesel Welding Generator', label: 'Diesel Welding Generator' },
-                                { value: 'Gasoline Welding Generator', label: 'Gasoline Welding Generator' },
-                                { value: 'Tillers', label: 'Tillers' },
-                                ]}
-                              />
+                                <Select
+                                  showSearch
+                                  placeholder="Search to Select"
+                                  optionFilterProp="label"
+                                  filterSort={(optionA, optionB) =>
+                                    (optionA?.label ?? '').toLowerCase().localeCompare((optionB?.label ?? '').toLowerCase())
+                                  }
+                                  options={[
+                                    { value: 'Diesel Engine', label: 'Diesel Engine' },
+                                    { value: 'Twin-Cylinder Diesel Engine', label: 'Twin-Cylinder Diesel Engine' },
+                                    { value: 'Open Type Diesel Generator', label: 'Open Type Diesel Generator' },
+                                    { value: 'Silent Diesel Generator', label: 'Silent Diesel Generator' },
+                                    { value: 'Twin-Cylinder Diesel Generator', label: 'Twin-Cylinder Diesel Generator' },
+                                    { value: 'Diesel Water Pump', label: 'Diesel Water Pump' },
+                                    { value: 'Diesel High Pressure Pump', label: 'Diesel High Pressure Pump' },
+                                    { value: 'Diesel Iron Pump', label: 'Diesel Iron Pump' },
+                                    { value: 'Gasoline Engine', label: 'Gasoline Engine' },
+                                    { value: 'Gasoline Twin-Cylinder Engine', label: 'Gasoline Twin-Cylinder Engine' },
+                                    { value: 'Gasoline Twin-Vertical Engine', label: 'Gasoline Twin-Vertical Engine' },
+                                    { value: 'Open Type Gasoline Generator', label: 'Open Type Gasoline Generator' },
+                                    { value: 'Silent Gasoline Generator', label: 'Silent Gasoline Generator' },
+                                    { value: 'Twin-Cylinder Gasoline Generator', label: 'Twin-Cylinder Gasoline Generator' },
+                                    { value: 'Liquified Petroleum Gas & LPT Generator', label: 'Liquified Petroleum Gas & LPT Generator' },
+                                    { value: 'Portable Gasoline Generator', label: 'Portable Gasoline Generator' },
+                                    { value: 'Gasoline Water Pump', label: 'Gasoline Water Pump' },
+                                    { value: 'Gasoline High Pressure Pump', label: 'Gasoline High Pressure Pump' },
+                                    { value: 'Gasoline Iron Pump', label: 'Gasoline Iron Pump' },
+                                    { value: 'Gasoline Trash Pump', label: 'Gasoline Trash Pump' },
+                                    { value: 'Inverter Generator', label: 'Inverter Generator' },
+                                    { value: 'Diesel Welding Generator', label: 'Diesel Welding Generator' },
+                                    { value: 'Gasoline Welding Generator', label: 'Gasoline Welding Generator' },
+                                    { value: 'Tillers', label: 'Tillers' },
+                                  ]}
+                                />
                               </Form.Item>
                             </div>
                             <div className="mb-4">
@@ -531,9 +555,6 @@ export default function EnginePageGrid({
                                   placeholder="Price"
                                   className="p-2 border border-gray-300 dark:border-gray-700 rounded-lg dark:bg-gray-900 dark:text-white focus:outline-none w-full"
                                   required
-                                  min={1}
-                                  maxLength={6}
-                                  max={999999}
                                 />
                               </Form.Item>
                             </div>
@@ -542,8 +563,10 @@ export default function EnginePageGrid({
                               <Form.Item className="mb-0" name="description" rules={[{ required: true, message: 'Please enter description' }]}>
                                 <Input.TextArea
                                   placeholder="Description"
+                                  maxLength={115}
                                   className="p-2 border border-gray-300 dark:border-gray-700 rounded-lg dark:bg-gray-900 dark:text-white focus:outline-none w-full"
                                   required
+                                  onChange={(e) => handleInputChange(e, editEngineForm.setFieldValue, 'description')}
                                 />
                               </Form.Item>
                             </div>
@@ -583,13 +606,16 @@ export default function EnginePageGrid({
                                       placeholder={key}
                                       className="p-2 border border-gray-300 dark:border-gray-700 rounded-lg dark:bg-gray-900 dark:text-white focus:outline-none w-full"
                                       required
-                                      max={20}
+                                      max={999}
+                                      min={1}
                                     />
                                   ) : (
                                     <Input
                                       placeholder={key}
+                                      maxLength={15}
                                       className="p-2 border border-gray-300 dark:border-gray-700 rounded-lg dark:bg-gray-900 dark:text-white focus:outline-none w-full"
                                       required
+                                      onChange={(e) => handleInputChange(e, editSpecificationForm.setFieldValue, key)}
                                     />
                                   )}
                                 </Form.Item>
@@ -628,8 +654,6 @@ export default function EnginePageGrid({
                                 min={1}
                                 className="p-2 border border-gray-300 dark:border-gray-700 rounded-lg dark:bg-gray-900 dark:text-white focus:outline-none w-full"
                                 required
-                                max={100}
-                                maxLength={4}
                               />
                             </Form.Item>
                           </div>
@@ -664,17 +688,17 @@ export default function EnginePageGrid({
                                 type="number"
                                 placeholder="Quantity"
                                 min={1}
-                                className="p-2 border border-gray-300 dark:border-gray-700 rounded-lg dark:bg-gray-900 dark:text-white focus:outline-none w-full"
+                                className="p-2 border border-gray-300 dark:border-gray-700 rounded-lg dark:bg-gray-900 dark:text-white focus:outline-none w/full"
                                 required
-                                max={100}
-                                maxLength={4}
                               />
                             </Form.Item>
-                            <Form.Item className="mb-0" name="reason" rules={[{ required: true, message: 'Please enter quantity' }]}>
+                            <Form.Item className="mb-0" name="reason" rules={[{ required: true, message: 'Please enter reason' }]}>
                               <Input.TextArea
                                 placeholder="Reason"
-                                className="p-2 my-2 border border-gray-300 dark:border-gray-700 rounded-lg dark:bg-gray-900 dark:text-white focus:outline-none w-full"
+                                maxLength={115}
+                                className="p-2 my-2 border border-gray-300 dark:border-gray-700 rounded-lg dark:bg-gray-900 dark:text-white focus:outline-none w/full"
                                 required
+                                onChange={(e) => handleInputChange(e, reduceStockForm.setFieldValue, 'reason')}
                               />
                             </Form.Item>
                           </div>

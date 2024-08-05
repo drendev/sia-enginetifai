@@ -14,6 +14,7 @@ export async function POST() {
                 description: true,
                 engineType: true,
                 quantity: true,
+                status: true
             }
         });
 

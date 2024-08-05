@@ -22,6 +22,7 @@ export async function POST(req: Request) {
                 quantity: true,
                 picture: true,
                 userName: true,
+                status: true,
             }
         });
 

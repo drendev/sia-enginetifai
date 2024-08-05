@@ -48,6 +48,7 @@ model Engine {
   description String
   createAt    DateTime @default(now())
   updatedAt   DateTime @updatedAt
+  status      Boolean? @default(true)
 
   // Relational Tables
   transactions  TransactionEngine[]

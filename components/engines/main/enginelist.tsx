@@ -12,6 +12,7 @@ interface Engine {
     price: number,
     quantity: number,
     picture: string,
+    status: boolean, // Changed to boolean to represent engine status
 }
 
 interface ScrapEngine {
@@ -228,7 +229,36 @@ export function EngineList() {
                 <Skeleton loading={loading} active>
                     <div className="grid grid-cols-2 gap-x-8 gap-y-4 md:grid-cols-2 xl:grid-cols-4 2xl:grid-cols-5 mb-4">
                         {currentEngines.length > 0 ? currentEngines.map(engine => (
-                            engine.quantity < 15 ? (
+                            !engine.status ? (
+                                <div key={engine.id} className='hover:-translate-y-1 transition-all cursor-pointer hover:shadow-md hover:rounded-xl'>
+                                    <Badge.Ribbon key={engine.id} text={'Deactivated'} color="#BB4747" placement='start' className="opacity-80 p-1">
+                                        <Link key={engine.id} href={`/engines/${engine.id}`}>
+                                            <div className="flex flex-col bg-white dark:bg-slate-900 rounded-xl shadow-md overflow-hidden h-44">
+                                                <div className="w-full h-32">
+                                                    <img src={engine.picture} alt={engine.engineName} className="object-cover w-full h-full"/>
+                                                </div>
+                                                <div className="flex-1 pb-2 bg-slate-50 dark:bg-slate-900">
+                                                    <h3 className="text-gray-800 dark:text-slate-300 text-center">
+                                                        <span className="font-bold font-sans text-sm">
+                                                            {engine.engineName.length > 15 ? (
+                                                                <>
+                                                                    {engine.engineName.substring(0, 10)}...
+                                                                </>
+                                                            ) : (
+                                                                engine.engineName
+                                                            )}
+                                                        </span>
+                                                    </h3>
+                                                    <h3 className="text-gray-800 dark:text-slate-300 text-center">
+                                                        <span className="font-semibold font-sans text-sm">Available:</span> 
+                                                        <span className='text-red-primary'>{engine.quantity}</span>
+                                                    </h3>
+                                                </div>
+                                            </div>
+                                        </Link>
+                                    </Badge.Ribbon>
+                                </div>
+                            ) : engine.quantity < 15 ? (
                                 <div key={engine.id} className='hover:-translate-y-1 transition-all cursor-pointer hover:shadow-md hover:rounded-xl'>
                                     <Badge.Ribbon key={engine.id} text={'Low Stocks'} color="#BB4747" placement='start' className="opacity-80 p-1">
                                         <Link key={engine.id} href={`/engines/${engine.id}`}>
@@ -386,3 +416,4 @@ export function EngineList() {
         </>
     );
 }
+
