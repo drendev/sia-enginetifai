@@ -164,6 +164,7 @@ const ForgotPasswordOtp = () => {
                   rules={[{ required: true, message: 'Please input OTP' }]}
                 >
                   <Input
+                    type='number'
                     placeholder="OTP"
                     className="p-2 px-5 rounded-full shadow-inner"
                     autoComplete="off"

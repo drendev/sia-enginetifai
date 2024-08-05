@@ -43,9 +43,10 @@ const AddTransaction = () => {
   const { data: session } = useSession();
   const router = useRouter();
   const user = session?.user.username;
-  const [selectedMethod, setSelectedMethod] = useState('Cash On Delivery');
+  const [selectedMethod, setSelectedMethod] = useState('Paid in Warehouse');
   const [loading, setLoading] = useState<boolean>(false);
   const [transactionId, setTransactionId] = useState<TransactionId | null>(null);
+  const [deliveryEnabled, setDeliveryEnabled] = useState(false);
   const [api, contextHolder] = notification.useNotification();
 
   type NotificationType = 'error';
@@ -59,7 +60,6 @@ const AddTransaction = () => {
       pauseOnHover: true,
     });
   };
-
 
   useEffect(() => {
     const fetchData = async () => {
@@ -98,7 +98,7 @@ const AddTransaction = () => {
       engineName: '',
       quantity: 1,
       delivery: false,
-      transactionMethod: '',
+      transactionMethod: 'Paid in Warehouse',
     },
   });
 
@@ -166,7 +166,14 @@ const AddTransaction = () => {
   };
 
   const handleSelect = (method: any) => {
+    if (method === 'Cash On Delivery' && !deliveryEnabled) return;
     setSelectedMethod(method);
+  };
+
+  const handleDeliveryChange = (checked: boolean) => {
+    form.setValue('delivery', checked);
+    setDeliveryEnabled(checked);
+    setSelectedMethod(checked ? 'Cash On Delivery' : 'Paid in Warehouse');
   };
 
   const formatCurrency = (value: any) => `₱${new Intl.NumberFormat('en-PH', { minimumFractionDigits: 0 }).format(value)}`;
@@ -317,7 +324,7 @@ const AddTransaction = () => {
                       <div
                         className={`flex-1 p-4 border rounded-lg text-center cursor-pointer ${
                           selectedMethod === 'Cash On Delivery' ? 'bg-red-primary/10 border-red-primary text-red-primary' : 'hover:bg-red-primary/5 text-slate-500'
-                        }`}
+                        } ${!deliveryEnabled && 'pointer-events-none opacity-50'}`}
                         onClick={() => handleSelect('Cash On Delivery')}
                       >
                         <CreditCardFilled className='text-2xl'/>
@@ -356,6 +363,7 @@ const AddTransaction = () => {
                     >
                       <Switch
                         className='shadow-inner bg-slate-200'
+                        onChange={handleDeliveryChange}
                       />
                     </Form.Item>
                   </div>
