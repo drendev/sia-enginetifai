@@ -27,7 +27,7 @@ const FormSchema = z.object({
 export async function POST(req: Request) {
   try {
     const body = await req.json();
-    console.log("this is the body: ", body);
+
     const { userID, username, role, email, password } = FormSchema.parse(body);
 
     // Hash the password before storing it

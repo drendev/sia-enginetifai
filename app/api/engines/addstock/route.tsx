@@ -16,6 +16,14 @@ export async function POST(req: Request) {
         // Validate the parsed quantity
         engineSchema.parse({ quantity });
 
+        if (quantity < 1) {
+            return
+        }
+
+        if(quantity > 100) {
+            return
+        }
+        
         const url = new URL(req.url);
         const engineId = url.searchParams.get('engineId');
 

@@ -19,6 +19,7 @@ model User {
   role      String   @default("user")
   createAt  DateTime @default(now())
   updatedAt DateTime @updatedAt
+  otp       String?
 
   // Relational Tables
   engines      Engine[]

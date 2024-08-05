@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Button, ConfigProvider, Image, Form, Modal, Input, Upload, Select, Spin } from "antd";
+import { Button, ConfigProvider, Image, Form, Modal, Input, Upload, Select, Spin, notification } from "antd";
 import { LoadingOutlined } from '@ant-design/icons';
 import { useEffect, useState, createContext } from "react";
 import { useRouter } from "next/navigation";
@@ -28,9 +28,10 @@ interface Transaction {
 }
 
 interface EngineSpecification {
-  [key: string]: string | undefined;  // Generalizing the property values as string or undefined
-  // Define specific properties if necessary
+  [key: string]: string | undefined;
 }
+
+const numericalFields = ["LoadingQty", "MaxACOutput", "NetWeight", "GrossWeight", "Inlet", "MaxCapacity", "IdleSpeed", "Size", "NetPower", "Weight"];
 
 export default function EnginePageGrid({
   params,
@@ -56,7 +57,15 @@ export default function EnginePageGrid({
   const { data: session } = useSession();
   const currentUser = session?.user?.username;
 
-  /* Fetch Engine data */
+  const [api, contextHolderNotification] = notification.useNotification();
+
+  const openNotificationWithIcon = (type: 'success' | 'error', message: string, description: string) => {
+    api[type]({
+      message: message,
+      description: description,
+    });
+  };
+
   useEffect(() => {
     if (isDeleted) return;
 
@@ -70,7 +79,6 @@ export default function EnginePageGrid({
     fetchEngineData();
   }, [params.engineId, isDeleted]);
 
-  /* Fetch Transaction data */
   useEffect(() => {
     const fetchTransactionData = async () => {
       const res = await fetch(`/api/engines/enginepagetransac?engineId=${params.engineId}`, {
@@ -82,7 +90,6 @@ export default function EnginePageGrid({
     fetchTransactionData();
   }, [params.engineId]);
 
-  /* Fetch Specification Data */
   useEffect(() => {
     const fetchEngineSpecification = async () => {
       const res = await fetch(`/api/engines/specification?engineId=${params.engineId}`, {
@@ -96,13 +103,12 @@ export default function EnginePageGrid({
 
   const sortedData = [...transactionData].sort((a, b) => new Date(b.createAt).getTime() - new Date(a.createAt).getTime());
 
-  /* format time and date */
   const utcDate = new Date();
   const timeZone = 'Asia/Manila';
   const dateToday = moment.tz(utcDate, timeZone).format('YYYY-MM-DDTHH:mm:ss.SSS[Z]');
 
   const formatTransactionTime = (dateTime: string) => {
-    const now = moment.tz(dateToday, timeZone);  // Use dateToday instead of the current moment
+    const now = moment.tz(dateToday, timeZone);
     const transactionTime = moment.tz(dateTime, timeZone);
     const diffMinutes = now.diff(transactionTime, 'minutes');
     const diffHours = now.diff(transactionTime, 'hours');
@@ -119,7 +125,6 @@ export default function EnginePageGrid({
     }
   };
 
-  // Render each specification
   const renderSpecifications = (specifications: EngineSpecification | null) => {
     if (!specifications) return null;
     return (
@@ -217,6 +222,10 @@ export default function EnginePageGrid({
   };
 
   const handleAddStockSubmit = async (values: any) => {
+    if (values.quantity <= 0) {
+      openNotificationWithIcon('error', 'Invalid Quantity', 'Quantity cannot be negative or zero.');
+      return;
+    }
     setLoading(true);
     const response = await fetch(`/api/engines/addstock?engineId=${params.engineId}`, {
       method: 'POST',
@@ -240,6 +249,10 @@ export default function EnginePageGrid({
   };
 
   const handleReduceStockSubmit = async (values: any) => {
+    if (values.quantity <= 0) {
+      openNotificationWithIcon('error', 'Invalid Quantity', 'Quantity cannot be negative or zero.');
+      return;
+    }
     setLoading(true);
     const response = await fetch(`/api/engines/reducestock?engineId=${params.engineId}`, {
       method: 'POST',
@@ -310,7 +323,7 @@ export default function EnginePageGrid({
               colorPrimary: '#BB4747',
               colorLink: '#BB4747',
             },
-          }}>  
+          }}>
           <div className="h-full flex-col flex md:px-10">
             <div className="flex flex-col sm:flex-row md:gap-2">
               <div className="flex-col md:flex-grow p-6">
@@ -396,7 +409,6 @@ export default function EnginePageGrid({
                     </Form>
                   </div>
 
-                  {/* Specification */}
                   <div className="w-full 2xl:w-full h-full md:h-[21rem] bg-white dark:bg-slate-900 shadow-md rounded-xl p-4">
                     <div className="text-red-900 text-2xl font-sans font-extrabold space-y-2">
                       Specifications
@@ -408,7 +420,6 @@ export default function EnginePageGrid({
               <div className="flex flex-col md:flex-none w-full md:w-2/6 space-y-4 p-6 md:p-0 gap-4">
                 <div className="relative md:fixed pt-6 md:h-[calc(100vh-96px)] scrollbar-none md:overflow-y-auto md:scrollbar md:scrollbar-thumb-red-primary md:scrollbar-track-transparent">
 
-                  {/* Description */}
                   <div className="w-full md:w-[29rem] h-64 bg-white dark:bg-slate-900 shadow-md rounded-xl p-4 flex flex-col">
                     <div className="text-red-900 text-2xl font-sans font-extrabold space-y-2">
                       Description
@@ -421,7 +432,6 @@ export default function EnginePageGrid({
                     </h3>
                   </div>
 
-                  {/* Recent Transaction */}
                   <div className="text-2xl font-bold font-sans mb-7 my-5">
                      Recently Transacted
                   </div>
@@ -521,6 +531,9 @@ export default function EnginePageGrid({
                                   placeholder="Price"
                                   className="p-2 border border-gray-300 dark:border-gray-700 rounded-lg dark:bg-gray-900 dark:text-white focus:outline-none w-full"
                                   required
+                                  min={1}
+                                  maxLength={6}
+                                  max={999999}
                                 />
                               </Form.Item>
                             </div>
@@ -564,12 +577,21 @@ export default function EnginePageGrid({
                               <div className="mb-4" key={key}>
                                 <label className="text-slate-600 dark:text-slate-200 block mb-1 font-sans font-semibold">{key}</label>
                                 <Form.Item className="mb-0" name={key} rules={[{ required: true, message: `Please enter ${key}` }]}>
-                                  <Input
-                                    placeholder={key}
-                                    className="p-2 border border-gray-300 dark:border-gray-700 rounded-lg dark:bg-gray-900 dark:text-white focus:outline-none w-full"
-                                    required
-                                    max={20}
-                                  />
+                                  {numericalFields.includes(key) ? (
+                                    <Input
+                                      type="number"
+                                      placeholder={key}
+                                      className="p-2 border border-gray-300 dark:border-gray-700 rounded-lg dark:bg-gray-900 dark:text-white focus:outline-none w-full"
+                                      required
+                                      max={20}
+                                    />
+                                  ) : (
+                                    <Input
+                                      placeholder={key}
+                                      className="p-2 border border-gray-300 dark:border-gray-700 rounded-lg dark:bg-gray-900 dark:text-white focus:outline-none w-full"
+                                      required
+                                    />
+                                  )}
                                 </Form.Item>
                               </div>
                             ))}
@@ -606,6 +628,8 @@ export default function EnginePageGrid({
                                 min={1}
                                 className="p-2 border border-gray-300 dark:border-gray-700 rounded-lg dark:bg-gray-900 dark:text-white focus:outline-none w-full"
                                 required
+                                max={100}
+                                maxLength={4}
                               />
                             </Form.Item>
                           </div>
@@ -642,15 +666,15 @@ export default function EnginePageGrid({
                                 min={1}
                                 className="p-2 border border-gray-300 dark:border-gray-700 rounded-lg dark:bg-gray-900 dark:text-white focus:outline-none w-full"
                                 required
+                                max={100}
+                                maxLength={4}
                               />
-                              
                             </Form.Item>
                             <Form.Item className="mb-0" name="reason" rules={[{ required: true, message: 'Please enter quantity' }]}>
-                            <Input.TextArea
+                              <Input.TextArea
                                 placeholder="Reason"
                                 className="p-2 my-2 border border-gray-300 dark:border-gray-700 rounded-lg dark:bg-gray-900 dark:text-white focus:outline-none w-full"
                                 required
-                                
                               />
                             </Form.Item>
                           </div>

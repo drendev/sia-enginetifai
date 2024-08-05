@@ -6,6 +6,7 @@ import { useState } from 'react';
 import { z } from 'zod';
 import { useRouter } from 'next/navigation';
 import { signIn } from 'next-auth/react';
+import Link from 'next/link';
 
   type NotificationType = 'error'; // Error notification type
 
@@ -103,7 +104,9 @@ import { signIn } from 'next-auth/react';
                 </Button>
               </Form.Item>
             </Form>
-          
+          <Link className='text-red-primary' href={'/forgot'}>
+            <span className='hover:bg-red-50'>Forgot Password</span>
+          </Link>
         </div>
       </div>
       </ConfigProvider>

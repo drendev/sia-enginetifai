@@ -21,6 +21,14 @@ export async function POST(req: Request) {
 
         const engineIdNumber = Number(engineId);
 
+        if(price < 1) {
+            return
+        }
+
+        if(price > 999999) {
+            return
+        }
+
         const getEngine = await db.engine.update({
             where: {
                 id: engineIdNumber

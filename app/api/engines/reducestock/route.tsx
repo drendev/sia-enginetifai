@@ -42,6 +42,14 @@ export async function POST(req: Request) {
             },
         });
 
+        if (quantity < 1) {
+            return
+        }
+
+        if(quantity > 100) {
+            return
+        }
+
         const getEngine = await db.scrap.create({
             data: {
                 quantity: quantity,
