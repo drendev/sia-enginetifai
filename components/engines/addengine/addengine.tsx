@@ -105,7 +105,7 @@ const AddEngineForm = () => {
     fetchData()
   }, [engineName])
 
-  const { setValue } = useForm<z.infer<typeof FormSchema>>({
+  const { setValue, handleSubmit, formState: { errors } } = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
       userName: '',
@@ -129,6 +129,13 @@ const AddEngineForm = () => {
   });
 
   const onSubmit = async (values: z.infer<typeof FormSchema>) => {
+    // Server-side validation for special characters
+    const specialCharPattern = /[^a-zA-Z0-9\s]/g;
+    if (specialCharPattern.test(values.engineName) || specialCharPattern.test(values.description)) {
+      openNotificationWithIcon('error');
+      setLoading(false);
+      return;
+    }
 
     setLoading(true);
     if (typeof file === "undefined") return;
@@ -227,7 +234,7 @@ const AddEngineForm = () => {
           labelCol={{ span: 4 }}
           wrapperCol={{ span: 16 }}
           className='flex flex-col md:flex-row max-w-screen-xl mx-auto gap-4 px-2'
-          onFinish={onSubmit}
+          onFinish={handleSubmit(onSubmit)}
           autoComplete="off"
           requiredMark={false}
           labelAlign='left'
@@ -237,7 +244,9 @@ const AddEngineForm = () => {
             <Form.Item
               label="Engine Name"
               name="engineName"
-              rules={[{ required: true, message: 'Please input Engine Name' },
+              rules={[
+                { required: true, message: 'Please input Engine Name' },
+                { pattern: /^[a-zA-Z0-9\s]+$/, message: 'Special characters are not allowed' },
                 () => ({
                   validator(_, value) {
                     if (!value) {
@@ -247,15 +256,14 @@ const AddEngineForm = () => {
                       return Promise.reject('Maximum Characters Limit Exceeded.');
                     }
                     if (value === engine?.engineName || value === !undefined) {
-                      return Promise.reject('Engine already exist');
+                      return Promise.reject('Engine already exists');
                     }
-                    else if (value.length < 5 && value.length > 1) {
+                    if (value.length < 5) {
                       return Promise.reject('Minimum 5 characters required.');
                     }
                     return Promise.resolve();
                   },
-
-                })
+                }),
               ]}
             >
               <Input
@@ -350,19 +358,20 @@ const AddEngineForm = () => {
             <Form.Item
               label="Description"
               name="description"
-              rules={[{ required: true, message: 'Please input Description' },
+              rules={[
+                { required: true, message: 'Please input Description' },
+                { pattern: /^[a-zA-Z0-9\s]+$/, message: 'Special characters are not allowed' },
                 () => ({
                   validator(_, value) {
                     if (value.length < 10) {
                       return Promise.reject('Minimum 10 characters required.');
                     }
-                    else if (value.length > 175) {
+                    if (value.length > 175) {
                       return Promise.reject('Maximum characters limit exceeded.');
                     }
                     return Promise.resolve();
                   },
-
-                })
+                }),
               ]}
             >
               <Input onChange={handleInputChange} />
